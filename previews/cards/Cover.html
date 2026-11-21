@@ -1,0 +1,31 @@
+<!-- @dsCard height=288 -->
+<style>
+  html,body{margin:0;background:var(--bg)}
+  .cv{box-sizing:border-box;min-height:288px;display:flex;flex-wrap:wrap;align-items:center;gap:24px 40px;padding:32px 40px;color:var(--fg);font:400 14px/20px var(--font-sans)}
+  .cv-l{flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:8px}
+  .cv-name{margin:0;font:500 20px/28px var(--font-sans)}
+  .cv-sub{margin:0;color:var(--fg-muted)}
+  .cv-meta{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:8px;font:400 12px/16px var(--font-sans);color:var(--fg-muted)}
+  .cv-meta span{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+  .cv-sw{width:12px;height:12px;border-radius:4px}
+  .cv-r{flex:1 1 320px;min-width:0;max-width:420px}
+  .cv-r .fa-pop{padding:8px}
+  @media (max-width:480px){.cv{padding:24px 16px}}
+</style>
+<div class="cv" role="img" aria-label="fleet-ade 组件库：三个项目共用，八套主题">
+  <div class="cv-l">
+    <h1 class="cv-name">fleet-ade 组件库</h1>
+    <p class="cv-sub">三个项目共用一套组件，只换品牌色。八套主题，一组颜色角色；字号 12 / 14 / 15 / 18 / 20，间距按 4 的倍数。</p>
+    <div class="cv-meta">
+      <span><i class="cv-sw" style="background:var(--brand-fleet)"></i>fleet-ade</span>
+      <span><i class="cv-sw" style="background:var(--brand-ashare)"></i>交易复盘</span>
+      <span><i class="cv-sw" style="background:var(--brand-jiqun)"></i>机群看板</span>
+    </div>
+  </div>
+  <div class="cv-r">
+    <div class="fa-pop" aria-hidden="true">
+      <div class="fa-cmd__row has-lead" data-active="true"><span class="lead"><span class="fa-agent">C<span class="fa-dot fa-dot--running"></span></span></span><div class="body"><div class="l l1"><span class="x grow">排查登录超时</span><span class="st">运行中</span><span class="tm">3 分钟</span></div><div class="l l2"><span class="x">读了 3 个文件，正在改 auth/session.ts</span></div></div></div>
+      <div class="fa-cmd__row has-lead is-unread"><span class="lead"><span class="fa-agent">K<span class="fa-dot fa-dot--new"></span></span></span><div class="body"><div class="l l1"><span class="x grow">修复 sandbox 目录读取</span><span class="st">有新回复</span><span class="tm">昨天</span></div><div class="l l2"><span class="x">已提交，未推送。测试 14 个全部通过</span></div></div></div>
+    </div>
+  </div>
+</div>

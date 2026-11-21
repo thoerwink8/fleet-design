@@ -1,0 +1,31 @@
+<div class="fa-stage" style="max-width:420px">
+  <div class="fa-col"><div class="fa-cap">输入框下方的常驻迷你条</div>
+    <div class="fa-row"><span class="fa-meter fa-meter--thin" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" aria-label="上下文占用 10.1%"><i style="width:10.1%;background:var(--accent)"></i></span><span class="fa-num fa-muted" style="font-size:12px;line-height:16px">10%</span></div></div>
+  <div class="fa-col" style="gap:8px"><div class="fa-cap">详情面板里的总条和分来源明细：分段用 data-1…6 分类色，段间留 1px 缝；第 7 类起并成灰色「其他」。悬停某一行，其余段变淡</div>
+    <div class="fa-row" style="justify-content:space-between"><b style="font:500 14px/20px var(--font-sans)" id="head"></b><span class="fa-num fa-muted" style="font-size:14px;line-height:20px" id="tot"></span></div>
+    <div class="fa-meter fa-meter--seg" id="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="上下文占用"></div>
+    <div id="src" class="fa-col" style="gap:0"></div>
+    <div class="fa-row" style="justify-content:space-between;margin-top:4px"><span class="fa-muted" style="font:400 14px/20px var(--font-sans)" id="left"></span><button class="fa-btn fa-btn--sm fa-btn--secondary" id="comp">压缩会话</button></div>
+    <div class="fa-hint" id="say" role="status"></div>
+  </div>
+  <div class="fa-col"><div class="fa-cap">通用进度条：任务清单 2/5；≥95% 整条换危险色</div>
+    <div class="fa-row" style="gap:8px"><div class="fa-meter" style="flex:1" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" aria-label="任务清单 2/5"><i style="width:40%;background:var(--accent)"></i></div><span class="fa-num fa-muted" style="font-size:12px;line-height:16px">2/5</span></div>
+    <div class="fa-row" style="gap:8px"><div class="fa-meter" style="flex:1" role="progressbar" aria-valuenow="97" aria-valuemin="0" aria-valuemax="100" aria-label="上下文占用 97%"><i style="width:97%;background:var(--danger)"></i></div><span class="fa-num fa-muted" style="font-size:12px;line-height:16px">97%</span></div></div>
+</div>
+<script>
+/*PRELUDE*/
+const CAP = 500000;
+let S = [['消息', 162000], ['系统工具', 82000], ['MCP 工具', 61000], ['记忆文件', 40000], ['系统提示词', 28000], ['Skills', 20000], ['自动压缩缓冲区', 12000]];
+const wan = n => (n / 10000).toFixed(1) + '万';
+function draw(hover) {
+  const used = S.reduce((a, b) => a + b[1], 0), pct = used / CAP * 100;
+  $('#head').textContent = '已使用 ' + Math.round(pct) + '%'; $('#tot').textContent = wan(used) + ' / ' + wan(CAP);
+  const bar = $('#bar'); bar.setAttribute('aria-valuenow', Math.round(pct));
+  bar.innerHTML = S.map((s, i) => '<i class="fa-s' + (i + 1) + '" style="width:' + s[1] / CAP * 100 + '%;' + (hover === undefined || hover === i ? '' : 'opacity:.35') + '"></i>').join('') + '<i></i>';
+  $('#src').innerHTML = S.map((s, i) => '<div class="fa-src" data-i="' + i + '"><span class="sw fa-s' + (i + 1) + '"></span><span>' + s[0] + '</span><span class="n">' + wan(s[1]) + '</span><span class="n">' + (s[1] / CAP * 100).toFixed(1) + '%</span></div>').join('') + '<div class="fa-src"><span class="sw fa-dot--ring" style="box-shadow:inset 0 0 0 1px var(--fg-muted)"></span><span>可用空间</span><span class="n">' + wan(CAP - used) + '</span><span class="n">' + ((CAP - used) / CAP * 100).toFixed(1) + '%</span></div>';
+  $$('.fa-src[data-i]').forEach(r => { r.onmouseenter = () => draw(+r.dataset.i); r.onmouseleave = () => draw(); });
+  $('#left').textContent = '距自动压缩还剩 ' + wan(Math.max(CAP * 0.95 - used, 0));
+}
+$('#comp').onclick = () => { S = S.map(([n, v]) => [n, n === '消息' ? 38000 : n === 'MCP 工具' ? 30000 : v]); draw(); $('#say').textContent = '已压缩：生成新的分支会话，原会话保留。消息从 16.2万 降到 3.8万。'; $('#comp').disabled = true; };
+draw();
+</script>

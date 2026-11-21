@@ -1,0 +1,31 @@
+<div class="fa-stage">
+  <div class="fa-seg" role="radiogroup" aria-label="场景" id="sc"></div>
+  <div id="host" class="fa-panel" style="padding:24px;display:flex;justify-content:center"></div>
+  <div class="fa-hint" id="say" role="status"></div>
+</div>
+<script>
+/*PRELUDE*/
+const SC = {
+  '删除一个会话': { title: '删除对话', body: '删除后无法恢复。', names: [['kimi', '沙盒测试：已重命名']], ok: '删除对话', danger: true },
+  '批量删除': { title: '删除 4 个会话', body: '将删除以下 4 个会话，删除后无法恢复。', names: [['kimi', '沙盒测试：已重命名'], ['claude', '排查：登录超时'], ['kimi', '定时：沙盒测试'], ['claude', '从这里开新会话']], ok: '删除 4 个会话', danger: true },
+  '还原未跟踪文件': { title: '删除未跟踪文件？', body: '该文件尚未被 Git 跟踪，还原会直接删除它，无法撤销。', names: [['U', 'attach-me.txt']], ok: '删除文件', danger: true },
+  '还原已跟踪文件': { title: '还原这个文件？', body: '还原会丢掉 src/auth/session.ts 里未提交的改动，可以再从提交里找回旧版本。', names: [], ok: '还原文件', danger: false },
+  '移除工作区': { title: '移除工作区？', body: '移除后不会删除本地文件。', names: [['路径', 'C:\\src\\old-project']], check: '同时删除它的数据（会话记录、智能体保存的会话与记忆，无法撤销）', ok: '移除工作区', danger: true },
+};
+const sc = $('#sc'), host = $('#host'); let cur = Object.keys(SC)[0];
+sc.innerHTML = Object.keys(SC).map(k => '<button role="radio" aria-checked="' + (k === cur) + '">' + k + '</button>').join('');
+$$('button', sc).forEach(b => b.onclick = () => { cur = b.textContent; $$('button', sc).forEach(x => x.setAttribute('aria-checked', x === b)); draw(); });
+function draw() {
+  const s = SC[cur];
+  host.innerHTML = '<div class="fa-dialog" role="alertdialog" aria-labelledby="dt" aria-describedby="db"><h2 id="dt"></h2><p id="db"></p>' + (s.names.length ? '<div class="fa-names"></div>' : '') + (s.check ? '<label class="fa-check"><input type="checkbox" id="ck"><span></span></label>' : '') + '<div id="err" class="fa-hint fa-hint--error" hidden></div><div class="fa-dialog__foot"><button class="fa-btn fa-btn--secondary" id="no">取消</button><button class="fa-btn ' + (s.danger ? 'fa-btn--danger' : 'fa-btn--primary') + '" id="ok"></button></div></div>';
+  $('#dt').textContent = s.title; $('#db').textContent = s.body; $('#ok').textContent = s.ok;
+  if (s.names.length) $('.fa-names').innerHTML = s.names.map(n => '<div><span class="ag"></span><span></span></div>').join('');
+  if (s.names.length) $$('.fa-names div').forEach((d, i) => { d.children[0].textContent = s.names[i][0]; d.children[1].textContent = s.names[i][1]; });
+  if (s.check) $('.fa-check span').textContent = s.check;
+  $('#no').focus();
+  $('#no').onclick = () => { $('#say').textContent = '取消：什么都没发生。'; };
+  $('#ok').onclick = () => { const ok = $('#ok'); ok.disabled = true; ok.setAttribute('aria-busy', 'true'); ok.textContent = '处理中…'; setTimeout(() => { $('#say').textContent = '已执行：' + s.ok + (s.check && $('#ck').checked ? '，并删除了数据' : '') + '。'; ok.disabled = false; ok.removeAttribute('aria-busy'); ok.textContent = s.ok; }, 900); };
+  host.querySelector('.fa-dialog').addEventListener('keydown', e => { if (e.key === 'Escape') { $('#say').textContent = 'Esc：取消。'; } });
+}
+draw();
+</script>

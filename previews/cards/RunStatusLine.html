@@ -1,0 +1,24 @@
+<div class="fa-stage" style="max-width:640px">
+  <div class="fa-cap">回合进行中的提示分三层，默认只露第一层：① 一行状态（三个点分步切换亮暗 + 现在在做什么 + 已用秒数 + 箭头），整个回合只有这一行在变；② 展开是步骤清单，每步一行 32，写人话，做完的改完成时；③ 点某一步才看原始命令、输出、差异（等宽）。回合结束整段收成一句</div>
+  <div class="fa-col" style="gap:8px"><span class="fa-lbl">1 进行中 · 收起</span><div id="t1"></div></div>
+  <div class="fa-col" style="gap:8px"><span class="fa-lbl">2 进行中 · 展开</span><div id="t2"></div></div>
+  <div class="fa-col" style="gap:8px"><span class="fa-lbl">3 某步失败（只有「失败」两个字用危险色；失败那步默认展开原始输出）</span><div id="t3"></div></div>
+  <div class="fa-col" style="gap:8px"><span class="fa-lbl">4 回合结束 · 收起</span><div id="t4"></div></div>
+  <div class="fa-hair"></div>
+  <div class="fa-col" style="gap:8px"><span class="fa-lbl">主对话里的后台智能体行：点开进任务详情</span>
+    <div class="fa-col" style="gap:0" id="runs"></div></div>
+  <div class="fa-hint" id="say" role="status">Tab 到状态行，Enter 或空格展开；步骤行同样可展开；三个点在离屏和「减少动态效果」下停住</div>
+</div>
+<script>
+/*PRELUDE*/
+/*SESSION*/
+turnBlock($('#t1'), 'running-collapsed'); turnBlock($('#t2'), 'running-open'); turnBlock($('#t3'), 'failed'); turnBlock($('#t4'), 'finished');
+const RUNS = [
+  ['running', '智能体运行中', '盘点子会话数据和界面', '已 3 分钟'],
+  ['needs', '智能体在等你', '复审 PR #57 返工', '已 11 分钟'],
+  ['error', '智能体出错了', '核对消息送达帧', '停在第 6 步'],
+  ['', '智能体已完成', '整理 Composer 紧凑变体的截图', '用时 6 分钟'],
+];
+$('#runs').innerHTML = RUNS.map((r, i) => '<button class="fa-run" data-r="' + i + '"><span class="fa-dot' + (r[0] ? ' fa-dot--' + r[0] : '') + '" role="img" aria-label="' + r[1] + '"></span><span class="lead">' + r[1] + '</span><span>·</span><span class="x">' + r[2] + '</span><span>·</span><span style="white-space:nowrap">' + r[3] + '</span>' + ic('chevR') + '</button>').join('');
+$$('[data-r]').forEach(b => b.onclick = () => { $('#say').textContent = '打开任务详情：' + RUNS[+b.dataset.r][2]; });
+</script>

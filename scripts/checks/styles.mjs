@@ -4,7 +4,7 @@ import { atoms, cmp, entries, relation, selectorSpecificity, splitList, touches 
 import { concatStyles, styleFiles, stylesDir } from '../lib/styles.mjs';
 import { root } from '../lib/tokens.mjs';
 
-// Component classes that the previews put on the same element (e.g. "fa-pop fa-cmd"), read from markup and scripts.
+// Classes that the previews put on the same element (e.g. "fa-pop fa-cmd"), read from markup and scripts.
 function coOccurring() {
   const pairs = new Set();
   const dirs = ['previews/cards', 'previews/lib'].map((d) => path.join(root, d)).filter((d) => fs.existsSync(d));
@@ -12,14 +12,7 @@ function coOccurring() {
     for (const f of fs.readdirSync(dir)) {
       const text = fs.readFileSync(path.join(dir, f), 'utf8');
       for (const m of text.matchAll(/class(?:Name)?\s*=\s*\\?["'`]([^"'`]+)/g)) {
-        const blocks = [
-          ...new Set(
-            m[1]
-              .split(/\s+/)
-              .filter((c) => /^(fa|pr)-[\w-]+$/.test(c))
-              .map((c) => c.replace(/--.*$/, '')),
-          ),
-        ];
+        const blocks = [...new Set(m[1].split(/\s+/).filter((c) => /^[a-z][\w-]*$/i.test(c)))];
         for (const a of blocks) for (const b of blocks) if (a !== b) pairs.add(`${a} ${b}`);
       }
     }
@@ -110,9 +103,7 @@ export default async function styles() {
 
   const pairs = coOccurring();
   const together = (x, y) => pairs.has(`${x} ${y}`);
-  lines.push(
-    `${pairs.size / 2} pairs of component classes appear together on one element in the previews; swaps between them count as same-subject`,
-  );
+  lines.push(`${pairs.size / 2} pairs of classes appear together on one element in the previews; swaps between them count as same-subject`);
   const { inverted, conflicts, assumed } = orderReport(base, next, together);
   lines.push(`order: ${inverted} rule pairs swapped relative to the baseline`);
   if (conflicts.length) {

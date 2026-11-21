@@ -1,0 +1,44 @@
+<div class="fa-stage">
+  <div class="fa-col"><div class="fa-cap">会话状态：圆点 + 12px 文字，无底无框。圆点带颜色，文字一律 fg-muted；同一处只出现这一种状态表达</div>
+    <div class="fa-row" style="gap:16px">
+      <span class="fa-status"><span class="fa-dot fa-dot--running"></span>运行中</span>
+      <span class="fa-status"><span class="fa-dot fa-dot--needs"></span>等你处理</span>
+      <span class="fa-status"><span class="fa-dot fa-dot--error"></span>出错了</span>
+      <span class="fa-status"><span class="fa-dot fa-dot--new"></span>有新回复</span>
+      <span class="fa-status"><span class="fa-dot fa-dot--ring"></span>排队中</span>
+      <span class="fa-status"><span class="fa-dot"></span>已暂停</span>
+      <span class="fa-status"><span class="fa-dot"></span>已完成</span>
+    </div></div>
+  <div class="fa-col"><div class="fa-cap">类别标签：高 20、淡底、无描边。只说「这是什么」（文件、PR、工作区），不重复状态</div>
+    <div class="fa-row">
+      <span class="fa-tag">文件</span>
+      <span class="fa-tag">PR</span>
+      <span class="fa-tag" data-ic-l="folder">fleet-ade</span>
+      <span class="fa-tag">自定义</span>
+    </div></div>
+  <div class="fa-col"><div class="fa-cap">警告签：只给要掏钱、要删找不回的东西</div>
+    <div class="fa-row">
+      <span class="fa-tag" data-w="alert">按量计费，约 ¥2.4</span>
+      <span class="fa-tag" data-w="trash">删除后无法恢复</span>
+    </div></div>
+  <div class="fa-col"><div class="fa-cap">连接状态签：未登录是 info，不是警告；出错是 danger</div>
+    <div class="fa-row">
+      <span class="fa-tag" data-i="info" data-c="info">Kimi Code 未登录</span>
+      <span class="fa-tag" data-i="alert" data-c="danger">引擎不可用</span>
+      <span class="fa-tag" data-i="check" data-c="success">已连接</span>
+    </div></div>
+  <div class="fa-col"><div class="fa-cap">数字徽标 20×20：强调色只统计「等你处理」，其余用淡底</div>
+    <div class="fa-row" style="gap:16px">
+      <span class="fa-row" style="gap:8px;font:400 14px/20px var(--font-sans)">会话 <span class="fa-count">3</span></span>
+      <span class="fa-row" style="gap:8px;font:400 14px/20px var(--font-sans)">已归档 <span class="fa-count fa-count--quiet">12</span></span>
+      <span class="fa-row" style="gap:8px;font:400 14px/20px var(--font-sans)">Git <span class="fa-count fa-count--quiet">5</span></span>
+    </div></div>
+  <div class="fa-col"><div class="fa-cap">近 10 次运行（旁边写成败数）</div>
+    <div class="fa-row"><span class="fa-bar5" role="img" aria-label="近 10 次成功 8 次，失败 1 次，1 次未运行"><i></i><i></i><i></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i class="n"></i></span><span class="fa-muted" style="font:400 12px/16px var(--font-sans);font-variant-numeric:tabular-nums">近 10 次 · 成功 8 · 失败 1</span></div></div>
+</div>
+<script>
+/*PRELUDE*/
+$$('[data-ic-l]').forEach(e => { e.innerHTML = ic(e.dataset.icL) + e.textContent; });
+$$('[data-w]').forEach(e => { e.innerHTML = '<span style="color:var(--warning);display:inline-flex">' + ic(e.dataset.w) + '</span>' + e.textContent; });
+$$('[data-i]').forEach(e => { e.innerHTML = '<span style="color:var(--' + e.dataset.c + ');display:inline-flex">' + ic(e.dataset.i) + '</span>' + e.textContent; });
+</script>

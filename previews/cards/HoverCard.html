@@ -1,0 +1,23 @@
+<div class="fa-stage" style="max-width:384px;min-height:280px">
+  <div class="fa-cap">演示态：第一行的原因卡默认展开。悬停或 Tab 聚焦圆点、分支图标看其他卡；卡片不挡住那一行</div>
+  <div class="fa-col fa-panel" style="gap:0;position:relative;padding:4px" id="wrap">
+    <div class="fa-trow" style="cursor:default"><span class="lead"><button class="fa-icon-btn" data-card="err" aria-label="出错了，查看原因" style="width:16px;height:20px"><span class="fa-agent">K<span class="fa-dot fa-dot--error"></span></span></button></span><div style="min-width:0"><div class="t">a91f03c2</div><div class="s">fleet-ade · main</div></div><span class="end"><span class="tm">1 小时</span></span></div>
+    <div class="fa-trow" style="cursor:default"><span class="lead"><span class="fa-agent" title="Claude Code">C<span class="fa-dot fa-dot--running" role="img" aria-label="运行中"></span></span></span><div style="min-width:0"><div class="t">排查登录超时</div><div class="s fa-row" style="gap:4px"><button class="fa-icon-btn" data-card="git" aria-label="分支状态" style="width:20px;height:16px"></button><span class="fa-mono">local/42-login-fix</span></div></div><span class="end"><span class="tm">3 分钟</span></span></div>
+    <div class="fa-pop fa-pop--pad" id="card" role="tooltip" hidden style="position:absolute;left:32px;width:288px;z-index:3"></div>
+  </div>
+</div>
+<script>
+/*PRELUDE*/
+$$('[data-card="git"]').forEach(b => { b.innerHTML = ic('branch'); });
+const CARDS = {
+  err: ['<div class="fa-row" style="gap:8px"><span class="fa-dot fa-dot--error"></span><b style="font:500 14px/20px var(--font-sans)">出错了</b></div><div style="font:400 14px/20px var(--font-sans);margin-top:4px">上一轮中断了：引擎进程退出（代码 1）。打开会话，点「继续」。</div><div class="fa-cap" style="margin-top:8px">第 4 轮 · 14:02</div>', 48],
+  git: ['<div style="font:500 14px/20px var(--font-sans)">已提交，未推送</div><div class="fa-cap" style="margin-top:4px">领先 origin 2 个提交，工作区干净</div>', 96],
+};
+const card = $('#card'); let timer;
+function show(b) { clearTimeout(timer); const c = CARDS[b.dataset.card]; timer = setTimeout(() => { card.innerHTML = c[0]; card.style.top = c[1] + 'px'; card.hidden = false; }, 300); }
+function hide() { clearTimeout(timer); timer = setTimeout(() => { card.hidden = true; }, 100); }
+$$('[data-card]').forEach(b => { b.addEventListener('mouseenter', () => show(b)); b.addEventListener('mouseleave', hide); b.addEventListener('focus', () => { clearTimeout(timer); const c = CARDS[b.dataset.card]; card.innerHTML = c[0]; card.style.top = c[1] + 'px'; card.hidden = false; }); b.addEventListener('blur', hide); b.addEventListener('keydown', e => { if (e.key === 'Escape') card.hidden = true; }); });
+card.addEventListener('mouseenter', () => clearTimeout(timer)); card.addEventListener('mouseleave', hide);
+// Demo state: the first row's card is shown on load.
+card.innerHTML = CARDS.err[0]; card.style.top = CARDS.err[1] + 'px'; card.hidden = false;
+</script>

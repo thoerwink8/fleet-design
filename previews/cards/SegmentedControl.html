@@ -1,0 +1,27 @@
+<div class="fa-stage">
+  <div class="fa-col"><div class="fa-cap">字号（改完立即生效，下面这行字跟着变）</div>
+    <div class="fa-seg" role="radiogroup" aria-label="字号" id="fs">
+      <button role="radio" aria-checked="false" data-v="14">标准</button>
+      <button role="radio" aria-checked="true" data-v="15">较大</button>
+      <button role="radio" aria-checked="false" data-v="18">超大</button>
+    </div>
+    <div id="sample" style="font-size:15px;line-height:1.6">我读了 3 个文件，改了 2 处。</div>
+  </div>
+  <div class="fa-col"><div class="fa-cap">动效</div>
+    <div class="fa-seg" role="radiogroup" aria-label="动效"><button role="radio" aria-checked="true">标准</button><button role="radio" aria-checked="false">减弱</button></div></div>
+  <div class="fa-col"><div class="fa-cap">禁用（写原因）</div>
+    <div class="fa-row"><div class="fa-seg" role="radiogroup" aria-label="会话显示"><button role="radio" aria-checked="true" disabled>简单</button><button role="radio" aria-checked="false" disabled>详细</button></div><span class="fa-hint">托管策略锁定了这一项</span></div></div>
+</div>
+<script>
+/*PRELUDE*/
+$$('.fa-seg').forEach(g => {
+  const items = $$('button:not([disabled])', g);
+  const pick = b => { items.forEach(x => { x.setAttribute('aria-checked', x === b); x.tabIndex = x === b ? 0 : -1; }); b.focus(); if (g.id === 'fs') { $('#sample').style.fontSize = b.dataset.v + 'px'; } };
+  items.forEach(b => { b.tabIndex = b.getAttribute('aria-checked') === 'true' ? 0 : -1; b.addEventListener('click', () => pick(b)); });
+  g.addEventListener('keydown', e => {
+    const i = items.findIndex(x => x.getAttribute('aria-checked') === 'true');
+    const n = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: items.length - 1 }[e.key];
+    if (n === undefined) return; e.preventDefault(); pick(items[(n + items.length) % items.length]);
+  });
+});
+</script>

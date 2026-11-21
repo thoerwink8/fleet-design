@@ -1,0 +1,43 @@
+<div class="fa-stage" style="max-width:640px">
+  <div class="fa-cap">助手正在运行。输入后 Enter 排队；空输入且有排队时按 Esc 插队；点停止看暂停</div>
+  <div class="fa-panel" style="padding:12px;display:flex;flex-direction:column;gap:8px">
+    <div id="turns" class="fa-col" style="gap:0"></div>
+    <div class="fa-col" id="q" style="gap:4px" aria-label="排队消息"></div>
+    <div id="paused" class="fa-strip fa-strip--info" hidden></div>
+    <div class="fa-composer"><textarea id="t" rows="2" placeholder="输入消息" aria-label="消息"></textarea><div class="fa-composer__bar"><span class="fa-composer__grow"></span><button class="fa-btn fa-btn--icon fa-btn--stop" id="stop" aria-label="停止当前运行的任务"></button></div></div>
+  </div>
+  <div class="fa-row"><button class="fa-btn fa-btn--sm fa-btn--secondary" id="reset">重置演示</button><span class="fa-hint" id="say" role="status"></span></div>
+</div>
+<script>
+/*PRELUDE*/
+let n = 1, running = true, paused = false, queue = [];
+const t = $('#t'), turns = $('#turns'), q = $('#q'), pz = $('#paused'), stop = $('#stop');
+const say = s => { $('#say').textContent = s; };
+// A turn row: "第 n 轮" is 12px sans muted (not mono), then the text, then the state as dot + word (no tag).
+const DOT = { '运行中': 'running', '你停止了上一轮': '', '已被插队': '', '已完成': '' };
+function turn(label, state) { const d = document.createElement('div'); d.className = 'fa-turn'; d.innerHTML = '<span class="no">第 ' + label.n + ' 轮</span><span class="tx"></span><span class="fa-status"><span class="fa-dot"></span><span></span></span>'; d.children[1].textContent = label.text; setState(d, state); return d; }
+function setState(d, state) { const st = d.children[2]; st.lastChild.textContent = state; st.firstChild.className = 'fa-dot' + (DOT[state] ? ' fa-dot--' + DOT[state] : ''); }
+let cur = { n: 1, text: '读 auth/session.ts 并改 token 刷新' };
+let curEl;
+function drawTurns() { turns.querySelectorAll('.cur').forEach(e => e.remove()); }
+function setCur(c, state) { if (curEl) setState(curEl, state); }
+function start(c) { cur = c; curEl = turn(c, '运行中'); turns.appendChild(curEl); running = true; render(); }
+function endCur(state) { if (curEl) setState(curEl, state); running = false; }
+function render() {
+  stop.innerHTML = ic(running ? 'stop' : 'send'); stop.setAttribute('aria-label', running ? '停止当前运行的任务' : '发送'); stop.disabled = !running;
+  q.innerHTML = queue.map((m, i) => '<div class="fa-queue" data-paused="' + paused + '" data-i="' + i + '"><span class="no">#' + (i + 1) + '</span><span class="tx" title="' + m.replace(/"/g, '&quot;') + '" tabindex="0">' + m.replace(/</g, '&lt;') + '</span><button class="fa-btn fa-btn--sm" data-act="jump"' + (paused ? ' disabled title="先点继续发送"' : '') + '>插队</button><button class="fa-btn fa-btn--sm" data-act="undo">撤回</button></div>').join('');
+  $$('[data-act]', q).forEach(b => b.onclick = () => { const i = +b.closest('.fa-queue').dataset.i; b.dataset.act === 'jump' ? jump(i) : recall([i]); });
+  if (paused) { pz.hidden = false; pz.innerHTML = '<span class="mk">' + ic('info') + '</span><span class="grow">你停止了上一轮 · 暂停了 ' + queue.length + ' 条</span><button class="fa-btn fa-btn--sm fa-btn--secondary" data-r="go">继续发送</button><button class="fa-btn fa-btn--sm fa-btn--secondary" data-r="all">全部撤回</button>'; $$('[data-r]', pz).forEach(b => b.onclick = () => (b.dataset.r === 'go' ? resume() : recall(queue.map((_, i) => i)))); }
+  else pz.hidden = true;
+}
+function recall(idx) { const texts = idx.map(i => queue[i]); queue = queue.filter((_, i) => !idx.includes(i)); const add = texts.join('\n\n'); t.value = t.value ? t.value + '\n\n' + add : add; if (!queue.length) paused = false; render(); t.focus(); say('已撤回 ' + texts.length + ' 条，文字回到输入框（追加在已有内容后面，没有覆盖草稿）。'); }
+function jump(i) { const m = queue.splice(i, 1)[0]; endCur('已被插队'); say('插队：当前轮已做的改动保留，不回滚；排队消息成为下一轮。'); start({ n: cur.n + 1, text: m }); }
+function resume() { paused = false; const m = queue.shift(); say('继续发送：从第 1 条接着发。'); start({ n: cur.n + 1, text: m }); }
+stop.onclick = () => { if (!running) return; endCur('你停止了上一轮'); if (queue.length) paused = true; render(); say('停止：队列整体暂停，选择交还给你。'); };
+t.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const v = t.value.trim(); if (!v) return; queue.push(v); t.value = ''; render(); say(running ? '运行中：已排队。' : '已发送。'); }
+  if (e.key === 'Escape' && !t.value && queue.length && running && !paused) { e.preventDefault(); jump(0); }
+});
+$('#reset').onclick = () => { turns.innerHTML = ''; queue = []; paused = false; t.value = ''; cur = { n: 1, text: '读 auth/session.ts 并改 token 刷新' }; curEl = turn(cur, '运行中'); turns.appendChild(curEl); running = true; render(); say(''); };
+queue = ['排查登录超时：先看 auth/session.ts 里 token 刷新的逻辑，再补一个失败重试的测试', '改完后跑一遍 auth 相关的测试']; curEl = turn(cur, '运行中'); turns.appendChild(curEl); render();
+</script>

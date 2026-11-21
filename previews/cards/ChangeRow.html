@@ -1,0 +1,42 @@
+<div class="fa-stage">
+  <div class="fa-cap">更改行（两行，52）：第一行标题（截断），第二行「仓 #号 +增 −删」，增用 success 文字色、删用 danger 文字色。状态图标区分开着 / 已合并 / 已关闭（形状不同，不只靠颜色）。行尾 ⋯ 在悬停、聚焦或触屏时出现。点行在浏览器打开 PR</div>
+  <div style="width:360px;max-width:100%;border-left:var(--bw-1) solid var(--border);position:relative">
+    <div class="fa-sec__h">更改<span class="aside" id="cnt"></span></div>
+    <div class="fa-sec__b" id="list"></div>
+    <div class="fa-pop fa-pop--plain" id="menu" role="menu" hidden style="position:absolute;right:8px;width:208px;z-index:3"></div>
+  </div>
+  <div class="fa-col" style="gap:12px;width:360px;max-width:100%"><div class="fa-cap">状态一览（静态）：悬停、按下、键盘焦点；空；出错</div><div id="still" class="fa-col" style="gap:4px"></div></div>
+  <div class="fa-hint" id="say" role="status">↑↓ 在行间移动；Enter 打开 PR；菜单键或 Shift+F10 打开 ⋯ 菜单</div>
+</div>
+<script>
+/*PRELUDE*/
+/*SESSION*/
+let showAll = false;
+const M = [{ l: '在浏览器打开', k: 'G' }, { l: '复制 PR 链接', k: 'C' }, { l: '在本地检出分支' }];
+function draw() {
+  $('#cnt').textContent = CHG.length + ' 个 PR';
+  $('#list').innerHTML = CHG.slice(0, showAll ? 99 : 3).map(chgRow).join('') + '<button class="fa-more" id="mr">' + (showAll ? '收起' : '显示更多') + '</button>';
+  $('#mr').onclick = () => { showAll = !showAll; draw(); };
+  $$('#list .fa-chg').forEach(r => {
+    const c = CHG[+r.dataset.i];
+    r.onclick = e => { if (e.target.closest('button')) return; $('#say').textContent = '在浏览器打开 ' + c.repo + ' #' + c.n; };
+    r.onkeydown = e => { const rows = $$('#list .fa-chg'), i = rows.indexOf(r);
+      if (e.key === 'ArrowDown') { e.preventDefault(); rows[Math.min(i + 1, rows.length - 1)].focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); rows[Math.max(i - 1, 0)].focus(); }
+      else if (e.key === 'Enter') r.click();
+      else if (e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10')) { e.preventDefault(); openMenu(r); } };
+  });
+  $$('[data-chgmore]').forEach(b => b.onclick = e => { e.stopPropagation(); openMenu(b.closest('.fa-chg')); });
+}
+const menu = $('#menu'); let mrow = null;
+function openMenu(r) { mrow = r; menu.innerHTML = M.map((m, i) => '<button class="fa-item" role="menuitem" data-m="' + i + '"' + (m.k ? ' aria-keyshortcuts="' + m.k + '"' : '') + '><span class="grow">' + m.l + '</span>' + (m.k ? '<span class="key" aria-hidden="true">' + m.k + '</span>' : '') + '</button>').join(''); menu.style.top = (r.offsetTop + r.offsetHeight) + 'px'; menu.hidden = false; const items = $$('.fa-item', menu); items[0].focus();
+  items.forEach((b, i) => { b.onclick = () => run(i); b.onkeydown = e => { if (e.key === 'ArrowDown') { e.preventDefault(); items[(i + 1) % items.length].focus(); } else if (e.key === 'ArrowUp') { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); } else if (e.key === 'Escape') { close(); } else { const k = M.findIndex(m => m.k === e.key.toUpperCase()); if (k >= 0) run(k); } }; }); }
+function run(i) { const c = CHG[+mrow.dataset.i]; $('#say').textContent = M[i].l + '：' + c.repo + ' #' + c.n; close(); }
+function close() { menu.hidden = true; if (mrow) mrow.focus(); }
+document.addEventListener('mousedown', e => { if (!menu.hidden && !menu.contains(e.target)) menu.hidden = true; });
+draw();
+$('#still').innerHTML = chgRow(CHG[0], 0).replace('fa-chg', 'fa-chg is-hover') + chgRow(CHG[1], 1).replace('fa-chg', 'fa-chg is-press') + chgRow(CHG[3], 3).replace('fa-chg', 'fa-chg is-focus')
+  + '<div class="fa-sec__note">这次会话还没有改动。开了 PR 会出现在这里</div>'
+  + '<div class="fa-sec__err">' + ic('alert') + '<span style="flex:1;min-width:0">PR 状态没取到：GitHub 没登录</span><button class="fa-link" style="font:400 14px/20px var(--font-sans)">去登录</button></div>';
+$$('#still [tabindex]').forEach(e => e.removeAttribute('tabindex')); $$('#still button').forEach(b => b.tabIndex = -1);
+</script>

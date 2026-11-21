@@ -1,0 +1,49 @@
+<div class="fa-stage">
+  <div class="fa-cap">任务详情：返回 + 标题 + 停止；交代原文；模型；一行「正在做什么」；过程折成一句（复用 ToolCallFold）。子会话类型底部带输入框，可以接着跟它说。上方切换类型和状态</div>
+  <div class="fa-row" style="gap:8px">
+    <div class="fa-seg" role="radiogroup" aria-label="任务类型" id="ty"><button role="radio" aria-checked="false" data-v="agent">智能体</button><button role="radio" aria-checked="true" data-v="sub">子会话</button><button role="radio" aria-checked="false" data-v="cmd">命令</button></div>
+    <div class="fa-seg" role="radiogroup" aria-label="任务状态" id="st"><button role="radio" aria-checked="true" data-v="running">运行中</button><button role="radio" aria-checked="false" data-v="failed">失败</button><button role="radio" aria-checked="false" data-v="done">已完成</button><button role="radio" aria-checked="false" data-v="err">没取到</button></div>
+  </div>
+  <div style="width:400px;max-width:100%;border-left:var(--bw-1) solid var(--border);padding:0 12px"><div class="fa-td" id="td"></div></div>
+  <div class="fa-hint" id="say" role="status">Esc 或返回键回到任务列表；Tab 依次到停止、展开原文、过程、输入框</div>
+</div>
+<script>
+/*PRELUDE*/
+let ty = 'sub', st = 'running', briefOpen = false, foldOpen = false;
+const BRIEF = '复审 fleet-ade PR #57 的返工。\n只看这次提交相对上一轮评审意见改了什么：1) 侧栏多选是否改成 Shift 连选；2) 批量条是否移到顶部；3) 新加的测试是否覆盖了取消多选。\n每条结论带 文件:行。不改代码，不发评论，结论写在汇报里。读不到或跑不成的照实说。';
+const STEPS = [['cmd', 'git fetch origin pull/57/head'], ['cmd', 'git diff main...FETCH_HEAD --stat'], ['read', 'apps/web/src/components/Sidebar.tsx'], ['read', 'apps/web/src/components/ThreadRow.tsx'], ['search', '"shiftKey" in apps/web'], ['cmd', 'pnpm vitest run Sidebar']];
+function draw() {
+  const td = $('#td');
+  if (st === 'err') { td.innerHTML = head() + '<div class="fa-sec__err" style="padding:0">' + ic('alert') + '<span style="flex:1;min-width:0">任务详情没取到：引擎没有回应</span><button class="fa-btn fa-btn--sm" id="retry">重试</button></div>'; bind(); $('#retry').onclick = () => { st = 'running'; sync(); draw(); }; return; }
+  const live = st === 'running' ? '<div class="fa-live"><span class="fa-dot fa-dot--running" role="img" aria-label="运行中"></span><span class="x">正在读 apps/web/src/components/ThreadRow.tsx</span></div>'
+    : st === 'failed' ? '<div class="fa-live is-error"><span class="fa-dot fa-dot--error" role="img" aria-label="失败"></span><span class="x">停在第 6 步：pnpm vitest 退出码 1</span><button class="fa-btn fa-btn--sm fa-btn--secondary" id="again">重试这一步</button></div>'
+    : '<div class="fa-live"><span class="fa-dot" role="img" aria-label="已完成"></span><span class="x">已完成，用时 11 分钟，汇报已回到主会话</span></div>';
+  const n = { cmd: STEPS.filter(s => s[0] === 'cmd').length, read: STEPS.filter(s => s[0] === 'read').length };
+  const fold = '<div class="fa-fold"><button class="fa-fold__sum" id="fs" aria-expanded="' + foldOpen + '">' + ic('chevR') + '跑了 ' + (ty === 'cmd' ? 1 : n.cmd) + ' 条命令' + (ty === 'cmd' ? '' : '，读了 ' + n.read + ' 个文件，搜了代码') + '</button>'
+    + (foldOpen ? '<div class="fa-fold__list">' + (ty === 'cmd' ? [['cmd', 'pnpm vitest run --reporter=dot']] : STEPS).map(s => s[0] === 'cmd' ? '<button class="fa-fold__cmd"><span style="color:var(--fg-muted)">$</span><span class="tx" title="' + s[1] + '">' + s[1] + '</span></button>' : '<div class="fa-fold__cmd" style="cursor:default;background:transparent;padding-left:0;color:var(--fg-muted);font-family:var(--font-sans)"><span class="tx">' + (s[0] === 'read' ? '读取 ' : '搜索 ') + '<span class="fa-mono">' + s[1] + '</span></span></div>').join('') + '</div>' : '') + '</div>';
+  const brief = ty === 'cmd' ? '<div class="fa-col" style="gap:8px"><span class="fa-lbl">命令</span><div class="fa-brief fa-mono" style="font-size:14px">pnpm vitest run --reporter=dot</div></div>'
+    : '<div class="fa-col" style="gap:8px"><span class="fa-lbl">交代原文</span><div class="fa-brief' + (briefOpen ? '' : ' is-clamped') + '" id="brief">' + BRIEF + '</div><button class="fa-more" id="bt" style="margin-left:-8px" aria-controls="brief" aria-expanded="' + briefOpen + '">' + (briefOpen ? '收起' : '展开全文') + '</button></div>';
+  td.innerHTML = head() + brief
+    + '<div class="fa-kv"><span>' + ic('agent') + '模型</span><span class="v">' + (ty === 'cmd' ? '—（命令不经过模型）' : 'Sonnet 5.5 · 高强度') + '</span></div>'
+    + live + fold
+    + (ty === 'sub' ? '<div class="fa-composer fa-composer--compact"><textarea rows="1" placeholder="' + (st === 'running' ? '接着跟它说…（会排在当前一轮之后）' : '接着跟它说…') + '" aria-label="给子会话发消息"></textarea><button class="fa-btn fa-btn--icon fa-btn--primary fa-btn--sm" aria-label="发送" disabled>' + ic('send') + '</button></div>' : '');
+  bind();
+}
+function head() {
+  const title = ty === 'cmd' ? 'pnpm vitest run --reporter=dot' : '复审 PR #57 返工';
+  return '<div class="fa-td__h"><button class="fa-icon-btn" id="back" aria-label="返回后台任务">' + ic('back') + '</button><h3 title="' + title + '"' + (ty === 'cmd' ? ' class="fa-mono"' : '') + '>' + title + '</h3>' + (st === 'running' ? '<button class="fa-btn fa-btn--sm fa-btn--secondary" id="stop">' + ic('stop') + '停止</button>' : '<span></span>') + '</div>';
+}
+function bind() {
+  $('#back').onclick = () => { $('#say').textContent = '回到后台任务列表，焦点回到这一行'; };
+  const s = $('#stop'); if (s) s.onclick = () => { st = 'done'; sync(); draw(); $('#say').textContent = '已停止，做过的步骤保留'; };
+  const bt = $('#bt'); if (bt) bt.onclick = () => { briefOpen = !briefOpen; draw(); $('#bt').focus(); };
+  const fs = $('#fs'); if (fs) fs.onclick = () => { foldOpen = !foldOpen; draw(); $('#fs').focus(); };
+  const ag = $('#again'); if (ag) ag.onclick = () => { st = 'running'; sync(); draw(); };
+  const ta = $('#td textarea'); if (ta) ta.oninput = () => { $('#td .fa-btn--primary').disabled = !ta.value.trim(); };
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !e.target.closest('textarea')) $('#back').click(); });
+function sync() { $$('#ty button').forEach(b => b.setAttribute('aria-checked', b.dataset.v === ty)); $$('#st button').forEach(b => b.setAttribute('aria-checked', b.dataset.v === st)); }
+$$('#ty button').forEach(b => b.onclick = () => { ty = b.dataset.v; sync(); draw(); });
+$$('#st button').forEach(b => b.onclick = () => { st = b.dataset.v; sync(); draw(); });
+draw();
+</script>

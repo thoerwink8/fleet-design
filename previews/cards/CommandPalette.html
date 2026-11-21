@@ -1,0 +1,61 @@
+<div class="fa-stage">
+  <div class="fa-cap">在下面输入：试试「登录」、「sandbox 修复」、「"登录超时"」、「&gt; 新建」。↑↓ Enter Esc 可用</div>
+  <div class="fa-pop fa-cmd" role="dialog" aria-label="命令面板">
+    <div class="fa-cmd__in"><span id="si"></span><input id="q" placeholder="输入命令，或搜索会话…" aria-label="命令面板" autocomplete="off"></div>
+    <div class="fa-cmd__list" id="list" role="listbox" aria-label="结果"></div>
+    <div class="fa-cmd__foot"><span><span class="fa-kbd">↑↓</span>选择</span><span><span class="fa-kbd">Enter</span>打开</span><span><span class="fa-kbd">Esc</span>关闭</span><span class="hint">空格分词，「引号」精确</span></div>
+  </div>
+  <div class="fa-hint" id="say" role="status"></div>
+</div>
+<script>
+/*PRELUDE*/
+$('#si').innerHTML = ic('search');
+const GO = [['设置 › 外观', 'folder'], ['设置 › 智能体', 'folder'], ['工作区 › fleet-ade › Git', 'branch']];
+const CMD = [['新建会话', 'plus', 'Ctrl+N'], ['切换主题', 'info', ''], ['收起侧栏', 'menu', 'Ctrl+B']];
+// st: [dot class, word]. Words are fixed: 运行中 / 出错了 / 有新回复 / 排队中 / 已完成.
+// ws is shown only when the session is not in the current workspace (multi-workspace case).
+const SESS = [
+  { t: '排查登录超时：token 刷新后旧会话没有失效，用户被踢回登录页', ag: 'C', agn: 'Claude Code', st: ['running', '运行中'], sum: '读了 3 个文件，正在改 auth/session.ts 里的刷新逻辑，下一步补失败重试的测试', m: 'Claude Opus 5.5', n: 12, br: 'local/42-login-timeout-refresh', tm: '3 分钟' },
+  { t: 'a91f03c2', ag: 'K', agn: 'Kimi Code', st: ['error', '出错了'], sum: '上一轮中断了：引擎进程退出（代码 1）。打开会话点「继续」', m: 'Kimi K3', n: 4, br: 'main', tm: '1 小时' },
+  { t: '修复 sandbox 目录读取', ag: 'C', agn: 'Claude Code', unread: true, st: ['new', '有新回复'], sum: '已提交，未推送。测试 14 个全部通过', m: 'Claude Haiku 5.5', n: 7, ws: 'demo-app', br: 'local/38-sandbox-fix', tm: '昨天' },
+  { t: '重命名会话标题', ag: 'X', agn: 'Codex', st: ['ring', '排队中'], sum: '等上一轮结束后开始', m: 'Codex GPT-5.5', n: 2, br: 'main', tm: '2 天' },
+  { t: '给 Table 加数字等宽', ag: 'C', agn: 'Claude Code', st: ['', '已完成'], sum: '数字列改成等宽右对齐，表头加排序按钮', m: 'Claude Opus 5.5', n: 9, br: 'local/35-table-mono', tm: '3 天' },
+];
+let act = 0, rows = [];
+const q = $('#q'), list = $('#list');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function terms(s) { const r = []; s.replace(/"([^"]+)"|(\S+)/g, (_, a, b) => { r.push((a || b).toLowerCase()); }); return r; }
+function hl(text, ts) { let h = esc(text); ts.forEach(t => { if (!t) return; const re = new RegExp('(' + esc(t).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'); h = h.replace(re, '<mark class="fa-mark">$1</mark>'); }); return h; }
+function render() {
+  let v = q.value.trim(), cmdOnly = v.startsWith('>'); if (cmdOnly) v = v.slice(1).trim();
+  const ts = terms(v), hit = s => ts.every(t => s.toLowerCase().includes(t));
+  const go = cmdOnly ? [] : GO.filter(g => hit(g[0])), cm = CMD.filter(c => hit(c[0])), ss = cmdOnly ? [] : SESS.filter(s => hit([s.t, s.sum, s.m, s.br, s.ws || ''].join(' ')));
+  rows = []; let h = '';
+  const grp = (name, arr, fn) => { if (!arr.length) return; h += '<div class="fa-glabel">' + name + '</div>'; arr.forEach(x => { h += fn(x, rows.length); rows.push(x); }); };
+  if (!v && !cmdOnly) grp('最近会话', SESS, S); else { grp('去哪', go, G); grp('命令', cm, C); grp('会话', ss, S); }
+  list.innerHTML = rows.length ? h : '<div class="fa-glabel">没有匹配项。试试少写一个词，或用「引号」精确匹配</div>';
+  $$('.fa-cmd__row', list).forEach(b => { b.onmouseenter = () => set(+b.dataset.k); b.onclick = () => run(+b.dataset.k); });
+  act = Math.min(act, Math.max(rows.length - 1, 0)); mark();
+  function G(x, k) { return '<div class="fa-cmd__row fa-cmd__row--1" role="option" data-k="' + k + '"><div class="l l1">' + ic(x[1]) + '<span class="x grow">' + hl(x[0], ts) + '</span></div></div>'; }
+  function C(x, k) { return '<div class="fa-cmd__row fa-cmd__row--1" role="option" data-k="' + k + '"><div class="l l1">' + ic(x[1]) + '<span class="x grow">' + hl(x[0], ts) + '</span>' + (x[2] ? '<span class="fa-kbd">' + x[2] + '</span>' : '') + '</div></div>'; }
+  // Line 1: title (own ellipsis) … status word + time, baseline-aligned with the title.
+  // Line 2: summary only. Line 3: model · turns on the left; [workspace ·] branch on the right, branch keeps its tail.
+  // Lead: 16px agent slot (initial placeholder) with the status dot on its corner.
+  // Line 1: title (own ellipsis; weight 500 only when unread) … status word (plain text) + time, baseline-aligned.
+  // Line 2: summary only. Line 3: model · turns on the left; [workspace ·] branch on the right, branch keeps its tail.
+  function S(x, k) {
+    return '<div class="fa-cmd__row has-lead' + (x.unread ? ' is-unread' : '') + '" role="option" data-k="' + k + '" aria-label="' + esc(x.agn + '：' + x.t + '，' + x.st[1] + '，' + x.tm) + '">'
+      + '<span class="lead"><span class="fa-agent" title="' + x.agn + '">' + x.ag + '<span class="fa-dot' + (x.st[0] ? ' fa-dot--' + x.st[0] : '') + '"></span></span></span><div class="body">'
+      + '<div class="l l1"><span class="x grow" title="' + esc(x.t) + '">' + hl(x.t, ts) + '</span><span class="st">' + x.st[1] + '</span><span class="tm">' + x.tm + '</span></div>'
+      + '<div class="l l2"><span class="x">' + hl(x.sum, ts) + '</span></div>'
+      + '<div class="l l3"><span class="lt"><span class="x">' + hl(x.m, ts) + '</span><span class="fix">' + x.n + ' 轮</span></span><span class="rt">' + (x.ws ? '<span class="x mono">' + hl(x.ws, ts) + '</span><span class="fix">·</span>' : '') + '<span class="x mono tail" title="' + esc(x.br) + '"><bdi>' + hl(x.br, ts) + '</bdi></span></span></div>'
+      + '</div></div>';
+  }
+}
+function mark() { $$('.fa-cmd__row', list).forEach((b, k) => { b.dataset.active = k === act; b.setAttribute('aria-selected', k === act); if (k === act && document.activeElement === q) b.scrollIntoView({ block: 'nearest' }); }); }
+function set(k) { act = k; mark(); }
+function run(k) { const x = rows[k]; if (!x) return; $('#say').textContent = '打开：' + (x.t || x[0]) + '（面板关闭，焦点回到页面）'; }
+q.addEventListener('input', () => { act = 0; render(); });
+q.addEventListener('keydown', e => { if (e.key === 'ArrowDown') { e.preventDefault(); set((act + 1) % Math.max(rows.length, 1)); } else if (e.key === 'ArrowUp') { e.preventDefault(); set((act - 1 + rows.length) % Math.max(rows.length, 1)); } else if (e.key === 'Enter') { e.preventDefault(); run(act); } else if (e.key === 'Escape') { q.value = ''; render(); $('#say').textContent = 'Esc：关闭面板。'; } });
+render();
+</script>

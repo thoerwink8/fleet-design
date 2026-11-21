@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!dist", "!test/fixtures", "!pnpm-lock.yaml"]
+    "includes": ["**", "!dist", "!test/fixtures", "!pnpm-lock.yaml", "!previews/cards", "!previews/lib"]
   },
   "formatter": {
     "enabled": true,
@@ -47,6 +47,16 @@
           },
           "style": {
             "noDescendingSpecificity": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["previews/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off"
           }
         }
       }

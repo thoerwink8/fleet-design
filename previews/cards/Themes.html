@@ -1,0 +1,83 @@
+<div class="fa-stage">
+  <div class="fa-col"><div class="fa-cap">切换主题，下面整个界面和色板实时变；对比度表读的是浏览器里实际生效的色值</div>
+    <div class="fa-seg" role="radiogroup" aria-label="主题" id="tp" style="flex-wrap:wrap;height:auto"></div>
+    <div class="fa-cap">项目层：只换强调色（和交易复盘的涨跌方向）</div>
+    <div class="fa-seg" role="radiogroup" aria-label="项目" id="pj"><button role="radio" aria-checked="true" data-p="">fleet-ade</button><button role="radio" aria-checked="false" data-p="ashare">交易复盘</button><button role="radio" aria-checked="false" data-p="jiqun">机群看板</button></div></div>
+
+  <div class="fa-app" id="app">
+    <div class="fa-app__side">
+      <div class="fa-ghead">等你处理<span class="fa-count fa-count--quiet">2</span></div>
+      <div class="fa-trow" aria-selected="true"><span class="lead"><span class="fa-agent">C<span class="fa-dot fa-dot--running"></span></span></span><div style="min-width:0"><div class="t">排查登录超时</div><div class="s">local/42-login-fix · 有未提交的改动</div></div><span class="end"><span class="tm">3 分</span></span></div>
+      <div class="fa-trow"><span class="lead"><span class="fa-agent">K<span class="fa-dot fa-dot--error"></span></span></span><div style="min-width:0"><div class="t">a91f03c2</div><div class="s">上一轮中断了：引擎进程退出</div></div><span class="end"><span class="tm">1 小时</span></span></div>
+      <div class="fa-trow is-unread"><span class="lead"><span class="fa-agent">C<span class="fa-dot fa-dot--new"></span></span></span><div style="min-width:0"><div class="t">修复 sandbox 目录读取</div><div class="s">已提交，未推送</div></div><span class="end"><span class="tm">昨天</span></span></div>
+    </div>
+    <div class="fa-app__main">
+      <div style="font:400 15px/24px var(--font-sans)">我读了 3 个文件，改了 2 处。<span class="fa-mono" style="font-size:14px;line-height:20px"> auth/session.ts</span> 里的 token 刷新现在会重试一次。需要我补一个失败重试的测试吗？</div>
+      <div class="fa-strips"><div class="fa-strip fa-strip--info"><span class="mk" id="sic"></span><span class="grow">Kimi Code 未登录，登录后才能发消息。</span><button class="fa-btn fa-btn--sm fa-btn--secondary">登录</button></div><div class="fa-strip fa-strip--danger"><span class="mk" id="dic"></span><span class="grow">引擎没起来：本机服务退出了，消息没发出。</span><button class="fa-btn fa-btn--sm fa-btn--secondary">重启服务</button></div></div>
+      <div class="fa-composer"><div class="fa-composer__chips"><span class="fa-chip fa-chip--ref" id="cf"></span></div><textarea rows="1" placeholder="输入消息…" aria-label="消息"></textarea><div class="fa-composer__bar"><span class="fa-composer__grow"></span><button class="fa-btn fa-btn--sm fa-btn--secondary">取消</button><button class="fa-btn fa-btn--sm fa-btn--danger">删除</button><button class="fa-btn fa-btn--icon fa-btn--primary fa-btn--sm" id="snd" aria-label="发送"></button></div></div>
+      <div class="fa-row"><div class="fa-pop" style="padding:8px;width:200px"><button class="fa-item" aria-selected="true"><span class="grow">Claude Opus 5.5</span></button><button class="fa-item"><span class="grow">Claude Haiku 5.5</span></button></div><span class="fa-status"><span class="fa-dot fa-dot--running"></span>运行中</span><span class="fa-tag" id="wt"></span><span class="fa-mv fa-up" id="mu"></span><span class="fa-mv fa-down" id="md"></span></div>
+    </div>
+  </div>
+
+  <div class="fa-col"><div class="fa-cap">颜色角色（当前主题）</div><div id="sw" class="fa-row" style="gap:8px"></div></div>
+
+  <div class="fa-col"><div class="fa-cap">对比度，8 套主题 × 各组配对（文字 ≥ 4.5，标记 ≥ 3）。selected 和 hover 是中性色，分别叠在 bg、panel、overlay 上算，三个项目共用。未达标的格子写「未达标」，不只靠颜色</div>
+    <div class="fa-table-wrap"><table class="fa-table" id="ct"></table></div>
+    <div class="fa-hint" id="sum" role="status"></div></div>
+
+  <div class="fa-col"><div class="fa-cap">写死色值检查：components/bundle.css 里的十六进制和 rgb()</div><div class="fa-hint" id="hc" role="status">检查中…</div></div>
+</div>
+<script>
+/*PRELUDE*/
+$('#sic').innerHTML = ic('info'); $('#dic').innerHTML = ic('alert'); $('#snd').innerHTML = ic('send');
+$('#mu').innerHTML = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 2l5 8H1z" fill="currentColor"/></svg>+2.31%'; $('#md').innerHTML = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 10L1 2h10z" fill="currentColor"/></svg>−1.08%';
+$('#cf').innerHTML = ic('file') + '<span class="t">session.ts</span>'; $('#wt').innerHTML = '<span style="color:var(--warning);display:inline-flex">' + ic('alert') + '</span>按量计费，约 ¥2.4';
+const THEMES = [['light', 'Light'], ['solarized', 'Solarized'], ['dark', 'Dark'], ['darcula', 'Darcula'], ['one-dark', 'One Dark'], ['dracula', 'Dracula'], ['nord', 'Nord'], ['tokyo-night', 'Tokyo Night']];
+const root = document.documentElement;
+const tp = $('#tp');
+tp.innerHTML = THEMES.map(t => '<button role="radio" aria-checked="false" data-t="' + t[0] + '">' + t[1] + '</button>').join('');
+function mark() { const cur = root.dataset.theme || 'light'; $$('button', tp).forEach(b => b.setAttribute('aria-checked', b.dataset.t === cur)); }
+$$('button', tp).forEach(b => b.onclick = () => { root.dataset.theme = b.dataset.t; mark(); sw(); });
+new MutationObserver(() => { mark(); sw(); }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+const pj = $('#pj');
+function markP() { const cur = root.dataset.project || ''; $$('button', pj).forEach(b => b.setAttribute('aria-checked', b.dataset.p === cur)); }
+$$('button', pj).forEach(b => b.onclick = () => { if (b.dataset.p) root.dataset.project = b.dataset.p; else root.removeAttribute('data-project'); markP(); sw(); });
+const ROLES = ['scrim', 'palette-n0', 'palette-n9', 'palette-red', 'palette-green', 'palette-amber', 'palette-blue', 'palette-cyan', 'brand-fleet', 'brand-ashare', 'brand-jiqun', 'up', 'down', 'flat', 'bg', 'panel', 'overlay', 'fg', 'fg-muted', 'border', 'accent', 'on-accent', 'success', 'warning', 'danger', 'on-danger', 'info', 'selected', 'hover', 'focus-ring', 'data-1', 'data-2', 'data-3', 'data-4', 'data-5', 'data-6'];
+function sw() { $('#sw').innerHTML = ROLES.map(r => '<div class="fa-col" style="gap:4px;width:96px"><div style="height:40px;border-radius:var(--radius-md);background:var(--' + r + ');box-shadow:inset 0 0 0 1px var(--border)"></div><div class="fa-mono" style="font-size:12px;line-height:16px">' + r + '</div></div>').join(''); }
+// contrast from the real computed values
+function hex(s) { s = s.trim(); if (s[0] !== '#') return null; if (s.length === 4) s = '#' + [...s.slice(1)].map(c => c + c).join(''); const n = s.length === 9; return { r: parseInt(s.slice(1, 3), 16), g: parseInt(s.slice(3, 5), 16), b: parseInt(s.slice(5, 7), 16), a: n ? parseInt(s.slice(7, 9), 16) / 255 : 1 }; }
+const over = (f, b) => ({ r: f.r * f.a + b.r * (1 - f.a), g: f.g * f.a + b.g * (1 - f.a), b: f.b * f.a + b.b * (1 - f.a), a: 1 });
+const lin = c => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+const lum = c => 0.2126 * lin(c.r) + 0.7152 * lin(c.g) + 0.0722 * lin(c.b);
+function ratio(f, b) { const B = over(b, { r: 255, g: 255, b: 255 }), F = over(f, B), a = lum(F) + 0.05, c = lum(B) + 0.05; return a > c ? a / c : c / a; }
+function vars(id) { const p = document.createElement('div'); p.dataset.theme = id; p.style.display = 'none'; document.body.appendChild(p); const cs = getComputedStyle(p), o = {}; ROLES.forEach(r => { o[r] = hex(cs.getPropertyValue('--' + r)); }); p.remove(); return o; }
+function pvars(id, proj) { const p = document.createElement('div'); p.dataset.theme = id; p.dataset.project = proj; p.style.display = 'none'; document.body.appendChild(p); const cs = getComputedStyle(p), o = {}; ['bg', 'panel', 'overlay', 'fg', 'fg-muted', 'accent', 'on-accent', 'up', 'down', 'selected', 'hover'].forEach(r => { o[r] = hex(cs.getPropertyValue('--' + r)); }); p.remove(); return o; }
+const PAIRS = [
+  ['正文 fg / bg', v => ratio(v.fg, v.bg), 4.5], ['正文 fg / panel', v => ratio(v.fg, v.panel), 4.5], ['正文 fg / overlay', v => ratio(v.fg, v.overlay), 4.5],
+  ['次要 fg-muted / bg', v => ratio(v['fg-muted'], v.bg), 4.5], ['次要 fg-muted / panel', v => ratio(v['fg-muted'], v.panel), 4.5], ['次要 fg-muted / overlay', v => ratio(v['fg-muted'], v.overlay), 4.5],
+  ['fg / selected（在 bg 上）', v => ratio(v.fg, over(v.selected, v.bg)), 4.5], ['fg-muted / selected（在 panel 上）', v => ratio(v['fg-muted'], over(v.selected, v.panel)), 4.5],
+  ['fg-muted / hover（在 panel 上）', v => ratio(v['fg-muted'], over(v.hover, v.panel)), 4.5],
+  ['fg / selected（叠在 overlay 上）', v => ratio(v.fg, over(v.selected, v.overlay)), 4.5], ['fg-muted / selected（叠在 overlay 上：命令面板、菜单的当前行）', v => ratio(v['fg-muted'], over(v.selected, v.overlay)), 4.5], ['fg-muted / hover（叠在 overlay 上）', v => ratio(v['fg-muted'], over(v.hover, v.overlay)), 4.5],
+  ['on-accent / accent', v => ratio(v['on-accent'], v.accent), 4.5], ['accent 文字 / bg', v => ratio(v.accent, v.bg), 4.5], ['accent 文字 / panel', v => ratio(v.accent, v.panel), 4.5],
+  ['on-danger / danger', v => ratio(v['on-danger'], v.danger), 4.5], ['danger 文字 / bg', v => ratio(v.danger, v.bg), 4.5], ['danger 文字 / panel', v => ratio(v.danger, v.panel), 4.5],
+  ['focus-ring / bg（标记 3）', v => ratio(v['focus-ring'], v.bg), 3], ['focus-ring / panel（标记 3）', v => ratio(v['focus-ring'], v.panel), 3],
+  ['success 标记 / panel（3）', v => ratio(v.success, v.panel), 3], ['warning 标记 / panel（3）', v => ratio(v.warning, v.panel), 3], ['info 标记 / panel（3）', v => ratio(v.info, v.panel), 3],
+  ...[1, 2, 3, 4, 5, 6].flatMap(n => [['data-' + n + ' 分类色 / panel（3）', v => ratio(v['data-' + n], v.panel), 3], ['data-' + n + ' 分类色 / bg（3）', v => ratio(v['data-' + n], v.bg), 3], ['data-' + n + ' 分类色 / overlay（3）', v => ratio(v['data-' + n], v.overlay), 3]]),
+];
+const PROJ = [['ashare', '交易复盘'], ['jiqun', '机群看板']];
+const PPAIRS = [];
+PROJ.forEach(([k, n]) => { PPAIRS.push([n + '：accent 文字 / bg', v => ratio(v.accent, v.bg), 4.5, k]); PPAIRS.push([n + '：on-accent / accent', v => ratio(v['on-accent'], v.accent), 4.5, k]);  });
+PPAIRS.push(['交易复盘：up（红）/ bg', v => ratio(v.up, v.bg), 4.5, 'ashare']); PPAIRS.push(['交易复盘：down（绿）/ panel', v => ratio(v.down, v.panel), 4.5, 'ashare']);
+PPAIRS.push(['默认：up（绿）/ bg', v => ratio(v.up, v.bg), 4.5, '']); PPAIRS.push(['默认：down（红）/ panel', v => ratio(v.down, v.panel), 4.5, '']);
+function table() {
+  const V = THEMES.map(t => vars(t[0])); let bad = 0, minText = 99, minTextAt = '';
+  const head = '<thead><tr><th scope="col">配对</th>' + THEMES.map(t => '<th scope="col" style="text-align:right">' + t[1] + '</th>').join('') + '</tr></thead>';
+  const PV = THEMES.map(t => ({ ashare: pvars(t[0], 'ashare'), jiqun: pvars(t[0], 'jiqun'), '': pvars(t[0], 'none') }));
+  const prow = PPAIRS.map(p => '<tr><td>' + p[0] + '</td>' + PV.map((v, i) => { const r = p[1](v[p[3]]); if (r < p[2]) bad++; if (r < minText) { minText = r; minTextAt = THEMES[i][1] + ' ' + p[0]; } return '<td class="num">' + r.toFixed(2) + (r < p[2] ? ' 未达标' : '') + '</td>'; }).join('') + '</tr>').join('');
+  const body = PAIRS.map(p => '<tr><td>' + p[0] + '</td>' + V.map((v, i) => { const r = p[1](v); if (r < p[2]) bad++; if (p[2] === 4.5 && r < minText) { minText = r; minTextAt = THEMES[i][1] + ' ' + p[0]; } return '<td class="num">' + r.toFixed(2) + (r < p[2] ? ' 未达标' : '') + '</td>'; }).join('') + '</tr>').join('');
+  $('#ct').innerHTML = head + '<tbody>' + body + prow + '</tbody>';
+  $('#sum').textContent = (PAIRS.length + PPAIRS.length) * THEMES.length + ' 个格子，' + bad + ' 个未达标；文字类最低 ' + minText.toFixed(2) + '（' + minTextAt + '）。';
+}
+table(); sw(); mark(); markP();
+fetch('../../components/bundle.css').then(r => r.text()).then(t => { const m = t.match(/#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/g) || []; $('#hc').textContent = m.length ? '发现 ' + m.length + ' 处写死色值：' + [...new Set(m)].join(' ') : '0 处。bundle.css 里没有十六进制、rgb() 或 hsl()，所有颜色来自角色变量。'; }).catch(() => { $('#hc').textContent = '读不到 bundle.css，没法检查（在设计系统页面里打开这张卡可以）。'; });
+</script>

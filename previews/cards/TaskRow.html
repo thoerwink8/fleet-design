@@ -1,0 +1,47 @@
+<div class="fa-stage">
+  <div class="fa-cap">后台任务行：类型图标（命令 / 智能体 / 子会话）+ 标题 + 谁在做（智能体位）+ 已用时间 + 停止。行高 32；有子步骤的行可展开第二行数字进度，只有「N 个失败」用危险色。四种状态：刚启动（没有第二行）、运行中、失败、已完成</div>
+  <div style="width:360px;max-width:100%;border-left:var(--bw-1) solid var(--border)">
+    <div class="fa-sec__h">后台任务<span class="aside" id="cnt"></span><button class="fa-icon-btn" id="clean" aria-label="清理已完成的任务"></button></div>
+    <div class="fa-sec__b" id="list" role="list" aria-label="后台任务"></div>
+  </div>
+  <div class="fa-col" style="gap:8px;width:360px;max-width:100%"><div class="fa-cap">状态一览（静态）：悬停、按下、键盘焦点；空；出错</div>
+    <div id="still" class="fa-col" style="gap:4px"></div></div>
+  <div class="fa-hint" id="say" role="status">↑↓ 在行间移动；→ 展开第二行、← 收起；Enter 打开详情；Delete 停止正在跑的任务</div>
+</div>
+<script>
+/*PRELUDE*/
+/*SESSION*/
+$('#clean').innerHTML = ic('trash');
+const open = new Set([1, 3]); let doneOpen = false;
+function draw(focusId) {
+  const live = TASKS.filter(t => t.st !== 'done'), done = TASKS.filter(t => t.st === 'done');
+  $('#cnt').textContent = live.length + ' 个进行中';
+  $('#list').innerHTML = live.map(t => taskRow(t, open.has(t.id))).join('')
+    + (done.length ? '<button class="fa-grp__h" id="dg" aria-expanded="' + doneOpen + '" style="margin-top:4px"><span class="chev">' + ic('chevR') + '</span><span class="x">已完成</span><span class="n">' + done.length + '</span></button>' + (doneOpen ? done.map(t => taskRow(t, open.has(t.id))).join('') : '') : '')
+    + (!TASKS.length ? '<div class="fa-sec__note">没有后台任务。智能体派出的子任务和长命令会出现在这里</div>' : '');
+  $$('#list .fa-task').forEach(r => {
+    const id = +r.dataset.id, t = TASKS.find(x => x.id === id);
+    r.onclick = e => { if (e.target.closest('button')) return; if (r.hasAttribute('aria-expanded')) { open.has(id) ? open.delete(id) : open.add(id); draw(id); } else $('#say').textContent = '打开任务详情：' + t.t; };
+    r.onkeydown = e => {
+      const rows = $$('#list .fa-task'), i = rows.indexOf(r);
+      if (e.key === 'ArrowDown') { e.preventDefault(); rows[Math.min(i + 1, rows.length - 1)].focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); rows[Math.max(i - 1, 0)].focus(); }
+      else if (e.key === 'ArrowRight' && r.hasAttribute('aria-expanded')) { open.add(id); draw(id); }
+      else if (e.key === 'ArrowLeft') { open.delete(id); draw(id); }
+      else if (e.key === 'Enter') { e.preventDefault(); $('#say').textContent = '打开任务详情（TaskDetail）：' + t.t; }
+      else if (e.key === 'Delete' && (t.st === 'running' || t.st === 'new')) stop(t);
+    };
+  });
+  $$('[data-stop]').forEach(b => b.onclick = e => { e.stopPropagation(); stop(TASKS.find(x => x.id === +b.dataset.stop)); });
+  const dg = $('#dg'); if (dg) dg.onclick = () => { doneOpen = !doneOpen; draw(); $('#dg').focus(); };
+  if (focusId) { const f = $('#list .fa-task[data-id="' + focusId + '"]'); if (f) f.focus(); }
+}
+function stop(t) { t.st = 'done'; t.tm = '已停止'; $('#say').textContent = '已停止「' + t.t + '」，已做的步骤保留'; draw(); }
+$('#clean').onclick = () => { const n = TASKS.filter(t => t.st === 'done').length; for (let i = TASKS.length - 1; i >= 0; i--) if (TASKS[i].st === 'done') TASKS.splice(i, 1); $('#say').textContent = '已清理 ' + n + ' 个已完成的任务'; draw(); };
+draw();
+const S = [TASKS[1], TASKS[0], TASKS[2]];
+$('#still').innerHTML = taskRow(S[0]).replace('fa-task', 'fa-task is-hover') + taskRow(S[1], true).replace('fa-task', 'fa-task is-press') + taskRow(S[2], true).replace('fa-task', 'fa-task is-focus')
+  + '<div class="fa-sec__note">没有后台任务。智能体派出的子任务和长命令会出现在这里</div>'
+  + '<div class="fa-sec__err">' + ic('alert') + '<span style="flex:1;min-width:0">后台任务没取到：引擎没有回应</span><button class="fa-btn fa-btn--sm">重试</button></div>';
+$$('#still [tabindex]').forEach(e => e.removeAttribute('tabindex')); $$('#still button').forEach(b => b.tabIndex = -1);
+</script>

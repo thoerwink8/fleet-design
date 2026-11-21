@@ -1,0 +1,43 @@
+<div class="fa-stage">
+  <div class="fa-cap">用量详情：只用行和细线，不做带框卡片墙。分段条用数据分类色；四个计数；缓存命中率和失效次数；生成速度；每次调用一根柱的小趋势图（静态数据），压缩点和缓存失效点用圆点标出；「复制报告」</div>
+  <div class="fa-seg" role="radiogroup" aria-label="演示状态" id="mode"><button role="radio" aria-checked="true" data-m="ok">正常</button><button role="radio" aria-checked="false" data-m="empty">空</button><button role="radio" aria-checked="false" data-m="err">出错</button></div>
+  <div style="width:360px;max-width:100%;border-left:var(--bw-1) solid var(--border)"><section class="fa-sec"><div class="fa-sec__h">用量<span class="aside" id="badge"></span></div><div class="fa-sec__b" id="u"></div></section></div>
+  <div class="fa-hint" id="say" role="status">趋势图可 Tab 聚焦，←→ 逐根查看</div>
+</div>
+<script>
+/*PRELUDE*/
+/*SESSION*/
+let mode = 'ok';
+// one bar per model call: input tokens (thousands); ev = compaction | miss (cache invalidated)
+const CALLS = [38, 41, 44, 47, 52, 55, 58, 61, 66, 70, 74, 79, 83, 88, 91, 96, 101, 107, 42, 45, 49, 53, 58, 62, 64, 69, 73, 78, 81, 86, 90, 95, 99, 104, 110, 116, 121, 128, 133, 140].map((v, i) => ({ v, ev: i === 18 ? 'compact' : [9, 26, 33].includes(i) ? 'miss' : '' }));
+let cur = CALLS.length - 1;
+function draw() {
+  const u = $('#u');
+  $('#badge').textContent = mode === 'ok' ? '工具执行中 · 已 41 秒' : '';
+  if (mode === 'err') { u.innerHTML = '<div class="fa-sec__err">' + ic('alert') + '<span style="flex:1;min-width:0">用量没取到：引擎没有上报</span><button class="fa-btn fa-btn--sm" id="retry">重试</button></div>'; $('#retry').onclick = () => { mode = 'ok'; sync(); draw(); }; return; }
+  if (mode === 'empty') { u.innerHTML = '<div class="fa-sec__note">会话刚开始，还没有调用模型。第一次调用后这里会出现用量</div>'; return; }
+  const ctx = '<div id="gen"></div>';
+  const stats = [['轮次', 18], ['模型调用', CALLS.length], ['工具调用', 126], ['压缩次数', 1]];
+  u.innerHTML = ctx + '<div class="fa-hair"></div>'
+    + '<div class="fa-stats fa-pad" style="padding:0 8px">' + stats.map(s => '<div><span class="k">' + s[0] + '</span><span class="v">' + s[1] + '</span></div>').join('') + '</div>'
+    + '<div class="fa-hair"></div>'
+    + '<div class="fa-kv"><span>缓存命中率</span><span class="v"><span style="color:var(--fg)">98.9%</span> · 失效 3 次</span></div>'
+    + '<div class="fa-kv"><span>生成速度</span><span class="v"><span style="color:var(--fg)">59.1</span> tok/s 实时</span></div>'
+    + '<div class="fa-kv"><span class="fa-muted" style="padding-left:0">平均 / 峰值</span><span class="v">47.3 / 88.0 tok/s</span></div>'
+    + '<div class="fa-hair"></div>'
+    + '<div class="fa-pad fa-col" style="gap:8px;padding:0 8px"><div class="fa-row" style="justify-content:space-between"><span style="font:400 14px/20px var(--font-sans)">每次调用的输入</span><span class="fa-num fa-muted" style="font-size:12px;line-height:16px" id="cur"></span></div>'
+    + '<div class="fa-trend" id="tr" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="40" aria-label="每次调用的输入 token，' + CALLS.length + ' 次调用">' + CALLS.map((c, i) => '<i style="height:' + (c.v / 140 * 100).toFixed(1) + '%"' + (c.ev ? ' data-ev="' + c.ev + '"' : '') + ' data-i="' + i + '"></i>').join('') + '</div>'
+    + '<div class="fa-legend"><span><b class="fa-s1"></b>输入 token</span><span><b class="dot" style="background:var(--data-4)"></b>压缩</span><span><b class="dot" style="background:var(--data-2)"></b>缓存失效</span></div></div>'
+    + '<div class="fa-hair"></div><div class="fa-pad" style="padding:0 8px"><button class="fa-btn fa-btn--sm fa-btn--secondary" id="copy">' + ic('copy') + '复制报告</button></div>';
+  ctxGeneric($('#gen'));
+  const tr = $('#tr');
+  const show = () => { $$('#tr i').forEach((b, i) => b.classList.toggle('is-on', i === cur)); const c = CALLS[cur]; $('#cur').textContent = '第 ' + (cur + 1) + ' 次 · ' + c.v + 'K' + (c.ev === 'compact' ? ' · 压缩后' : c.ev === 'miss' ? ' · 缓存失效' : ''); tr.setAttribute("aria-valuenow", cur + 1); tr.setAttribute("aria-valuetext", $("#cur").textContent); };
+  $$('#tr i').forEach(b => b.onmouseenter = () => { cur = +b.dataset.i; show(); });
+  tr.onkeydown = e => { if (e.key === 'ArrowRight') { cur = Math.min(cur + 1, CALLS.length - 1); show(); } if (e.key === 'ArrowLeft') { cur = Math.max(cur - 1, 0); show(); } if (e.key === 'Home') { cur = 0; show(); } if (e.key === 'End') { cur = CALLS.length - 1; show(); } };
+  show();
+  $('#copy').onclick = () => { $('#say').textContent = '已复制报告（Markdown：上下文四段、计数、命中率、速度、40 次调用）'; };
+}
+function sync() { $$('#mode button').forEach(b => b.setAttribute('aria-checked', b.dataset.m === mode)); }
+$$('#mode button').forEach(b => b.onclick = () => { mode = b.dataset.m; sync(); draw(); });
+draw();
+</script>

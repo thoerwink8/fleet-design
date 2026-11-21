@@ -202,14 +202,14 @@ export function relation(selA, selB, together = () => false) {
   const ta = tagOf(sa);
   const tb = tagOf(sb);
   if (ta && tb && ta !== tb) return 'disjoint';
-  const ca = subjectClasses(selA);
-  const cb = subjectClasses(selB);
-  if (ca.length && cb.length && !ca.some((x) => cb.includes(x))) return ca.some((x) => cb.some((y) => together(x, y))) ? 'same' : 'cross';
   const pa = scopeOf(selA);
   const pb = scopeOf(selB);
-  if (pa && pb && pa !== pb) return 'cross';
-  const oa = ca.find((c) => /^(fa|pr)-/.test(c)) || pa;
-  const ob = cb.find((c) => /^(fa|pr)-/.test(c)) || pb;
-  if (oa && ob && oa !== ob) return 'cross';
+  if (pa && pb && pa !== pb && !together(pa, pb)) return 'cross';
+  const ra = classesOf(sa).filter((c) => !/^(is|has)-/.test(c));
+  const rb = classesOf(sb).filter((c) => !/^(is|has)-/.test(c));
+  if (ra.length && rb.length) return ra.every((x) => rb.every((y) => x === y || together(x, y))) ? 'same' : 'cross';
+  const oa = ra.find((c) => /^(fa|pr)-/.test(c)) || pa;
+  const ob = rb.find((c) => /^(fa|pr)-/.test(c)) || pb;
+  if (oa && ob && block(oa) !== block(ob)) return 'cross';
   return 'same';
 }

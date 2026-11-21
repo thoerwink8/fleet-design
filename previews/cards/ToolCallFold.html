@@ -1,0 +1,12 @@
+<div class="fa-stage" style="max-width:640px">
+  <div class="fa-cap">工具调用折叠，和 RunStatusLine 同一套三层：回合结束收成一句摘要；展开是一步一行的人话（读了 3 个文件、跑了 pnpm test、给子会话发了消息），不摆原始命令；点某一步才出现等宽的原始命令、输出或差异</div>
+  <div class="fa-col" style="gap:8px"><span class="fa-lbl">回合结束 · 收起（默认）</span><div id="a"></div></div>
+  <div class="fa-col" style="gap:8px"><span class="fa-lbl">展开：步骤清单；第 4 步点开看原始输出</span><div id="b"></div></div>
+  <div class="fa-hint" id="say" role="status">摘要和每一步都是按钮：Enter / 空格展开收起</div>
+</div>
+<script>
+/*PRELUDE*/
+/*SESSION*/
+turnBlock($('#a'), 'finished');
+turnBlock($('#b'), 'finished'); $('#b .fa-fold__sum').click(); $('#b [data-s="3"]').click(); document.activeElement.blur();
+</script>

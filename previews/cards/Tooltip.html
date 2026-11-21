@@ -1,0 +1,23 @@
+<div class="fa-stage">
+  <div class="fa-cap">悬停 500ms 或 Tab 聚焦。Esc 关闭。默认隐藏；下面左边一条是展开态的样子</div>
+  <div class="fa-row" style="gap:16px"><span class="fa-tip" role="presentation"><span>新建会话</span><span class="fa-kbd">Ctrl+N</span></span><span class="fa-tip" role="presentation" style="max-width:240px">排查登录超时：先看 auth/session.ts 里 token 刷新的逻辑</span></div>
+  <div class="fa-row" style="gap:16px;padding-top:32px" id="tr">
+    <button class="fa-btn fa-btn--icon fa-btn--secondary" data-tip="新建会话" data-key="Ctrl+N" aria-label="新建会话" data-ic="plus"></button>
+    <button class="fa-btn fa-btn--icon fa-btn--secondary" data-tip="停止当前运行的任务" data-key="" aria-label="停止当前运行的任务" data-ic="stop"></button>
+    <button class="fa-btn fa-btn--icon fa-btn--secondary" data-tip="归档对话" data-key="" aria-label="归档对话" data-ic="archive"></button>
+    <div class="fa-queue" style="width:260px"><span class="no">#1</span><span class="tx" tabindex="0" data-tip="排查登录超时：先看 auth/session.ts 里 token 刷新的逻辑，再补一个失败重试的测试" data-key="" aria-label="排队消息全文">排查登录超时：先看 auth/session.ts 里 token 刷新的逻辑，再补一个失败重试的测试</span></div>
+  </div>
+  <div class="fa-tip" id="tip" role="tooltip" hidden style="position:fixed;z-index:5;max-width:240px"></div>
+  <div class="fa-cap" style="margin-top:24px">情境提示：真遇到问题才出现，可关闭，关了不再出现</div>
+  <div class="fa-strip fa-strip--info" id="ctx"><span class="mk" data-ic="info"></span><span class="grow">格子太挤？Ctrl+T 新建一个分组，切组就换一整排标签。</span><button class="fa-icon-btn" aria-label="关闭提示" id="cx"></button></div>
+  <div class="fa-hint" id="say"></div>
+</div>
+<script>
+/*PRELUDE*/
+$$('[data-ic]').forEach(e => { e.innerHTML = ic(e.dataset.ic); }); $('#cx').innerHTML = ic('x');
+const tip = $('#tip'); let timer;
+function show(el, delay) { clearTimeout(timer); timer = setTimeout(() => { tip.innerHTML = '<span></span>' + (el.dataset.key ? '<span class="fa-kbd">' + el.dataset.key + '</span>' : ''); tip.firstChild.textContent = el.dataset.tip; tip.hidden = false; const r = el.getBoundingClientRect(), t = tip.getBoundingClientRect(); tip.style.left = Math.max(8, Math.min(r.left, innerWidth - t.width - 8)) + 'px'; tip.style.top = (r.top - t.height - 8) + 'px'; }, delay); }
+function hide() { clearTimeout(timer); tip.hidden = true; }
+$$('[data-tip]').forEach(el => { el.addEventListener('mouseenter', () => show(el, 500)); el.addEventListener('mouseleave', hide); el.addEventListener('focus', () => show(el, 0)); el.addEventListener('blur', hide); el.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); }); });
+$('#cx').onclick = () => { $('#ctx').hidden = true; $('#say').textContent = '已关闭，之后不会再出现这条提示。'; };
+</script>

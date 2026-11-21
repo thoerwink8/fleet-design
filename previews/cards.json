@@ -1,0 +1,157 @@
+[
+  {
+    "name": "Cover",
+    "group": "Foundations",
+    "subtitle": "封面：三个品牌和八套主题"
+  },
+  {
+    "name": "Themes",
+    "group": "Foundations",
+    "subtitle": "8 套主题实时切换，当场算对比度"
+  },
+  {
+    "name": "Foundations",
+    "group": "Foundations",
+    "subtitle": "字阶、间距、圆角、阴影、动效"
+  },
+  {
+    "name": "Button",
+    "group": "Actions",
+    "subtitle": "主 / 次 / 幽灵 / 危险，三档高度，图标按钮"
+  },
+  {
+    "name": "SegmentedControl",
+    "group": "Actions",
+    "subtitle": "2 到 4 项的互斥切换，改完立即生效"
+  },
+  {
+    "name": "Input",
+    "group": "Inputs",
+    "subtitle": "单行输入、说明、出错、禁用"
+  },
+  {
+    "name": "Composer",
+    "group": "Inputs",
+    "subtitle": "多行输入，@ 引用变胶囊，附件胶囊，发送与停止"
+  },
+  {
+    "name": "Select",
+    "group": "Inputs",
+    "subtitle": "单选下拉，以及左智能体右模型的双栏选择器"
+  },
+  {
+    "name": "Menu",
+    "group": "Overlays",
+    "subtitle": "右键菜单和「更多」菜单，用量直接放菜单里"
+  },
+  {
+    "name": "CommandPalette",
+    "group": "Overlays",
+    "subtitle": "Ctrl+K：去哪和会话搜索，三行结果行：标题与时间 / 摘要 / 模型与分支"
+  },
+  {
+    "name": "HoverCard",
+    "group": "Overlays",
+    "subtitle": "悬停看详情：中断原因、git 状态、模型来源"
+  },
+  {
+    "name": "Tooltip",
+    "group": "Overlays",
+    "subtitle": "图标按钮的名字和快捷键，按情境出现的提示"
+  },
+  {
+    "name": "ConfirmDialog",
+    "group": "Overlays",
+    "subtitle": "确认弹窗：按状态换措辞，批量逐条列名单"
+  },
+  {
+    "name": "Toast",
+    "group": "Feedback",
+    "subtitle": "做完了的反馈，右下角，几秒后消失，可带撤销"
+  },
+  {
+    "name": "StatusStrip",
+    "group": "Feedback",
+    "subtitle": "输入框上方的状态条：可收起、可多条，报错有固定位置"
+  },
+  {
+    "name": "QueueChip",
+    "group": "Session",
+    "subtitle": "排队消息：序号、插队、撤回；停止后整队暂停"
+  },
+  {
+    "name": "ToolCallFold",
+    "group": "Session",
+    "subtitle": "工具调用折叠：一句摘要 → 人话步骤 → 点开才看原始内容"
+  },
+  {
+    "name": "ThreadRow",
+    "group": "Session",
+    "subtitle": "会话列表行：单行 32（默认）和两行 52（等你处理），智能体位 + 角标圆点"
+  },
+  {
+    "name": "StatusTag",
+    "group": "Session",
+    "subtitle": "状态签和数字徽标，状态靠文字和形状，不靠色相"
+  },
+  {
+    "name": "SessionPanel",
+    "group": "Session",
+    "subtitle": "会话页右侧总览栏：环境、上下文、连接器、谁在做、输出内容、更改、后台任务"
+  },
+  {
+    "name": "TaskRow",
+    "group": "Session",
+    "subtitle": "后台任务行：类型、标题、谁在做、用时、停止；可展开数字进度"
+  },
+  {
+    "name": "TaskDetail",
+    "group": "Session",
+    "subtitle": "任务详情：交代原文、模型、正在做什么、过程折叠、子会话可续聊"
+  },
+  {
+    "name": "ChangeRow",
+    "group": "Session",
+    "subtitle": "更改行：PR 状态、标题、仓 #号、增删行数、行尾菜单"
+  },
+  {
+    "name": "RunStatusLine",
+    "group": "Session",
+    "subtitle": "回合进行中的三层提示，和主对话里的后台智能体行"
+  },
+  {
+    "name": "ContextMeter",
+    "group": "Data",
+    "subtitle": "进度条和上下文用量条，含分来源明细"
+  },
+  {
+    "name": "MarketText",
+    "group": "Data",
+    "subtitle": "行情语义：涨跌平数字，交易复盘品牌涨红跌绿，和成功 / 危险分开"
+  },
+  {
+    "name": "Table",
+    "group": "Data",
+    "subtitle": "表格行：统一行高，数字右对齐 tabular-nums，点行即筛选"
+  },
+  {
+    "name": "UsageDetail",
+    "group": "Data",
+    "subtitle": "用量详情：四段占用、计数、缓存命中、生成速度、每次调用趋势"
+  },
+  {
+    "name": "EmptyState",
+    "group": "Layout",
+    "subtitle": "空状态：一句话教怎么开始，最多三个可点卡片"
+  },
+  {
+    "name": "Drawer",
+    "group": "Layout",
+    "subtitle": "抽屉：手机侧栏，带遮罩，Esc 和点遮罩关闭"
+  },
+  {
+    "name": "DetailsPanel",
+    "group": "Layout",
+    "subtitle": "右侧详情面板分区：环境、上下文、连接器、输出内容"
+  }
+]

@@ -1,0 +1,29 @@
+<div class="fa-stage">
+  <div class="fa-cap">点表头排序；点行选中（等于筛选）；Tab 到表头，Enter 排序</div>
+  <div class="fa-table-wrap"><table class="fa-table" id="tb"><caption class="fa-cap" style="text-align:left;padding:8px 12px;caption-side:top">按智能体的用量</caption><thead><tr>
+    <th scope="col"><button data-k="a">智能体 <span class="ar"></span></button></th>
+    <th scope="col" style="text-align:right"><button data-k="tok">Token <span class="ar"></span></button></th>
+    <th scope="col" style="text-align:right"><button data-k="hit">缓存命中 <span class="ar"></span></button></th>
+    <th scope="col" style="text-align:right"><button data-k="est">估算 <span class="ar"></span></button></th>
+    <th scope="col">近 10 次</th></tr></thead><tbody></tbody></table></div>
+  <div class="fa-hint">估算按官方价、没算折扣。读不到的单元格写「—」，已计量 98%。</div>
+  <div class="fa-hint" id="say" role="status"></div>
+</div>
+<script>
+/*PRELUDE*/
+const D = [
+  { a: 'Claude Code', tok: 30120000, hit: 96.7, est: 112.4, r: 'ssssfssssn' },
+  { a: 'Kimi Code', tok: 8210000, hit: 71.2, est: 3.1, r: 'sssssssfsf' },
+  { a: 'Codex', tok: 2640000, hit: 88.0, est: 24.8, r: 'ssssssssss' },
+  { a: 'Antigravity', tok: 0, hit: null, est: null, r: 'nnnnnnnnnn' },
+];
+let key = 'tok', dir = -1, sel = null;
+function draw() {
+  const rows = D.slice().sort((x, y) => ((x[key] ?? -1) > (y[key] ?? -1) ? 1 : -1) * dir * (key === 'a' ? -1 : 1));
+  $('tbody').innerHTML = rows.map(r => '<tr tabindex="0" aria-selected="' + (sel === r.a) + '" data-a="' + r.a + '"><td>' + r.a + '</td><td class="num">' + (r.tok ? (r.tok / 1e6).toFixed(2) + 'M' : '—') + '</td><td class="num">' + (r.hit == null ? '—' : r.hit.toFixed(1) + '%') + '</td><td class="num">' + (r.est == null ? '—' : '$' + r.est.toFixed(2)) + '</td><td><span class="fa-bar5" role="img" aria-label="近 10 次成功 ' + [...r.r].filter(c => c === 's').length + ' 次">' + [...r.r].map(c => '<i class="' + (c === 'f' ? 'f' : c === 'n' ? 'n' : '') + '"></i>').join('') + '</span></td></tr>').join('');
+  $$('th button').forEach(b => { b.querySelector('.ar').innerHTML = b.dataset.k === key ? ic('chevD').replace('<svg', '<svg style="transform:rotate(' + (dir > 0 ? 180 : 0) + 'deg)"') : ''; b.closest('th').setAttribute('aria-sort', b.dataset.k === key ? (dir > 0 ? 'ascending' : 'descending') : 'none'); });
+  $$('tbody tr').forEach(tr => { tr.onclick = () => { sel = sel === tr.dataset.a ? null : tr.dataset.a; $('#say').textContent = sel ? '筛选：只看 ' + sel + ' 的调用明细' : '已清除筛选'; draw(); }; tr.onkeydown = e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); tr.click(); } if (e.key === 'ArrowDown') { e.preventDefault(); (tr.nextElementSibling || tr).focus(); } if (e.key === 'ArrowUp') { e.preventDefault(); (tr.previousElementSibling || tr).focus(); } }; });
+}
+$$('th button').forEach(b => b.onclick = () => { dir = key === b.dataset.k ? -dir : -1; key = b.dataset.k; draw(); });
+draw();
+</script>

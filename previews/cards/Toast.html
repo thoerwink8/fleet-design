@@ -1,0 +1,36 @@
+<div class="fa-stage" style="min-height:240px;position:relative">
+  <div class="fa-cap">演示态：右下已经有一条。点按钮再触发；带撤销的停 8 秒，其余 4 秒，悬停暂停。Toast 在右下，输入框区域之外</div>
+  <div class="fa-row">
+    <button class="fa-btn fa-btn--secondary" data-t="copy">复制 Session ID</button>
+    <button class="fa-btn fa-btn--secondary" data-t="archive">归档会话</button>
+    <button class="fa-btn fa-btn--secondary" data-t="fork">回退到这条</button>
+  </div>
+  <div class="fa-hint">失败不用 Toast：错误进输入框上方的状态条（见 StatusStrip）。</div>
+  <div id="stack" class="fa-col" style="position:absolute;right:16px;bottom:16px;gap:8px;align-items:flex-end" role="region" aria-label="通知"></div>
+</div>
+<script>
+/*PRELUDE*/
+const stack = $('#stack');
+function toast(kind, icon, text, undo) {
+  while (stack.children.length >= 3) stack.firstChild.remove();
+  const el = document.createElement('div'); el.className = 'fa-toast fa-enter'; el.setAttribute('role', 'status');
+  el.innerHTML = '<span class="m-' + kind + '">' + ic(icon) + '</span><span class="grow"></span>' + (undo ? '<button class="fa-btn fa-btn--sm" data-u>撤销</button>' : '') + '<button class="fa-icon-btn" aria-label="关闭" data-x>' + ic('x') + '</button>';
+  el.querySelector('.grow').textContent = text; stack.appendChild(el);
+  let left = undo ? 8000 : 4000, last = Date.now(), paused = false, id;
+  const tick = () => { if (!paused) { left -= Date.now() - last; } last = Date.now(); if (left <= 0) el.remove(); else id = setTimeout(tick, 100); };
+  id = setTimeout(tick, 100);
+  el.onmouseenter = () => { paused = true; }; el.onmouseleave = () => { paused = false; last = Date.now(); };
+  el.querySelector('[data-x]').onclick = () => { clearTimeout(id); el.remove(); };
+  const u = el.querySelector('[data-u]'); if (u) u.onclick = () => { clearTimeout(id); el.remove(); toast('success', 'check', '已恢复'); };
+  el.addEventListener('keydown', e => { if (e.key === 'Escape') { clearTimeout(id); el.remove(); } });
+}
+// Demo state: one toast with 撤销 sits in the stack on load and stays until closed (the real one leaves after 8 s).
+function demo() { const el = document.createElement('div'); el.className = 'fa-toast'; el.setAttribute('role', 'status'); el.innerHTML = '<span class="m-info">' + ic('archive') + '</span><span class="grow">已归档「排查登录超时」</span><button class="fa-btn fa-btn--sm" data-u>撤销</button><button class="fa-icon-btn" aria-label="关闭" data-x>' + ic('x') + '</button>'; el.querySelector('[data-x]').onclick = () => el.remove(); el.querySelector('[data-u]').onclick = () => { el.remove(); toast('success', 'check', '已恢复'); }; stack.appendChild(el); }
+demo();
+$$('[data-t]').forEach(b => b.onclick = () => {
+  const k = b.dataset.t;
+  if (k === 'copy') toast('success', 'check', '已复制 Session ID');
+  if (k === 'archive') toast('info', 'archive', '已归档「排查登录超时」', true);
+  if (k === 'fork') toast('info', 'fork', '已新建分支会话，原会话保留不变');
+});
+</script>

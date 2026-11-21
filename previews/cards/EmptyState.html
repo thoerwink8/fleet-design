@@ -1,0 +1,30 @@
+<div class="fa-stage">
+  <div class="fa-cap">空会话页</div>
+  <div class="fa-panel"><div class="fa-empty">
+    <span class="fa-ic--lg" id="i1" style="color:var(--fg-muted)"></span>
+    <h3>输入提示词开始新会话</h3>
+    <p>也可以粘贴或拖入图片和文件。输入 @ 引用文件和会话，输入 / 用智能体自己的命令。</p>
+    <span class="fa-mono fa-muted" style="font-size:12px;line-height:16px">C:\src\acme-app</span>
+    <div class="fa-row" style="margin-top:8px"><button class="fa-btn fa-btn--secondary" id="b1">打开终端</button></div>
+  </div></div>
+  <div class="fa-cap">定时任务页（无任务）：最多三张入口卡</div>
+  <div class="fa-panel"><div class="fa-empty">
+    <h3>还没有定时任务</h3>
+    <p>让代理按时间自己开会话。先点「立即运行」试一次，结果对了再等它按时跑。</p>
+    <div class="fa-empty__cards">
+      <button class="fa-card"><b>每个工作日 09:00</b><span>跑一遍测试，结果放进一个会话</span></button>
+      <button class="fa-card"><b>每周一整理分支</b><span>列出超过两周没动的分支</span></button>
+      <button class="fa-card"><b>一句话说清楚</b><span>用自然语言描述，自动生成 cron</span></button>
+    </div>
+  </div></div>
+  <div class="fa-cap">目录不存在：不是普通空态</div>
+  <div class="fa-panel"><div class="fa-empty" style="padding-block:24px">
+    <h3>文件夹已不存在</h3>
+    <p>C:\src\old-project 找不到了。可能被移动或删除。</p>
+    <div class="fa-row"><button class="fa-btn fa-btn--secondary">重试</button><button class="fa-btn">移除这个工作区</button></div>
+  </div></div>
+</div>
+<script>
+/*PRELUDE*/
+$('#i1').innerHTML = ic('file', 'fa-ic--lg');
+</script>

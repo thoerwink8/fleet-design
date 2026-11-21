@@ -1,0 +1,25 @@
+<div class="fa-stage" style="align-items:center">
+  <div class="fa-cap">手机宽度，演示态先打开。点遮罩、Esc 或选一个会话关闭；关上后左缘不留阴影</div>
+  <div class="fa-phone" id="ph" data-open="false">
+    <div style="display:flex;align-items:center;gap:8px;height:48px;padding:0 8px;border-bottom:var(--bw-1) solid var(--border)"><button class="fa-icon-btn" id="mb" aria-label="打开会话列表" aria-expanded="false" style="width:40px;height:40px"></button><b style="font:500 14px/20px var(--font-sans)" id="ttl">排查登录超时</b></div>
+    <div style="padding:16px;font:400 15px/24px var(--font-sans)"><p style="margin:0">我读了 3 个文件，改了 2 处。需要我接着补失败重试的测试吗？</p></div>
+    <div class="fa-scrim" id="sc" aria-hidden="true"></div>
+    <nav class="fa-drawer" id="dr" aria-label="会话列表" inert>
+      <div class="fa-row" style="justify-content:space-between;height:40px;padding:0 8px"><b style="font:500 14px/20px var(--font-sans)">会话</b><button class="fa-icon-btn" id="mc" aria-label="关闭" style="width:40px;height:40px"></button></div>
+      <div id="dl" class="fa-col" style="gap:0"></div>
+    </nav>
+  </div>
+</div>
+<script>
+/*PRELUDE*/
+const L = [['排查登录超时', 'local/42-login-fix', 'running', '运行中', 'C'], ['a91f03c2', '上一轮中断了：引擎进程退出', 'error', '出错了', 'K'], ['修复 sandbox 目录读取', '已提交，未推送', 'new', '有新回复', 'C'], ['给 Table 加数字等宽', '等上一轮结束后开始', 'ring', '排队中', 'X']];
+const ph = $('#ph'), dr = $('#dr'), mb = $('#mb');
+$('#mb').innerHTML = ic('menu', 'fa-ic--lg'); $('#mc').innerHTML = ic('x', 'fa-ic--lg');
+$('#dl').innerHTML = L.map((x, i) => '<button class="fa-trow" style="border-inline:0;text-align:left;width:100%;color:inherit" data-i="' + i + '"><span class="lead"><span class="fa-agent">' + x[4] + '<span class="fa-dot fa-dot--' + x[2] + '" role="img" aria-label="' + x[3] + '"></span></span></span><div style="min-width:0"><div class="t">' + x[0] + '</div><div class="s">' + x[1] + '</div></div><span></span></button>').join('');
+function open() { ph.dataset.open = 'true'; dr.inert = false; mb.setAttribute('aria-expanded', 'true'); $('.fa-trow', dr).focus(); }
+function close() { ph.dataset.open = 'false'; dr.inert = true; mb.setAttribute('aria-expanded', 'false'); mb.focus(); }
+mb.onclick = open; $('#mc').onclick = close; $('#sc').onclick = close;
+$$('.fa-trow', dr).forEach(b => b.onclick = () => { $('#ttl').textContent = L[+b.dataset.i][0]; close(); });
+ph.dataset.open = 'true'; dr.inert = false; mb.setAttribute('aria-expanded', 'true');
+ph.addEventListener('keydown', e => { if (e.key === 'Escape' && ph.dataset.open === 'true') close(); if (e.key === 'Tab' && ph.dataset.open === 'true') { const f = $$('button', dr); const first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } } });
+</script>

@@ -1,0 +1,53 @@
+<div class="fa-stage" style="max-width:640px">
+  <div class="fa-cap">点按钮加状态。多条时只展开优先级最高的一条，其余合成「还有 N 条」</div>
+  <div class="fa-row">
+    <button class="fa-btn fa-btn--sm fa-btn--secondary" data-a="engine">引擎不可用</button>
+    <button class="fa-btn fa-btn--sm fa-btn--secondary" data-a="login">未登录</button>
+    <button class="fa-btn fa-btn--sm fa-btn--secondary" data-a="cost">要花钱</button>
+    <button class="fa-btn fa-btn--sm fa-btn--secondary" data-a="ok">已重连</button>
+  </div>
+  <div class="fa-panel" style="padding:16px;display:flex;flex-direction:column;gap:12px">
+    <div class="fa-muted" style="font:400 15px/24px var(--font-sans)">对话内容在这里，状态条不会压在它上面。</div>
+    <div class="fa-strips" id="strips" aria-label="状态"></div>
+    <div class="fa-composer"><textarea rows="1" placeholder="输入消息…" aria-label="消息"></textarea><div class="fa-composer__bar"><span class="fa-composer__grow"></span><button class="fa-btn fa-btn--icon fa-btn--primary" disabled id="snd" aria-label="发送"></button></div></div>
+  </div>
+  <div class="fa-hint" id="say" role="status"></div>
+</div>
+<script>
+/*PRELUDE*/
+$('#snd').innerHTML = ic('send');
+const DEF = {
+  engine: { sev: 'danger', pri: 3, ic: 'alert', text: '引擎没起来：本机服务退出了，消息没发出。', acts: [['重启服务', '服务重启中…']] },
+  login: { sev: 'info', pri: 2, ic: 'info', text: 'Claude Code 未登录，登录后才能发消息。', acts: [['登录', '打开登录页']] },
+  cost: { sev: 'warning', pri: 1, ic: 'alert', text: '继续会用你自己的 API 额度，这一轮约 ¥2.4。', acts: [['继续', '已确认，开始本轮'], ['改用本机账号', '已切换']] },
+  ok: { sev: 'success', pri: 0, ic: 'check', text: '已重连，可以继续发送。', acts: [], auto: 4000 },
+};
+let items = [], expanded = false;
+const box = $('#strips');
+function strip(it) {
+  const el = document.createElement('div'); el.className = 'fa-strip fa-strip--' + it.sev + ' fa-enter'; el.setAttribute('role', it.sev === 'danger' ? 'alert' : 'status');
+  el.innerHTML = '<span class="mk">' + ic(it.ic) + '</span><span class="grow"></span>' + it.acts.map((a, i) => '<button class="fa-btn fa-btn--sm fa-btn--secondary" data-i="' + i + '">' + a[0] + '</button>').join('') + '<button class="fa-icon-btn" aria-label="收起这一条" data-x>' + ic('x') + '</button>';
+  el.querySelector('.grow').textContent = it.text;
+  $$('[data-i]', el).forEach(b => b.onclick = () => { $('#say').textContent = it.acts[+b.dataset.i][1]; });
+  el.querySelector('[data-x]').onclick = () => { items = items.filter(x => x !== it); $('#say').textContent = '已收起。同一条不会重复弹出，再次出现时才重新展开。'; render(); };
+  el.addEventListener('keydown', e => { if (e.key === 'Escape') el.querySelector('[data-x]').click(); });
+  return el;
+}
+function render() {
+  box.innerHTML = '';
+  const sorted = items.slice().sort((a, b) => b.pri - a.pri);
+  if (!sorted.length) { $('#snd').disabled = true; return; }
+  if (expanded || sorted.length === 1) sorted.forEach(i => box.appendChild(strip(i))); else box.appendChild(strip(sorted[0]));
+  if (sorted.length > 1) {
+    const s = document.createElement('button'); s.className = 'fa-strip__sum'; s.setAttribute('aria-expanded', expanded);
+    s.innerHTML = '<span class="fa-dots">' + sorted.slice(1).map(i => '<span class="fa-dot" style="background:var(--' + i.sev + ')"></span>').join('') + '</span><span style="flex:1">' + (expanded ? '收起其余 ' + (sorted.length - 1) + ' 条' : '还有 ' + (sorted.length - 1) + ' 条') + '</span>' + ic(expanded ? 'chevD' : 'chevR');
+    s.onclick = () => { expanded = !expanded; render(); }; box.appendChild(s);
+  }
+}
+$$('[data-a]').forEach(b => b.onclick = () => {
+  const k = b.dataset.a, d = DEF[k]; if (items.some(x => x.key === k)) { $('#say').textContent = '已经有这一条了，不重复出现。'; return; }
+  const it = Object.assign({ key: k }, d); items.push(it); render();
+  if (d.auto) setTimeout(() => { items = items.filter(x => x !== it); render(); }, d.auto);
+});
+items.push(Object.assign({ key: 'engine' }, DEF.engine), Object.assign({ key: 'login' }, DEF.login)); render();
+</script>

@@ -1,0 +1,40 @@
+<div class="fa-stage">
+  <div class="fa-col"><div class="fa-cap">变体。悬停、按下、Tab 聚焦都可以直接试</div>
+    <div class="fa-row">
+      <button class="fa-btn fa-btn--primary" data-say="主按钮：继续发送">继续发送</button>
+      <button class="fa-btn fa-btn--secondary" data-say="次按钮：取消">取消</button>
+      <button class="fa-btn" data-say="幽灵按钮：编辑">编辑</button>
+      <button class="fa-btn fa-btn--danger" data-say="危险按钮只在确认弹窗里出现：删除 4 个会话">删除 4 个会话</button>
+    </div></div>
+  <div class="fa-col"><div class="fa-cap">尺寸 28 / 32 / 40，图标按钮同高正方形</div>
+    <div class="fa-row">
+      <button class="fa-btn fa-btn--secondary fa-btn--sm">小 28</button>
+      <button class="fa-btn fa-btn--secondary">默认 32</button>
+      <button class="fa-btn fa-btn--secondary fa-btn--lg">大 40</button>
+      <button class="fa-btn fa-btn--icon fa-btn--secondary fa-btn--sm" aria-label="复制" data-ic="copy"></button>
+      <button class="fa-btn fa-btn--icon" aria-label="归档" data-ic="archive"></button>
+      <button class="fa-btn fa-btn--stop" aria-label="停止当前运行的任务" data-ic="stop"></button>
+      <button class="fa-btn fa-btn--icon fa-btn--primary" aria-label="发送" data-ic="send"></button>
+    </div></div>
+  <div class="fa-col"><div class="fa-cap">带图标、进行中、禁用（要写原因）。禁用不靠变淡：中性底 + 次要文字，仍然看得清</div>
+    <div class="fa-row">
+      <button class="fa-btn fa-btn--secondary"><span data-ic="branch"></span>从这里开新会话</button>
+      <button class="fa-btn fa-btn--primary" id="go">压缩会话</button>
+      <button class="fa-btn fa-btn--primary" disabled aria-describedby="why">继续发送</button>
+      <button class="fa-btn fa-btn--secondary" disabled aria-describedby="why">全部撤回</button>
+      <span class="fa-hint" id="why">没有排队消息，所以不能继续发送或撤回</span>
+    </div></div>
+  <div class="fa-hint" id="say" role="status" aria-live="polite">点上面的按钮看反馈。</div>
+</div>
+<script>
+/*PRELUDE*/
+$$('[data-ic]').forEach(e => { e.innerHTML = ic(e.dataset.ic); });
+$$('[data-say]').forEach(b => b.addEventListener('click', () => { $('#say').textContent = b.dataset.say; }));
+const go = $('#go');
+go.addEventListener('click', () => {
+  if (go.disabled) return;
+  go.style.width = go.offsetWidth + 'px'; go.disabled = true; go.setAttribute('aria-busy', 'true'); go.textContent = '压缩中…';
+  $('#say').textContent = '进行中：文字换成「压缩中…」，宽度不变，禁用，不可重复点击。不用转圈图标。';
+  setTimeout(() => { go.disabled = false; go.removeAttribute('aria-busy'); go.style.width = ''; go.textContent = '压缩会话'; $('#say').textContent = '完成。压缩生成新的分支会话，原会话保留。'; }, 1400);
+});
+</script>

@@ -1,0 +1,50 @@
+<div class="fa-stage">
+  <div class="fa-cap">会话页右侧总览栏：没有外框，分区之间一根细线，分区头 14/500。每区默认只露几行，其余收在「显示更多」里。上方切换演示「正常 / 空 / 出错」三种数据状态</div>
+  <div class="fa-row" style="gap:8px">
+    <div class="fa-seg" role="radiogroup" aria-label="演示状态" id="mode"><button role="radio" aria-checked="true" data-m="ok">正常</button><button role="radio" aria-checked="false" data-m="empty">空</button><button role="radio" aria-checked="false" data-m="err">出错</button></div>
+    <div class="fa-seg" role="radiogroup" aria-label="上下文数据深度" id="depth"><button role="radio" aria-checked="true" data-d="full">完整明细</button><button role="radio" aria-checked="false" data-d="gen">通用四段</button></div>
+  </div>
+  <div style="width:360px;max-width:100%;border-left:var(--bw-1) solid var(--border)"><div class="fa-side" id="side"></div></div>
+  <div class="fa-hint" id="say" role="status">Tab 走到每一行；Enter 打开；分区头的箭头可收起</div>
+</div>
+<script>
+/*PRELUDE*/
+/*SESSION*/
+const side = $('#side'); let mode = 'ok', depth = 'full'; const more = {};
+const WHO = [['C', 'Claude Code', 'running', '运行中 · 主会话'], ['K', 'Kimi Code', 'needs', '等你处理 · 复审 PR #57'], ['X', 'Codex', '', '已完成 · 核对送达帧'], ['C', 'Claude Code', '', '已完成 · 整理截图']];
+const OUT = [['file', 'session.ts', '文件'], ['link', '#42 修复登录超时', 'PR'], ['file', 'login-timeout.md', '文档'], ['file', 'compare__ThreadRow__dark.png', '图片'], ['link', 'fleet-ade 组件库', '页面']];
+function sec(id, title, aside, body) { return '<section class="fa-sec" aria-labelledby="h-' + id + '"><div class="fa-sec__h" id="h-' + id + '">' + title + (aside ? '<span class="aside">' + aside + '</span>' : '') + '</div><div class="fa-sec__b" id="b-' + id + '">' + body + '</div></section>'; }
+const moreBtn = (k, n, total) => total > n ? '<button class="fa-more" data-more="' + k + '">' + (more[k] ? '收起' : '显示更多') + '</button>' : '';
+const err = (what) => '<div class="fa-sec__err">' + ic('alert') + '<span style="flex:1;min-width:0">' + what + '没取到</span><button class="fa-btn fa-btn--sm" data-retry>重试</button></div>';
+function draw() {
+  const E = mode === 'empty', X = mode === 'err';
+  const env = '<div class="fa-kv"><span>' + ic('laptop') + '本电脑</span><button class="fa-link" style="font:400 14px/20px var(--font-sans)">切换</button></div>'
+    + '<div class="fa-kv"><span>' + ic('folder') + 'fleet-ade</span><span class="v v--mono" title="C:\\src\\acme-app">C:\\src\\acme-app</span></div>'
+    + '<div class="fa-kv"><span>' + ic('branch') + '<span class="fa-mono" style="font-size:14px">local/42-login-fix</span></span><span class="v">领先 2</span></div>';
+  const who = E ? '<div class="fa-sec__note">只有你和主会话。派出子任务后，参与的智能体会列在这里</div>' : WHO.slice(0, more.who ? 9 : 2).map(w => '<div class="fa-kv"><span><span class="fa-agent">' + w[0] + (w[2] ? '<span class="fa-dot fa-dot--' + w[2] + '"></span>' : '') + '</span>' + w[1] + '</span><span class="v">' + w[3] + '</span></div>').join('') + moreBtn('who', 2, WHO.length);
+  const out = E ? '<div class="fa-sec__note">还没有输出。生成的文件、PR、文档会出现在这里</div>' : OUT.slice(0, more.out ? 9 : 3).map(o => '<div class="fa-kv"><span>' + ic(o[0]) + o[1] + '</span><span class="v">' + o[2] + '</span></div>').join('') + moreBtn('out', 3, OUT.length);
+  const chg = X ? err('PR 状态') : E ? '<div class="fa-sec__note">这次会话还没有改动</div>' : CHG.slice(0, more.chg ? 9 : 2).map(chgRow).join('') + moreBtn('chg', 2, CHG.length);
+  const live = TASKS.filter(t => t.st !== 'done');
+  const tasks = X ? err('后台任务') : E ? '<div class="fa-sec__note">没有后台任务。智能体派出的子任务和长命令会出现在这里</div>' : live.slice(0, more.tsk ? 9 : 3).map(t => taskRow(t, t.st === 'failed')).join('') + moreBtn('tsk', 3, live.length) + '<div class="fa-sec__note" style="font-size:12px;line-height:16px">' + TASKS.filter(t => t.st === 'done').length + ' 个已结束</div>';
+  side.innerHTML = sec('env', '环境', '', env)
+    + sec('ctx', '上下文', depth === 'full' ? '完整明细' : '通用', '<div id="ctxb"></div>')
+    + '<section class="fa-sec" id="conn"></section>'
+    + sec('who', '谁在做', E ? '' : '2 个在跑', who)
+    + sec('out', '输出内容', '', out)
+    + sec('chg', '更改', E || X ? '' : CHG.length + ' 个 PR', chg)
+    + sec('tsk', '后台任务', E || X ? '' : live.length + ' 个进行中', tasks);
+  const cb = $('#ctxb');
+  if (X) cb.innerHTML = err('上下文用量'); else if (E) cb.innerHTML = '<div class="fa-sec__note">会话刚开始，还没有调用模型</div>'; else if (depth === 'full') ctxFull(cb, { rows: more.ctx ? 99 : 6, more: moreBtn('ctx', 6, CTX_ROWS.length) }); else ctxGeneric(cb);
+  connectors($('#conn'), false);
+  $$('[data-more]').forEach(b => b.onclick = () => { more[b.dataset.more] = !more[b.dataset.more]; draw(); });
+  $$('[data-retry]').forEach(b => b.onclick = () => { b.textContent = '正在重试…'; b.setAttribute('aria-busy', 'true'); setTimeout(() => { mode = 'ok'; sync(); draw(); }, 700); });
+  $$('[data-stop]').forEach(b => b.onclick = e => { e.stopPropagation(); const t = TASKS.find(x => x.id === +b.dataset.stop); t.st = 'done'; t.tm = '已停止'; $('#say').textContent = '已停止「' + t.t + '」'; draw(); });
+  $$('.fa-task').forEach(r => { r.onclick = e => { if (e.target.closest('button')) return; $('#say').textContent = '打开任务详情（TaskDetail）：' + TASKS.find(x => x.id === +r.dataset.id).t; }; r.onkeydown = e => { if (e.key === 'Enter') r.click(); }; });
+  $$('.fa-chg').forEach(r => { r.onclick = e => { if (e.target.closest('button')) return; $('#say').textContent = '在浏览器打开 ' + CHG[+r.dataset.i].repo + ' #' + CHG[+r.dataset.i].n; }; r.onkeydown = e => { if (e.key === 'Enter') r.click(); }; });
+  $$('[data-more]').length;
+}
+function sync() { $$('#mode button').forEach(b => b.setAttribute('aria-checked', b.dataset.m === mode)); $$('#depth button').forEach(b => b.setAttribute('aria-checked', b.dataset.d === depth)); }
+$$('#mode button').forEach(b => b.onclick = () => { mode = b.dataset.m; sync(); draw(); });
+$$('#depth button').forEach(b => b.onclick = () => { depth = b.dataset.d; sync(); draw(); });
+draw();
+</script>

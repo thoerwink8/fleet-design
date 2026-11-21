@@ -1,0 +1,61 @@
+<div class="fa-stage">
+  <div class="fa-col"><div class="fa-cap">单选下拉（Enter / 方向键 / Esc）</div>
+    <div style="position:relative;width:200px">
+      <button class="fa-select" id="s1" aria-haspopup="listbox" aria-expanded="false" style="width:100%;justify-content:space-between"><span id="s1v">较大</span><span data-ic="chevD"></span></button>
+      <div class="fa-pop" id="p1" role="listbox" hidden style="position:absolute;left:0;top:calc(100% + 4px);width:100%;z-index:3"></div>
+    </div>
+  </div>
+  <div class="fa-col"><div class="fa-cap">双栏模型选择器（演示态，默认展开）：左智能体，右账号、搜索、模型；换智能体，入口随之增减</div>
+    <div style="position:relative">
+      <button class="fa-select" id="s2" aria-haspopup="dialog" aria-expanded="false"><span class="fa-agent">C</span><span id="s2v">Claude Opus 5.5 · 本机账号</span><span data-ic="chevD"></span></button>
+      <div class="fa-pop fa-pop--two" id="p2" hidden style="position:absolute;left:0;top:calc(100% + 4px);z-index:3"><div id="ag" role="listbox" aria-label="智能体"></div><div><div class="fa-glabel">账号</div><button class="fa-item" id="acct"><span class="grow" id="acv">本机账号</span><span data-ic="chevD"></span></button><div style="padding:4px 4px 0"><input class="fa-input" id="q" placeholder="搜索模型" aria-label="搜索模型" style="height:28px"></div><div id="ml" role="listbox" aria-label="模型" style="margin-top:4px"></div></div></div>
+    </div>
+    <div class="fa-hint" id="note">智能体有 TUI 时，会话页才有「打开 TUI」入口。</div>
+  </div>
+  <div style="height:296px" aria-hidden="true"></div>
+</div>
+<script>
+/*PRELUDE*/
+$$('[data-ic]').forEach(e => { e.innerHTML = ic(e.dataset.ic); });
+function listbox(btn, pop, opts, cur, onPick) {
+  let i = opts.indexOf(cur);
+  const render = () => { pop.innerHTML = opts.map((o, k) => '<button class="fa-item" role="option" aria-selected="' + (o === cur) + '" data-active="' + (k === i) + '" data-k="' + k + '"><span class="grow">' + o + '</span>' + (o === cur ? ic('check') : '') + '</button>').join(''); $$('.fa-item', pop).forEach(b => b.onclick = () => pick(+b.dataset.k)); };
+  const open = () => { pop.hidden = false; btn.setAttribute('aria-expanded', 'true'); i = opts.indexOf(cur); render(); };
+  const close = (f) => { pop.hidden = true; btn.setAttribute('aria-expanded', 'false'); if (f) btn.focus(); };
+  const pick = k => { cur = opts[k]; onPick(cur); close(true); };
+  btn.onclick = () => (pop.hidden ? open() : close(true));
+  btn.addEventListener('keydown', e => {
+    if (pop.hidden && ['ArrowDown', 'Enter', ' '].includes(e.key)) { e.preventDefault(); open(); return; }
+    if (pop.hidden) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); i = (i + 1) % opts.length; render(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); i = (i - 1 + opts.length) % opts.length; render(); }
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(i); }
+    else if (e.key === 'Escape') { e.preventDefault(); close(true); }
+  });
+  document.addEventListener('mousedown', e => { if (!pop.hidden && !pop.contains(e.target) && !btn.contains(e.target)) close(false); });
+}
+listbox($('#s1'), $('#p1'), ['标准', '较大', '超大'], '较大', v => { $('#s1v').textContent = v; });
+
+const AG = { 'Claude Code': ['Claude Opus 5.5', 'Claude Opus 5', 'Claude Fable 5.2', 'Claude Haiku 5.5'], 'Kimi Code': ['Kimi K3', 'Kimi K2.6'], 'Codex': ['GPT-5.5', 'GPT-5.4 mini'], 'Antigravity': ['Gemini 3 Pro'] };
+const TUI = { 'Claude Code': true, 'Kimi Code': false, 'Codex': true, 'Antigravity': false };
+const CUSTOM = ['DeepSeek V4 · Recodex'];
+let agent = 'Claude Code', model = 'Claude Opus 5.5', filter = '';
+const p2 = $('#p2'), s2 = $('#s2');
+function r2() {
+  $('#ag').innerHTML = '<div class="fa-glabel">智能体</div>' + Object.keys(AG).map(a => '<button class="fa-item" role="option" aria-selected="' + (a === agent) + '" data-a="' + a + '"><span class="grow">' + a + '</span></button>').join('');
+  const ms = AG[agent].filter(m => m.toLowerCase().includes(filter.toLowerCase())), cu = CUSTOM.filter(m => m.toLowerCase().includes(filter.toLowerCase()));
+  $('#ml').innerHTML = ms.map(m => '<button class="fa-item" role="option" aria-selected="' + (m === model) + '" data-m="' + m + '"><span class="grow">' + m + '</span>' + (m === model ? ic('check') : '') + '</button>').join('') + (cu.length ? '<div class="fa-sep"></div><div class="fa-glabel">你的模型</div>' + cu.map(m => '<button class="fa-item" role="option" aria-selected="false" data-m="' + m + '"><span class="grow">' + m + '</span><span class="end">自定义</span></button>').join('') : '') + (ms.length || cu.length ? '' : '<div class="fa-glabel">没有匹配的模型</div>');
+  $$('[data-a]', p2).forEach(b => b.onclick = () => { agent = b.dataset.a; model = AG[agent][0]; r2(); upd(); });
+  $$('[data-m]', p2).forEach(b => b.onclick = () => { model = b.dataset.m; upd(); close2(); });
+}
+function upd() { $('#s2v').textContent = model + ' · ' + $('#acv').textContent; $('#note').textContent = TUI[agent] ? '该智能体有 TUI：会话页显示「打开 TUI」和「打开终端」。' : '该智能体没有 TUI：「打开 TUI」入口已隐藏，只剩「打开终端」。'; }
+function close2() { p2.hidden = true; s2.setAttribute('aria-expanded', 'false'); s2.focus(); }
+s2.onclick = () => { if (p2.hidden) { p2.hidden = false; s2.setAttribute('aria-expanded', 'true'); r2(); $('#q').focus(); } else close2(); };
+$('#q').addEventListener('input', e => { filter = e.target.value; r2(); });
+p2.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); close2(); } });
+let acct = 0; $('#acct').onclick = () => { acct = (acct + 1) % 2; $('#acv').textContent = ['本机账号', '个人账号'][acct]; upd(); };
+document.addEventListener('mousedown', e => { if (!p2.hidden && !p2.contains(e.target) && !s2.contains(e.target)) { p2.hidden = true; s2.setAttribute('aria-expanded', 'false'); } });
+upd();
+// Demo state: the two-column picker starts open and fully rendered (agents, account, search, models), without stealing focus.
+r2(); p2.hidden = false; s2.setAttribute('aria-expanded', 'true');
+</script>

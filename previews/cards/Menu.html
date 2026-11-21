@@ -1,0 +1,48 @@
+<div class="fa-stage">
+  <div class="fa-cap">演示态：菜单默认展开。不放装饰图标；勾号只表示开关开着；右侧单字母是快捷键，菜单开着时直接按；删除单独一组放最后、红字。右键或点「更多」重新打开，方向键、Enter、Esc 都能用</div>
+  <div style="position:relative;width:360px">
+    <div class="fa-trow" id="row" tabindex="0" >
+      <span class="lead"><span class="fa-agent" title="Claude Code">C<span class="fa-dot fa-dot--running" role="img" aria-label="运行中"></span></span></span>
+      <div style="min-width:0"><div class="t">排查登录超时</div><div class="s">local/42-login-fix · 有未提交的改动</div></div>
+      <span class="end"><span class="tm">3 分钟</span><span class="acts"><button class="fa-icon-btn" id="more" aria-label="更多操作" aria-haspopup="menu"></button></span></span>
+    </div>
+    <div class="fa-pop" id="menu" role="menu" hidden style="position:absolute;width:248px;z-index:3"></div>
+  </div>
+  <div style="height:392px" aria-hidden="true"></div>
+  <div class="fa-hint" id="say" role="status">选一项看反馈。</div>
+</div>
+<script>
+/*PRELUDE*/
+// No decorative icons: an icon appears only when it means exactly one thing, and the check mark only means "this toggle is on".
+// Right edge: single-letter shortcut, live while the menu is open. Delete-type items sit in their own last group, in danger text.
+const ITEMS = [
+  { l: '置顶', k: 'P', say: '已置顶' }, { l: '标为未读', k: 'U', say: '已标为未读' }, { l: '重命名', k: 'R', say: '进入行内重命名' },
+  { sep: 1 }, { l: '本会话用量', usage: 1, say: '打开用量详情' }, { l: '复制会话标题', say: '已复制会话标题' }, { l: '复制 Session ID', say: '已复制 Session ID' }, { l: '复制续聊命令', say: '已复制续聊命令' },
+  { sep: 1 }, { l: '闲置时释放内存', toggle: 1, on: true }, { l: '选择多个', say: '进入多选：顶部出现批量操作条' }, { l: '归档', k: 'A', say: '已归档。撤销（Toast 8 秒）' },
+  { sep: 1 }, { l: '删除', k: 'D', danger: 1, say: '打开 ConfirmDialog：删除后无法恢复' },
+];
+const menu = $('#menu'), row = $('#row'); let act = 0, buttons = [];
+$('#more').innerHTML = ic('more');
+function build() {
+  menu.classList.add('fa-pop--plain'); menu.innerHTML = ITEMS.map((it, n) => it.sep ? '<div class="fa-sep"></div>' : '<button class="fa-item' + (it.danger ? ' fa-item--danger' : '') + '" role="' + (it.toggle ? 'menuitemcheckbox' : 'menuitem') + '"' + (it.toggle ? ' aria-checked="' + it.on + '"' : '') + (it.k ? ' aria-keyshortcuts="' + it.k + '"' : '') + ' data-n="' + n + '"><span class="grow">' + it.l + '</span>' + (it.usage ? '<span class="end" id="u">正在统计…</span>' : '') + (it.toggle ? '<span class="tick">' + ic('check') + '</span>' : '') + (it.k ? '<span class="key" aria-hidden="true">' + it.k + '</span>' : '') + '</button>').join('');
+  buttons = $$('.fa-item', menu); buttons.forEach((b, k) => { b.onmouseenter = () => hi(k); b.onclick = () => run(+b.dataset.n); });
+  setTimeout(() => { const u = $('#u'); if (u) u.textContent = '81K tokens'; }, 500);
+}
+function hi(k, quiet) { act = k; buttons.forEach((b, j) => b.dataset.active = j === k); if (!quiet) buttons[k].focus(); }
+function openAt(x, y, quiet) { build(); menu.hidden = false; menu.style.left = Math.max(0, Math.min(x, 360 - 248)) + 'px'; menu.style.top = y + 'px'; hi(0, quiet); }
+function close(f) { menu.hidden = true; if (f) row.focus(); }
+function run(n) { const it = ITEMS[n]; if (it.toggle) { it.on = !it.on; buttons.find(b => +b.dataset.n === n).setAttribute('aria-checked', it.on); $('#say').textContent = '闲置时释放内存：' + (it.on ? '开' : '关') + '（开关项点了菜单不关）'; return; } $('#say').textContent = it.say || it.l; close(true); }
+row.addEventListener('contextmenu', e => { e.preventDefault(); const r = row.getBoundingClientRect(); openAt(e.clientX - r.left, e.clientY - r.top); });
+$('#more').onclick = e => { e.stopPropagation(); const r = row.getBoundingClientRect(), b = e.currentTarget.getBoundingClientRect(); openAt(b.left - r.left - 200, b.bottom - r.top + 4); };
+row.addEventListener('keydown', e => { if (e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10')) { e.preventDefault(); openAt(40, 56); } });
+menu.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') { e.preventDefault(); hi((act + 1) % buttons.length); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); hi((act - 1 + buttons.length) % buttons.length); }
+  else if (e.key === 'Escape') { e.preventDefault(); close(true); }
+  else if (e.key === 'Tab') { e.preventDefault(); close(true); }
+  else if (/^[a-z]$/i.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) { const n = ITEMS.findIndex(it => it.k === e.key.toUpperCase()); if (n >= 0) { e.preventDefault(); run(n); } }
+});
+document.addEventListener('mousedown', e => { if (!menu.hidden && !menu.contains(e.target)) close(false); });
+// Demo state: the menu starts open under the row's 更多 button, nothing focused.
+openAt(112, 48, true);
+</script>
