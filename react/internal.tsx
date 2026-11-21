@@ -24,6 +24,18 @@ const PATHS = {
       <path d="M8 5v3.5M8 10.8v.01" />
     </>
   ),
+  info: (
+    <>
+      <circle cx="8" cy="8" r="6" />
+      <path d="M8 7.5V11M8 5.2v.01" />
+    </>
+  ),
+  warn: (
+    <>
+      <path d="M8 2.5L14 13H2z" />
+      <path d="M8 6.5v3M8 11.2v.01" />
+    </>
+  ),
   search: (
     <>
       <circle cx="7" cy="7" r="4" />

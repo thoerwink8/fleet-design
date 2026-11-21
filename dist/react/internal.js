@@ -8,6 +8,8 @@ const PATHS = {
     chevD: _jsx("path", { d: "M4 6l4 4 4-4" }),
     chevR: _jsx("path", { d: "M6 4l4 4-4 4" }),
     alert: (_jsxs(_Fragment, { children: [_jsx("circle", { cx: "8", cy: "8", r: "6" }), _jsx("path", { d: "M8 5v3.5M8 10.8v.01" })] })),
+    info: (_jsxs(_Fragment, { children: [_jsx("circle", { cx: "8", cy: "8", r: "6" }), _jsx("path", { d: "M8 7.5V11M8 5.2v.01" })] })),
+    warn: (_jsxs(_Fragment, { children: [_jsx("path", { d: "M8 2.5L14 13H2z" }), _jsx("path", { d: "M8 6.5v3M8 11.2v.01" })] })),
     search: (_jsxs(_Fragment, { children: [_jsx("circle", { cx: "7", cy: "7", r: "4" }), _jsx("path", { d: "M10 10l3.5 3.5" })] })),
     x: _jsx("path", { d: "M4 4l8 8M12 4l-8 8" }),
 };
