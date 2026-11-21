@@ -48,6 +48,7 @@
   --spacing-row-2: var(--row-2);
   --spacing-row-3: var(--row-3);
   --spacing-row-data: var(--row-data);
+  --spacing-row-table: var(--row-table);
 
   --radius-*: initial;
   --radius-sm: 4px;

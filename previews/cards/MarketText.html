@@ -1,6 +1,6 @@
 <div class="fa-stage">
   <div class="fa-col"><div class="fa-cap">项目（只改强调色和涨跌方向）</div>
-    <div class="fa-seg" role="radiogroup" aria-label="项目" id="pj"><button role="radio" aria-checked="false" data-p="">fleet-ade</button><button role="radio" aria-checked="true" data-p="ashare">交易复盘（涨红跌绿）</button><button role="radio" aria-checked="false" data-p="jiqun">机群看板</button></div></div>
+    <div class="fa-seg" role="radiogroup" aria-label="项目" id="pj"><button role="radio" aria-checked="false" data-p="">fleet-ade</button><button role="radio" aria-checked="true" data-p="trade">交易复盘（涨红跌绿）</button><button role="radio" aria-checked="false" data-p="board">机群看板</button></div></div>
   <div class="fa-table-wrap"><table class="fa-table"><caption class="fa-cap" style="text-align:left;padding:8px 12px;caption-side:top">自选股（示例数据）</caption><thead><tr><th scope="col">名称</th><th scope="col" style="text-align:right">现价</th><th scope="col" style="text-align:right">涨跌幅</th><th scope="col" style="text-align:right">盈亏</th></tr></thead>
     <tbody id="tb"></tbody></table></div>
   <div class="fa-col"><div class="fa-cap">和成功 / 危险并排：状态用图标和文字，方向用三角和正负号</div>
@@ -23,6 +23,6 @@ $$('[data-mv]').forEach(e => { const v = +e.dataset.mv; e.outerHTML = mv(v, '%')
 $$('[data-i]').forEach(e => { e.innerHTML = ic(e.dataset.i); });
 const root = document.documentElement, pj = $('#pj');
 function mark() { const cur = root.dataset.project || ''; $$('button', pj).forEach(b => b.setAttribute('aria-checked', b.dataset.p === cur)); }
-$$('button', pj).forEach(b => b.onclick = () => { if (b.dataset.p) root.dataset.project = b.dataset.p; else root.removeAttribute('data-project'); mark(); $('#say').textContent = b.dataset.p === 'ashare' ? '交易复盘：涨红跌绿。看右边的「行情接口超时」，仍然是 danger 红，带图标和文字。' : '默认：涨绿跌红。'; });
-root.dataset.project = 'ashare'; mark();
+$$('button', pj).forEach(b => b.onclick = () => { if (b.dataset.p) root.dataset.project = b.dataset.p; else root.removeAttribute('data-project'); mark(); $('#say').textContent = b.dataset.p === 'trade' ? '交易复盘：涨红跌绿。看右边的「行情接口超时」，仍然是 danger 红，带图标和文字。' : '默认：涨绿跌红。'; });
+root.dataset.project = 'trade'; mark();
 </script>

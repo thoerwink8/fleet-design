@@ -33,3 +33,6 @@
 .fa-gi{height:var(--row-data)}
 .fa-grp__h{height:var(--row-1);padding:0 var(--space-row-x)}
 .fa-grp__list{padding:0 var(--space-row-x) var(--space-1) calc(var(--space-row-x) + 20px)}
+/* the filled part of a single-value meter (React Meter): accent, danger from 95% */
+.fa-meter__fill{background:var(--accent)}
+.fa-meter__fill--full{background:var(--danger)}

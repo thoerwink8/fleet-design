@@ -1,13 +1,14 @@
-/* Command palette. Three-line result rows: title + time / summary / meta (left: model, turns; right: workspace, branch).
+/* Command palette. A list floating layer, so 8 padding like menus and selects (stated here so the result does not depend on file order). Three-line result rows: title + time / summary / meta (left: model, turns; right: workspace, branch).
    Every variable-length field truncates on its own innermost element. Right edge of text sits 20px from the overlay edge (list 8 + row 12). */
-.fa-cmd{width:640px;max-width:100%;padding:0;overflow:hidden}
+.fa-cmd{width:640px;max-width:100%;padding:var(--space-2);overflow:hidden}
 .fa-cmd__in{display:flex;align-items:center;gap:var(--space-2);height:48px;padding:0 var(--space-4);border-bottom:var(--bw-1) solid var(--border);color:var(--fg-muted)}
 .fa-cmd__in input{flex:1;min-width:0;height:100%;border:0;outline:0;background:transparent;font:400 14px/20px var(--font-sans);color:var(--fg)}
 .fa-cmd__in input::placeholder{color:var(--fg-muted)}
 .fa-cmd__list{padding:var(--space-1) var(--space-2) var(--space-2);max-height:368px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .fa-cmd__list .fa-glabel{padding:var(--space-2) var(--space-3) var(--space-1)}
 .fa-cmd__row{display:flex;flex-direction:column;justify-content:center;min-height:var(--ctrl);padding:var(--space-2) var(--space-3);border-radius:var(--radius-md);cursor:pointer;background-color:transparent}
-.fa-cmd__row--1{padding-block:var(--space-1)}
+/* one-line rows: 2 seam + 4 + 20 + 4 + 2 = 32; the doubled class keeps this ahead of the .fa-cmd__row padding below whatever the order */
+.fa-cmd__row.fa-cmd__row--1{padding-block:var(--space-1)}
 .fa-cmd__row:hover{background-image:linear-gradient(var(--hover),var(--hover))}
 .fa-cmd__row[data-active=true]{background-color:var(--selected);background-image:none}
 .fa-cmd__row .l{display:flex;align-items:baseline;gap:var(--space-2);min-width:0}
@@ -39,3 +40,6 @@
 /* palette three-line rows: 2 seam + 8 + 20 + 16 + 16 + 8 + 2 = 72 */
 .fa-cmd__row{padding:var(--space-2) var(--space-row-x)}
 .fa-cmd__row.has-lead{column-gap:var(--space-icon-gap)}
+/* as a modal layer (React CommandPalette): fixed in the upper part of the viewport over the scrim; an empty result says so in one muted line */
+.fa-cmd--modal{position:fixed;top:15%;left:50%;z-index:41;transform:translateX(-50%);max-width:calc(100% - 2 * var(--space-4))}
+.fa-cmd__empty{display:flex;align-items:center;min-height:var(--ctrl);padding:0 var(--space-row-x);font:400 14px/20px var(--font-sans);color:var(--fg-muted)}

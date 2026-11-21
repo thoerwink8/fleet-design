@@ -2,3 +2,4 @@ node_modules/
 .dev-server.pid
 test-results/
 *.log
+.claude/

@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import net from 'node:net';
 import path from 'node:path';
 import { outputs } from './lib/outputs.mjs';
 import { createPreviewServer, listen } from './lib/preview.mjs';
@@ -17,17 +18,39 @@ function build() {
   }
 }
 
+// A pid file left behind by a killed server must not block the next start: the recorded server counts as running only
+// if its process exists and its port still answers (on Windows a pid can be reused by an unrelated process).
+const answers = (port) =>
+  new Promise((resolve) => {
+    const socket = net.connect({ port, host: '127.0.0.1' });
+    const done = (ok) => {
+      socket.destroy();
+      resolve(ok);
+    };
+    socket.setTimeout(500);
+    socket.once('connect', () => done(true));
+    socket.once('timeout', () => done(false));
+    socket.once('error', () => done(false));
+  });
+
 if (fs.existsSync(pidFile)) {
-  const { pid } = JSON.parse(fs.readFileSync(pidFile, 'utf8'));
+  let recorded = {};
+  try {
+    recorded = JSON.parse(fs.readFileSync(pidFile, 'utf8'));
+  } catch {}
   let alive = false;
   try {
-    process.kill(pid, 0);
-    alive = true;
+    process.kill(recorded.pid, 0);
+    alive = await answers(recorded.port);
   } catch {}
   if (alive) {
-    console.error(`a preview server started by pnpm dev is already running (pid ${pid}); run pnpm stop first`);
+    console.error(
+      `a preview server started by pnpm dev is already running (pid ${recorded.pid}, port ${recorded.port}); run pnpm stop first`,
+    );
     process.exit(1);
   }
+  fs.rmSync(pidFile, { force: true });
+  console.log(`removed a stale .dev-server.pid (pid ${recorded.pid} is not serving)`);
 }
 
 build();

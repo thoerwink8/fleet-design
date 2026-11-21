@@ -1,0 +1,349 @@
+[
+  {
+    "name": "Button",
+    "card": "Button",
+    "subtitle": "React：Button、IconButton。变体、尺寸、进行中、禁用",
+    "compare": [
+      ["[data-cmp=primary]", ".fa-btn.fa-btn--primary"],
+      ["[data-cmp=secondary]", ".fa-btn.fa-btn--secondary"],
+      ["[data-cmp=ghost]", ".fa-btn:not([class*=fa-btn--])"],
+      ["[data-cmp=danger]", ".fa-btn.fa-btn--danger"],
+      ["[data-cmp=sm]", ".fa-btn--secondary.fa-btn--sm:not(.fa-btn--icon)"],
+      ["[data-cmp=lg]", ".fa-btn--secondary.fa-btn--lg"],
+      ["[data-cmp=icon-sm]", ".fa-btn--icon.fa-btn--secondary.fa-btn--sm"],
+      ["[data-cmp=busy]", "#go"],
+      ["[data-cmp=disabled-primary]", ".fa-btn--primary[disabled]"],
+      ["[data-cmp=disabled-secondary]", ".fa-btn--secondary[disabled]"]
+    ]
+  },
+  {
+    "name": "SegmentedControl",
+    "card": "SegmentedControl",
+    "subtitle": "React：SegmentedControl（Base UI RadioGroup）。受控、非受控、禁用项",
+    "compare": [
+      ["[aria-label=字号]", "#fs"],
+      ["[aria-label=字号] [aria-checked=true]", "#fs [aria-checked=true]"],
+      ["[aria-label=字号] [aria-checked=false]", "#fs [aria-checked=false]"],
+      ["[aria-label=上下文] [disabled]", ".fa-seg button[disabled][aria-checked=false]"]
+    ]
+  },
+  {
+    "name": "Input",
+    "card": "Input",
+    "subtitle": "React：Input（Base UI Field）。提示、错误态、前后缀、禁用",
+    "compare": [
+      ["input[data-cmp=plain]", "#a"],
+      [".fa-field label", ".fa-field label"],
+      ["input[data-cmp=plain]", "#a"],
+      ["input[data-cmp=branch]", "#b"],
+      [
+        ".fa-hint--error",
+        "#bh",
+        {
+          "ignore": ["block-size", "height"],
+          "why": "the card wraps its icon in a span, which adds 2px of line box; the component puts the 16px icon straight into the flex row"
+        }
+      ],
+      [".fa-input--group", ".fa-input--group"],
+      ["input[data-cmp=affix]", "#e"],
+      [".fa-input__affix", ".fa-input__affix"],
+      ["input[data-cmp=disabled]", "#d"]
+    ]
+  },
+  {
+    "name": "Tooltip",
+    "card": "Tooltip",
+    "subtitle": "React：Tooltip（Base UI Tooltip）。悬停、聚焦、Esc、快捷键",
+    "compare": [
+      [
+        ".fa-tip",
+        ".fa-tip[style*=max-width]",
+        {
+          "ignore": ["tag", "display", "min-block-size", "min-height", "min-inline-size", "min-width"],
+          "why": "the card shows the tip as a span inside a flex row (blockified); the component renders the popup as a div inside its positioner"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Menu",
+    "card": "Menu",
+    "subtitle": "React：Menu（Base UI Menu）。快捷键、勾选项、分组、子菜单、禁用项",
+    "compare": [
+      [
+        "[aria-label=视图]",
+        "#menu",
+        {
+          "ignore": [
+            "block-size",
+            "height",
+            "bottom",
+            "top",
+            "left",
+            "right",
+            "inset-block-end",
+            "inset-block-start",
+            "inset-inline-start",
+            "inset-inline-end",
+            "position",
+            "z-index"
+          ],
+          "why": "the popup is positioned by Base UI and holds different items; size and position are not styles"
+        }
+      ],
+      ["[aria-label=视图] [role=menuitem]", "#menu .fa-item[data-active=false]"],
+      ["[aria-label=视图] .fa-sep", "#menu .fa-sep"],
+      ["[aria-label=视图] [role=menuitemcheckbox]", "#menu [role=menuitemcheckbox]"],
+      [
+        "[aria-label=视图] .fa-glabel",
+        "#p2 .fa-glabel",
+        {
+          "card": "Select"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Select",
+    "card": "Select",
+    "subtitle": "React：Select（Base UI Select）。受控、幽灵变体、占位",
+    "compare": [
+      ["[aria-label=字号]", "#s1"],
+      [
+        ".fa-select--ghost",
+        ".fa-composer__bar .fa-select--ghost:not(.is-model)",
+        {
+          "card": "Composer"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Toast",
+    "card": "Toast",
+    "subtitle": "React：ToastProvider + useToast（Base UI Toast）。队列、自动消失、悬停暂停、撤销",
+    "compare": [
+      [".fa-toast", ".fa-toast"],
+      [".fa-toast .fa-btn", ".fa-toast .fa-btn"],
+      [".fa-toast .fa-icon-btn", ".fa-toast .fa-icon-btn"],
+      [".fa-toast .grow", ".fa-toast .grow"]
+    ]
+  },
+  {
+    "name": "Dialog",
+    "card": "ConfirmDialog",
+    "subtitle": "React：Dialog、ConfirmDialog（Base UI Dialog / AlertDialog）。焦点去向、Esc、焦点归还",
+    "compare": [
+      [
+        ".fa-dialog",
+        ".fa-dialog",
+        {
+          "ignore": [
+            "position",
+            "top",
+            "left",
+            "bottom",
+            "right",
+            "inset-block-start",
+            "inset-block-end",
+            "inset-inline-start",
+            "inset-inline-end",
+            "z-index",
+            "transform",
+            "max-height",
+            "max-width",
+            "overflow",
+            "overflow-x",
+            "overflow-y",
+            "block-size",
+            "height",
+            "max-block-size",
+            "max-inline-size",
+            "min-block-size",
+            "min-height",
+            "min-inline-size",
+            "min-width",
+            "overflow-block",
+            "overflow-inline"
+          ],
+          "why": "the card shows the dialog inline; the component centres it over a fixed scrim, and its height follows its content"
+        }
+      ],
+      [".fa-dialog h2", ".fa-dialog h2"],
+      [".fa-dialog p", ".fa-dialog p"],
+      [
+        ".fa-dialog .fa-names",
+        ".fa-dialog .fa-names",
+        {
+          "ignore": ["block-size", "height"],
+          "why": "different number of names"
+        }
+      ],
+      [".fa-dialog__foot", ".fa-dialog__foot"],
+      [".fa-dialog .fa-btn--danger", ".fa-dialog .fa-btn--danger"]
+    ]
+  },
+  {
+    "name": "Drawer",
+    "card": "Drawer",
+    "subtitle": "React：Drawer（Base UI Dialog）。滑入、遮罩、Esc、焦点归还",
+    "compare": [
+      [
+        ".fa-drawer",
+        "#dr",
+        {
+          "ignore": [
+            "position",
+            "z-index",
+            "max-width",
+            "block-size",
+            "height",
+            "bottom",
+            "inset-block-end",
+            "tag",
+            "right",
+            "inset-inline-end",
+            "max-inline-size"
+          ],
+          "why": "the card frames the drawer inside a phone mock-up; the component fixes it to the viewport edge (the card uses a nav element; the component renders the Base UI popup, a div with role dialog)"
+        }
+      ],
+      [
+        ".fa-backdrop",
+        "#sc",
+        {
+          "ignore": [
+            "position",
+            "z-index",
+            "opacity",
+            "pointer-events",
+            "transition-duration",
+            "transition-property",
+            "transition-timing-function",
+            "transition-behavior",
+            "transition-delay",
+            "width",
+            "height",
+            "block-size",
+            "bottom",
+            "right",
+            "inset-block-end",
+            "inset-inline-end",
+            "user-select"
+          ],
+          "why": "the card fades its scrim in with opacity; the component mounts the scrim only while open"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Collapsible",
+    "card": "DetailsPanel",
+    "subtitle": "React：Collapsible、DetailsPanel（Base UI Collapsible）。分节和对话折叠行",
+    "compare": [
+      [
+        ".fa-dp__head",
+        ".fa-dp summary",
+        {
+          "ignore": ["tag", "text-align", "list-style-type", "display", "cursor", "appearance", "counter-increment"],
+          "why": "the card uses details/summary; the component head is a button with aria-expanded (UA defaults of button vs summary)"
+        }
+      ],
+      [
+        ".fa-fold__sum",
+        ".fa-fold__sum",
+        {
+          "card": "ToolCallFold",
+          "ignore": ["display", "min-inline-size", "min-width"],
+          "why": "inside the component root (a flex column) the summary button is blockified: flex instead of inline-flex, same box"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Meter",
+    "card": "ContextMeter",
+    "subtitle": "React：Meter（Base UI Meter）。细条、默认、危险色、分段",
+    "compare": [
+      [".fa-meter--thin", ".fa-meter--thin"],
+      [
+        ".fa-meter--seg",
+        "#bar",
+        {
+          "ignore": ["flex-basis", "flex-grow", "flex-shrink", "max-inline-size", "max-width"],
+          "why": "layout of the demo"
+        }
+      ],
+      [
+        "[aria-label=\"上下文占用 97%\"]",
+        "[aria-label=\"上下文占用 97%\"]",
+        {
+          "ignore": ["flex-basis", "flex-grow", "flex-shrink"],
+          "why": "the card stretches the bar with flex:1 in a row"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "CommandPalette",
+    "card": "CommandPalette",
+    "subtitle": "React：CommandPalette（Base UI Dialog + 组合框）。过滤、键盘选择、回车执行、分组",
+    "compare": [
+      [
+        ".fa-cmd",
+        ".fa-cmd",
+        {
+          "ignore": [
+            "position",
+            "top",
+            "left",
+            "bottom",
+            "right",
+            "inset-block-start",
+            "inset-block-end",
+            "inset-inline-start",
+            "inset-inline-end",
+            "z-index",
+            "transform",
+            "max-width",
+            "max-inline-size",
+            "block-size",
+            "height",
+            "min-block-size",
+            "min-height",
+            "min-inline-size",
+            "min-width"
+          ],
+          "why": "the card shows the palette inline; the component fixes it over the scrim, and its height follows the results"
+        }
+      ],
+      [".fa-cmd__in", ".fa-cmd__in"],
+      [
+        ".fa-cmd__in input",
+        "#q",
+        {
+          "ignore": ["outline-offset"],
+          "why": "the component input has focus when the palette opens (its outline stays none)"
+        }
+      ],
+      [
+        ".fa-cmd__list",
+        "#list",
+        {
+          "ignore": ["block-size", "height"],
+          "why": "different number of results"
+        }
+      ],
+      [".fa-cmd__list .fa-glabel", "#list .fa-glabel"],
+      [".fa-cmd__row[data-active=true]", ".fa-cmd__row[data-active=true]"],
+      [".fa-cmd__row[data-active=false]:not(.fa-cmd__row--1)", ".fa-cmd__row[data-active=false]"],
+      [".fa-cmd__foot", ".fa-cmd__foot"]
+    ]
+  },
+  {
+    "name": "Checkbox",
+    "card": "ThreadRow",
+    "subtitle": "React：Checkbox（Base UI Checkbox）。带文字、半选、禁用；ThreadRow 多选也用它",
+    "compare": []
+  }
+]

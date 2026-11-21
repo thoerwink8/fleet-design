@@ -86,7 +86,7 @@
     },
     {
       "name": "accent",
-      "usage": "The one accent: primary button fill, links, active mark, focus ring, selected tint source. Also usable as text on `bg`/`panel`/`overlay` (4.5:1). Never for status.",
+      "usage": "The one accent: primary button fill, links, active mark, focus ring. Also usable as text on `bg`/`panel`/`overlay` (4.5:1). Never for status.",
       "value": {
         "light": "{brand-fleet}",
         "solarized": "{brand-fleet}",
@@ -242,7 +242,7 @@
   "market": [
     {
       "name": "up",
-      "usage": "Market direction: price or value rose. Default = `palette-green`; `data-project=\"ashare\"` switches it to `palette-red` (A-share convention). Always paired with ▲ and a plus sign. Not `success`.",
+      "usage": "Market direction: price or value rose. Default = `palette-green`; `data-project=\"trade\"` switches it to `palette-red` (A-share convention). Always paired with ▲ and a plus sign. Not `success`.",
       "value": {
         "light": "{palette-green}",
         "solarized": "{palette-green}",
@@ -256,7 +256,7 @@
     },
     {
       "name": "down",
-      "usage": "Market direction: price or value fell. Default = `palette-red`; `data-project=\"ashare\"` switches it to `palette-green`. Always paired with ▼ and a minus sign. Not `danger`.",
+      "usage": "Market direction: price or value fell. Default = `palette-red`; `data-project=\"trade\"` switches it to `palette-green`. Always paired with ▼ and a minus sign. Not `danger`.",
       "value": {
         "light": "{palette-red}",
         "solarized": "{palette-red}",

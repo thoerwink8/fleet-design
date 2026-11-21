@@ -11,3 +11,11 @@
 .fa-hint--error .fa-ic{color:var(--danger)}
 /* forms: label to input 8 */
 .fa-field{gap:var(--space-2)}
+/* input with a prefix or suffix (unit, protocol, search icon): the frame is .fa-input, the inner input has no frame of its own */
+.fa-input--group{display:flex;align-items:center;gap:var(--space-2);cursor:text}
+.fa-input--group:has(.fa-input__control:focus-visible){outline:var(--bw-focus) solid var(--focus-ring);outline-offset:0;border-color:var(--accent)}
+.fa-input--group:has(.fa-input__control:disabled){background:var(--panel);color:var(--fg-muted);border-color:var(--border);cursor:not-allowed}
+.fa-input--group:has(.fa-input__control[aria-invalid=true]){border-color:var(--danger)}
+.fa-input__control{flex:1;min-width:0;height:100%;border:0;outline:0;background:transparent;color:inherit;font:inherit}
+.fa-input__control::placeholder{color:var(--fg-muted)}
+.fa-input__affix{flex:none;display:inline-flex;align-items:center;color:var(--fg-muted);white-space:nowrap}

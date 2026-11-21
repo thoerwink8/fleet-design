@@ -2,6 +2,7 @@
   <div class="fa-field"><label for="a">会话标题</label><input class="fa-input" id="a" value="排查登录超时" aria-describedby="ah"><div class="fa-hint" id="ah">留空则恢复自动标题。最长 20 个字。</div></div>
   <div class="fa-field"><label for="b">分支名</label><input class="fa-input fa-mono" id="b" value="local/42-login fix" aria-invalid="true" aria-describedby="bh"><div class="fa-hint fa-hint--error" id="bh"><span data-ic="alert"></span><span>分支名不能有空格。把空格换成连字符，例如 local/42-login-fix</span></div></div>
   <div class="fa-field"><label for="c">搜索会话</label><input class="fa-input" id="c" placeholder="标题或内容，空格分词，引号精确"><div class="fa-hint">输入后出现「标题 3 · 内容 12」，列表本身不被过滤，命中的字高亮。</div></div>
+  <div class="fa-field"><label for="e">单次花费上限</label><div class="fa-input fa-input--group"><span class="fa-input__affix">$</span><input class="fa-input__control" id="e" value="2.00" inputmode="decimal" aria-describedby="eh"><span class="fa-input__affix">每次运行</span></div><div class="fa-hint" id="eh">前缀和后缀在框里，跟着输入框一起变色和聚焦。</div></div>
   <div class="fa-field"><label for="d">工作区路径</label><input class="fa-input fa-mono" id="d" value="C:\src\acme-app" disabled><div class="fa-hint">由当前仓库决定，不能在这里改</div></div>
   <div class="fa-hint" id="say" role="status" style="margin-top:4px">试试：在第一个框里写超过 20 个字，或清空它。</div>
 </div>

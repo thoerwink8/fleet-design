@@ -8,7 +8,7 @@
 /* Compact composer: one line, 44 high including the border. Same tokens as the standard one. */
 .fa-composer--compact{display:flex;align-items:center;gap:var(--space-1);min-height:44px;padding:0 var(--space-2)}
 .fa-composer--compact textarea{flex:1;min-width:0;min-height:24px;height:24px;padding:0 var(--space-1)}
-.fa-composer__meta{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);min-width:0;white-space:nowrap;padding:var(--space-2) var(--space-3) 0;font:400 12px/16px var(--font-sans);color:var(--fg-muted)}
+.fa-composer__meta{container:composer-meta / inline-size;display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);min-width:0;white-space:nowrap;padding:var(--space-2) var(--space-3) 0;font:400 12px/16px var(--font-sans);color:var(--fg-muted)}
 .fa-chip{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--ctrl-xs);padding:0 var(--space-2);border-radius:var(--radius-sm);background-color:transparent;background-image:var(--wash2);font:400 12px/16px var(--font-sans);color:var(--fg);max-width:240px;min-width:0}
 .fa-chip--sm{height:var(--ctrl-2xs);padding:0 var(--space-1)}
 .fa-chip .fa-ic{width:12px;height:12px}
@@ -35,3 +35,6 @@
 }
 @container composer (max-width: 399px){ .fa-composer__bar .is-model .acct{display:none} }
 @container composer (max-width: 299px){ .fa-composer__bar .is-model .lbl{display:none} }
+/* the read-only strip under the composer: below 400 (bp-composer-account) the branch name goes, project and usage stay; it is hidden, never cut to "local/42-lo…" */
+.fa-composer__meta .branch{display:inline-flex;align-items:center;gap:var(--space-1);min-width:0}
+@container composer-meta (max-width: 399px){ .fa-composer__meta .branch{display:none} }

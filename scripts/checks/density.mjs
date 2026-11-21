@@ -13,6 +13,7 @@ export function densitySpec(T = tokensJson()) {
   return {
     clickableRow: px('row-1'),
     twoLineRow: px('row-2'),
+    tableRow: px('row-table'),
     rowPadY: px('space-row-y'),
     iconGap: px('space-icon-gap'),
     seam: px('space-row-seam'),
@@ -26,6 +27,10 @@ export function densitySpec(T = tokensJson()) {
     contentLayerPad: px('space-4'),
   };
 }
+
+// Clickable rows: at least row-1 high at 1000, and their content stays inside them at 360.
+export const ROWS =
+  '.fa-item,.fa-trow,.fa-task,.fa-chg,.fa-conn,.fa-grp__h,.fa-step,.fa-cmd__row,.fa-more,.fa-fold__sum,button.fa-fold__cmd,.fa-run,.fa-dp summary,.fa-dp__head,.fa-sec__h--btn,tr[tabindex]';
 
 // Runs inside the page: measures rendered geometry, not CSS text. Returns [{check, spec, actual, ok, where}].
 function audit(S) {
@@ -41,9 +46,8 @@ function audit(S) {
   const add = (check, spec, actual, ok, e) => out.push({ check, spec, actual, ok, where: e ? name(e) : '' });
   const all = (s) => [...document.querySelectorAll(s)].filter(vis);
 
-  const ROWS =
-    '.fa-item,.fa-trow,.fa-task,.fa-chg,.fa-conn,.fa-grp__h,.fa-step,.fa-cmd__row,.fa-more,.fa-fold__sum,button.fa-fold__cmd,.fa-run,.fa-dp summary,.fa-sec__h--btn,tr[tabindex]';
-  for (const e of all(ROWS)) {
+  const rows = S.rows;
+  for (const e of all(rows)) {
     const h = Math.round(R(e).height);
     add('clickable row height', `>= ${S.clickableRow}`, h, h >= S.clickableRow, e);
   }
@@ -51,10 +55,19 @@ function audit(S) {
     ...all('.fa-chg'),
     ...all('.fa-trow:not(.fa-trow--1)').filter((e) => e.querySelector('.s')),
     ...all('.fa-task[aria-expanded=true]').filter((e) => e.querySelector('.sub')),
+    ...all('.fa-cmd__row').filter((e) => e.querySelector('.l2') && !e.querySelector('.l3')),
   ];
   for (const e of two) {
     const h = Math.round(R(e).height);
     add('two-line row height', `${S.twoLineRow}`, h, h === S.twoLineRow, e);
+  }
+  for (const e of all('.fa-cmd__row--1')) {
+    const h = Math.round(R(e).height);
+    add('one-line command row height', `${S.clickableRow}`, h, h === S.clickableRow, e);
+  }
+  for (const e of all('.fa-table tbody tr')) {
+    const h = Math.round(R(e).height);
+    add('table row height', `${S.tableRow}`, h, h === S.tableRow, e);
   }
   for (const e of all('.fa-cmd__row')) {
     if (!e.querySelector('.l3')) continue;
@@ -67,7 +80,7 @@ function audit(S) {
     const ic = [...e.children].find(
       (c) =>
         vis(c) &&
-        (c.matches('svg,.fa-agent,.lead,.ty,.fa-dot,input[type=checkbox]') ||
+        (c.matches('svg,.fa-agent,.lead,.ty,.fa-dot,.fa-checkbox,input[type=checkbox]') ||
           (c.querySelector && c.children.length === 1 && c.querySelector(':scope>svg'))),
     );
     if (!ic) continue;
@@ -137,7 +150,7 @@ function audit(S) {
   }
   for (const p of all('.fa-pop:not(.fa-pop--pad):not(.fa-pop--two),.fa-cmd,.fa-toast')) {
     const v = px(getComputedStyle(p).paddingTop);
-    add('list layer padding', `${S.listLayerPad}`, v, v === S.listLayerPad || p.matches('.fa-cmd'), p);
+    add('list layer padding', `${S.listLayerPad}`, v, v === S.listLayerPad, p);
   }
   for (const p of all('.fa-pop--pad,.fa-dialog')) {
     const v = px(getComputedStyle(p).paddingTop);
@@ -146,19 +159,45 @@ function audit(S) {
   return out;
 }
 
+// At a phone width: the page does not scroll sideways, and no control or read-only strip cuts its text with an
+// ellipsis. Titles and summaries of variable length may truncate; controls collapse with container queries instead.
+function narrow({ width, rows }) {
+  const out = [];
+  const over = Math.round(document.documentElement.scrollWidth - innerWidth);
+  out.push({ check: `${width}px: page overflow`, spec: '0', actual: Math.max(0, over), ok: over <= 0, where: '' });
+  const CONTROLS = '.fa-btn,.fa-select,.fa-seg,.fa-composer__meta,.fa-composer__bar,.fa-composer__foot';
+  for (const e of document.querySelectorAll('body *')) {
+    if (getComputedStyle(e).textOverflow !== 'ellipsis' || !e.getBoundingClientRect().width || !e.closest(CONTROLS)) continue;
+    const cut = e.scrollWidth > e.clientWidth + 1;
+    const where = `${typeof e.className === 'string' && e.className ? e.className : e.tagName} "${e.textContent.trim().slice(0, 20)}"`;
+    out.push({ check: `${width}px: control text cut`, spec: '0', actual: cut ? 1 : 0, ok: !cut, where });
+  }
+  // Row content stays inside its row: a line that wraps and spills over the next row fails.
+  for (const row of document.querySelectorAll(rows)) {
+    const r = row.getBoundingClientRect();
+    if (!r.width || !r.height) continue;
+    let spill = 0;
+    for (const d of row.querySelectorAll('*')) {
+      const b = d.getBoundingClientRect();
+      if (!b.width || !b.height || getComputedStyle(d).visibility === 'hidden') continue;
+      spill = Math.max(spill, Math.round(b.bottom - r.bottom), Math.round(r.top - b.top));
+    }
+    const where = `${typeof row.className === 'string' ? row.className.split(' ')[0] : row.tagName} "${row.textContent.trim().slice(0, 16)}"`;
+    out.push({ check: `${width}px: row content spills`, spec: '0', actual: Math.max(0, spill), ok: spill <= 0, where });
+  }
+  return out;
+}
+
+export const NARROW = 360;
+
 export default async function density() {
-  const { base, browser, cards } = await browserSession();
-  const spec = densitySpec();
-  const context = await browser.newContext({ viewport: { width: 1000, height: 900 }, deviceScaleFactor: 1 });
-  const page = await context.newPage();
+  const { base, browser, pages } = await browserSession();
+  const spec = { ...densitySpec(), rows: ROWS };
   const lines = [];
   let total = 0;
   let bad = 0;
   const byCheck = new Map();
-  for (const card of cards) {
-    await page.goto(`${base}/cards/${card}.html?theme=light`);
-    await page.waitForTimeout(700);
-    const rows = await page.evaluate(audit, spec);
+  const record = (label, rows) => {
     for (const r of rows) {
       total++;
       const agg = byCheck.get(r.check) || { spec: r.spec, n: 0, min: Infinity, max: -Infinity, fails: [] };
@@ -167,13 +206,23 @@ export default async function density() {
       agg.max = Math.max(agg.max, r.actual);
       if (!r.ok) {
         bad++;
-        agg.fails.push(`${card}: ${r.where} = ${r.actual}`);
+        agg.fails.push(`${label}: ${r.where} = ${r.actual}`);
       }
       byCheck.set(r.check, agg);
     }
+  };
+  for (const width of [1000, NARROW]) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
+    const page = await context.newPage();
+    for (const p of pages) {
+      await page.goto(`${base}${p.url}?theme=light`);
+      await p.ready(page);
+      if (width === NARROW) record(`${p.label} @${NARROW}`, await page.evaluate(narrow, { width: NARROW, rows: ROWS }));
+      else record(p.label, await page.evaluate(audit, spec));
+    }
+    await context.close();
   }
-  await context.close();
-  lines.push(`${cards.length} cards at 1000px, ${total} measurements, ${bad} below spec`);
+  lines.push(`${pages.length} pages at 1000px (density table) and ${NARROW}px (overflow), ${total} measurements, ${bad} below spec`);
   lines.push('check                            spec   measured   count  fails');
   for (const [check, a] of byCheck) {
     lines.push(`${check.padEnd(32)} ${a.spec.padEnd(6)} ${`${a.min}-${a.max}`.padEnd(10)} ${String(a.n).padStart(5)}  ${a.fails.length}`);

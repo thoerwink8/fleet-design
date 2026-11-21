@@ -1,0 +1,90 @@
+import { Select as BaseSelect } from '@base-ui/react/select';
+import type * as React from 'react';
+import { cx, Icon, type LayoutProps } from './internal.js';
+
+export interface SelectOption<V extends string> {
+  value: V;
+  label: React.ReactNode;
+  disabled?: boolean;
+}
+
+export interface SelectProps<V extends string> extends LayoutProps {
+  options: readonly SelectOption<V>[];
+  value?: V | null;
+  defaultValue?: V | null;
+  onValueChange?: (value: V) => void;
+  placeholder?: React.ReactNode;
+  /** `default`: framed, 32 high. `ghost`: no frame, 28 high, muted text, for pickers inside a composer or toolbar. */
+  variant?: 'default' | 'ghost';
+  /** Content before the value inside the trigger (an agent slot, an icon). */
+  lead?: React.ReactNode;
+  disabled?: boolean;
+  name?: string;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+}
+
+/**
+ * A single-choice dropdown: `<Select options={[{ value: '15', label: '较大' }]} value={v} onValueChange={setV} aria-label="字号" />`.
+ * The list opens under the trigger; arrow keys move, Enter picks, Esc closes and focus returns to the trigger.
+ */
+export function Select<V extends string>({
+  options,
+  value,
+  defaultValue,
+  onValueChange,
+  placeholder,
+  variant = 'default',
+  lead,
+  disabled,
+  name,
+  open,
+  defaultOpen,
+  onOpenChange,
+  className,
+  style,
+  ...aria
+}: SelectProps<V>) {
+  return (
+    <BaseSelect.Root
+      items={options.map((o) => ({ value: o.value, label: o.label }))}
+      value={value}
+      defaultValue={defaultValue}
+      onValueChange={(next) => {
+        if (next !== null) onValueChange?.(next as V);
+      }}
+      disabled={disabled}
+      name={name}
+      open={open}
+      defaultOpen={defaultOpen}
+      onOpenChange={(next) => onOpenChange?.(next)}
+    >
+      <BaseSelect.Trigger {...aria} className={cx('fa-select', variant === 'ghost' && 'fa-select--ghost', className)} style={style}>
+        {lead}
+        <BaseSelect.Value className="lbl" placeholder={placeholder} />
+        <BaseSelect.Icon render={<span />}>
+          <Icon name="chevD" />
+        </BaseSelect.Icon>
+      </BaseSelect.Trigger>
+      <BaseSelect.Portal>
+        <BaseSelect.Positioner alignItemWithTrigger={false} side="bottom" align="start" sideOffset={4} collisionPadding={8}>
+          <BaseSelect.Popup className="fa-pop" style={{ minWidth: 'var(--anchor-width)' }}>
+            <BaseSelect.List>
+              {options.map((o) => (
+                <BaseSelect.Item key={o.value} value={o.value} disabled={o.disabled} className="fa-item">
+                  <BaseSelect.ItemText className="grow">{o.label}</BaseSelect.ItemText>
+                  <BaseSelect.ItemIndicator render={<span className="tick" />}>
+                    <Icon name="check" />
+                  </BaseSelect.ItemIndicator>
+                </BaseSelect.Item>
+              ))}
+            </BaseSelect.List>
+          </BaseSelect.Popup>
+        </BaseSelect.Positioner>
+      </BaseSelect.Portal>
+    </BaseSelect.Root>
+  );
+}

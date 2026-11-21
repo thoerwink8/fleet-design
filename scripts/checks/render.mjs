@@ -53,7 +53,10 @@ export default async function render() {
   await context.close();
   lines.push(`${cards.length} cards x ${THEMES.join(', ')}: ${elements} elements compared, every computed property`);
   if (diffs.length)
-    lines.push(`${diffs.length} element(s) render differently from the baseline bundle.css:`, ...diffs.slice(0, 20).map((d) => `  ${d}`));
+    lines.push(
+      `${diffs.length} element(s) render differently from the baseline bundle.css:`,
+      ...diffs.slice(0, Number(process.env.RENDER_SHOW || 20)).map((d) => `  ${d}`),
+    );
   else lines.push('dist/styles.css renders every element exactly as the baseline bundle.css');
   return { ok: diffs.length === 0, lines };
 }

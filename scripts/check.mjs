@@ -3,13 +3,16 @@ import { closeBrowserSession } from './lib/browser.mjs';
 const CHECKS = [
   ['tokens match baseline', './checks/tokens.mjs'],
   ['styles match baseline', './checks/styles.mjs'],
-  ['dist is current', './checks/dist.mjs'],
+  ['dist is current (CSS and dist/react)', './checks/dist.mjs'],
+  ['types (React components, previews, tests)', './checks/types.mjs'],
   ['rules: type scale, weights, spacing, colours, monospace', './checks/rules.mjs'],
   ['contrast, 8 themes x 3 brands', './checks/contrast.mjs'],
   ['data colours under colour-vision deficiency', './checks/cvd.mjs'],
   ['tailwind theme compiles to the variables', './checks/tailwind.mjs'],
   ['rendered styles match baseline (browser)', './checks/render.mjs'],
   ['density spec (browser)', './checks/density.mjs'],
+  ['preview pages load every resource (browser)', './checks/requests.mjs'],
+  ['React components render like the static cards (browser)', './checks/react-render.mjs'],
   ['public-repo hygiene', './checks/hygiene.mjs'],
   ['format and lint (biome)', './checks/lint.mjs'],
 ];
