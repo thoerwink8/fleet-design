@@ -34,7 +34,12 @@ try {
           react: dev.react,
           'react-dom': dev['react-dom'],
         },
-        devDependencies: { '@types/react': dev['@types/react'], '@types/react-dom': dev['@types/react-dom'], esbuild: dev.esbuild, typescript: dev.typescript },
+        devDependencies: {
+          '@types/react': dev['@types/react'],
+          '@types/react-dom': dev['@types/react-dom'],
+          esbuild: dev.esbuild,
+          typescript: dev.typescript,
+        },
       },
       null,
       2,
@@ -44,7 +49,15 @@ try {
   fs.writeFileSync(
     path.join(app, 'tsconfig.json'),
     JSON.stringify({
-      compilerOptions: { target: 'es2022', module: 'esnext', moduleResolution: 'bundler', jsx: 'react-jsx', strict: true, noEmit: true, skipLibCheck: false },
+      compilerOptions: {
+        target: 'es2022',
+        module: 'esnext',
+        moduleResolution: 'bundler',
+        jsx: 'react-jsx',
+        strict: true,
+        noEmit: true,
+        skipLibCheck: false,
+      },
       include: ['src'],
     }),
   );
@@ -78,7 +91,7 @@ createRoot(document.getElementById('root')!).render(<App />);
   // A type error must be caught: variant is a closed set.
   fs.writeFileSync(
     path.join(app, 'src', 'bad.tsx'),
-    "import { Button } from '@fleet/design/react/button';\n// @ts-expect-error unknown variant\nexport const x = <Button variant=\"huge\">x</Button>;\n",
+    'import { Button } from \'@fleet/design/react/button\';\n// @ts-expect-error unknown variant\nexport const x = <Button variant="huge">x</Button>;\n',
   );
 
   run('pnpm install --prefer-offline --reporter=silent', app);

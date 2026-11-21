@@ -13,6 +13,9 @@ Rules for anyone changing this repository. Each rule says what we do and why. `p
 | `previews/`          | Preview site: `cards/` (one fragment per component), `lib/` (demo helpers), `index.html` + `shell.*`.                                                                                            |
 | `scripts/`           | `build`, `dev`, `stop`, `check`, `baseline` and the checks in `scripts/checks/`.                                                                                                                 |
 | `test/fixtures/`     | The baseline the checks compare against: `tokens.css`, `tokens.json`, `bundle.css`.                                                                                                              |
+| `react/`             | React components on Base UI, one file each; built to `dist/react/`.                                                                                                                              |
+| `previews/react/`    | One React preview page per component and `pages.json` (subtitle, static card, element pairs to compare).                                                                                         |
+| `test/react/`        | Playwright interaction tests (`pnpm test:react`, config in `playwright.config.ts`).                                                                                                              |
 
 ## Tokens are the single source of truth / 变量是唯一真相
 
@@ -84,11 +87,19 @@ No screenshots, icons, colour tables or code from other products, open or closed
 - Browser checks use Playwright's Chromium: `pnpm exec playwright install chromium` once per machine.
 - Commit `dist/`. Consumers install from git tags without building.
 
-## Next: React components on Base UI
+## React components
 
-Planned for 0.2; nothing is exported yet.
+- `react/<name>.tsx`, one file per component, exported from `react/index.ts`; `pnpm build` compiles them with `tsc` (`tsconfig.build.json`) into `dist/react/` (ESM + `.d.ts`), committed like the rest of `dist/`.
+- A component wraps Base UI parts for behaviour and maps `variant` / `size` (closed unions) to existing `.fa-*` classes. No inline colours, no new look in TypeScript. A state Base UI exposes that the classes do not cover yet (`data-highlighted`, `data-open`, …) goes into `styles/<component>.css`, where the rules, density and render checks see it.
+- `className` / `style` reach the root element and are documented as layout only. Controlled and uncontrolled both work. No `any`.
+- Import Base UI by subpath (`@base-ui/react/menu`), never from its root entry, so one component does not pull in the others.
+- Imports between files carry the `.js` extension (`./internal.js`): the output is plain ESM.
 
-- `react/` with one file per component (`react/button.tsx`, `react/menu.tsx`, …) and `react/index.ts`; built to `dist/react/` (ESM + `.d.ts`), exported as `./react`. `react` and `@base-ui/react` become peer dependencies.
-- Components only map `variant` / `size` props to the existing `.fa-*` classes and wrap Base UI parts for behaviour; no inline colours, no new CSS outside `styles/`.
-- Order: Button and SegmentedControl (Toggle Group), Input (Field), Tooltip, Menu, Select / Combobox, Toast, Dialog / Alert Dialog, Drawer, Collapsible (DetailsPanel, ToolCallFold), Meter (ContextMeter), CommandPalette (Dialog + Autocomplete). Business components (ThreadRow, Composer, StatusStrip, QueueChip, TaskRow, ChangeRow, UsageDetail, RunStatusLine) stay in each product.
-- Previews gain a React page per component that renders the same cards, and the density and render checks run against it.
+### Adding a component
+
+1. Styles first: the classes exist in `styles/<name>.css` and a static card in `previews/cards/` shows the states. Missing states go there too.
+2. `react/<name>.tsx` and an export line in `react/index.ts`. A one-line default form for the common case, Base UI parts for the rest.
+3. `previews/react/<Name>.tsx` (a demo built from `./lib`: `mount`, `Demo`, `Say`) and an entry in `previews/react/pages.json` with the static card and the element pairs to compare. A difference you keep gets an `ignore` list and a `why`.
+4. `test/react/<name>.spec.ts`: open and close, keyboard, focus return, controlled value. Wait with Playwright's auto-waiting and `page.clock`, never a fixed sleep.
+5. `pnpm build`, `pnpm check`, `pnpm test:react`, `pnpm smoke`. If a style changed on purpose, `pnpm baseline` and say why in the commit.
+6. A line in the README component table: what it is for, the shortest use, what is not obvious.

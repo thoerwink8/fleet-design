@@ -12,6 +12,12 @@ export default async function types() {
     });
     return { ok: true, lines: ['tsc -p tsconfig.json: no errors (react/, previews/react/, test/react/)'] };
   } catch (err) {
-    return { ok: false, lines: String(err.stdout || err.message).trim().split('\n').slice(0, 30) };
+    return {
+      ok: false,
+      lines: String(err.stdout || err.message)
+        .trim()
+        .split('\n')
+        .slice(0, 30),
+    };
   }
 }
