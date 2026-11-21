@@ -63,6 +63,9 @@ export function renderCss(T) {
   const scales = ['spacing', 'radius', 'size', 'border', 'duration', 'easing'];
   const families = ['sans', 'mono'].map((k) => `${cssVar(`font-${k}`)}:${T.type.families[k]};`);
   css += `:root{${scales.flatMap((k) => T[k].tokens.map((t) => `${cssVar(t.name)}:${t.value};`)).join('')}${families.join('')}}\n`;
+  // Reduced motion lives with the duration tokens, so it holds for any page that loads them, with or without a reset.
+  const still = T.duration.tokens.map((t) => `${cssVar(t.name)}:${T.duration.reducedMotion};`).join('');
+  css += `@media (prefers-reduced-motion:reduce){:root{${still}}}\n`;
   css += `${T.type.groups
     .flatMap((g) =>
       g.styles.map(

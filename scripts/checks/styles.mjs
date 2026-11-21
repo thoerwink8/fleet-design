@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { atoms, cmp, entries, relation, selectorSpecificity, splitList, touches } from '../lib/css.mjs';
-import { concatStyles, styleFiles, stylesDir } from '../lib/styles.mjs';
+import { concatStyles, RESET, resetCss, styleFiles, stylesDir } from '../lib/styles.mjs';
 import { root } from '../lib/tokens.mjs';
 
 // Classes that the previews put on the same element (e.g. "fa-pop fa-cmd"), read from markup and scripts.
@@ -50,7 +50,7 @@ function sameOutcome(base, newIndex, i, j, sels, props) {
     for (const r of [...rules].sort((x, y) => order(x) - order(y))) {
       for (const [p, v, imp] of base[r].decls) {
         if (!atoms(p).includes(atom)) continue;
-        if (best && best.imp && !imp) continue;
+        if (best?.imp && !imp) continue;
         best = { decl: `${p}:${v}`, imp };
       }
     }
@@ -104,6 +104,16 @@ export function orderReport(base, next, together) {
 export default async function styles() {
   const lines = [];
   let ok = true;
+  // The optional reset is one short file: its rules must equal the baseline, in the same order.
+  const resetBase = entries(fs.readFileSync(path.join(root, 'test', 'fixtures', RESET), 'utf8'), RESET).map((e) => e.key);
+  const resetNext = entries(resetCss(), RESET).map((e) => e.key);
+  if (resetBase.join('\n') === resetNext.join('\n')) lines.push(`${RESET}: ${resetNext.length} rules, same as the baseline`);
+  else {
+    ok = false;
+    lines.push(`${RESET} differs from the baseline:`);
+    for (const k of resetBase.filter((x) => !resetNext.includes(x))) lines.push(`  missing ${k}`);
+    for (const k of resetNext.filter((x) => !resetBase.includes(x))) lines.push(`  extra   ${k}`);
+  }
   const baseline = fs.readFileSync(path.join(root, 'test', 'fixtures', 'bundle.css'), 'utf8');
   const base = entries(baseline, 'bundle.css');
   const next = entries(concatStyles(), 'styles.css');

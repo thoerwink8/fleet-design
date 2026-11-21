@@ -29,15 +29,15 @@ pnpm add github:thoerwink8/fleet-design#v0.2.1
 
 The package is not published to npm. `dist/` is committed, so installing from git needs no build step and no extra tools, on Windows and Linux alike (see [Why dist/ is committed](#why-dist-is-committed)).
 
-| Import                            | File                                                                                       |
-| --------------------------------- | ------------------------------------------------------------------------------------------ |
-| `@fleet/design/tokens.css`        | all variables, eight themes                                                                |
-| `@fleet/design/tokens.json`       | the same values as data                                                                    |
-| `@fleet/design/styles.css`        | every component class, in cascade order                                                    |
-| `@fleet/design/styles/<name>.css` | one component, e.g. `styles/button.css`; `styles/base.css` holds resets and shared helpers |
-| `@fleet/design/tailwind`          | Tailwind v4 theme mapped to the variables                                                  |
-| `@fleet/design/react`             | all React components (see [React](#react))                                                 |
-| `@fleet/design/react/<name>`      | one component, e.g. `react/button`, `react/command-palette`                                |
+| Import                            | File                                                                                |
+| --------------------------------- | ----------------------------------------------------------------------------------- |
+| `@fleet/design/tokens.css`        | all variables, eight themes                                                         |
+| `@fleet/design/tokens.json`       | the same values as data                                                             |
+| `@fleet/design/styles.css`        | every component class, in cascade order                                             |
+| `@fleet/design/styles/<name>.css` | one component, e.g. `styles/button.css`; `styles/base.css` holds the shared helpers |
+| `@fleet/design/tailwind`          | Tailwind v4 theme mapped to the variables                                           |
+| `@fleet/design/react`             | all React components (see [React](#react))                                          |
+| `@fleet/design/react/<name>`      | one component, e.g. `react/button`, `react/command-palette`                         |
 
 ## Use it
 
@@ -177,20 +177,20 @@ pnpm dev     # http://127.0.0.1:5178, rebuilds dist/ when tokens/ or styles/ cha
 pnpm stop    # stops the server started by pnpm dev
 ```
 
-The 31 cards in `previews/cards/` load the built `dist/tokens.css` and `dist/styles.css`. The React group has one page per React component (`previews/react/<Name>.tsx`, bundled on request). The toolbar switches theme, light / dark / system, brand and width (full, 720, 360). `PORT=5200 pnpm dev` picks another port.
+The 31 cards in `previews/cards/` load the built `dist/tokens.css`, `dist/reset.css` and `dist/styles.css`. The React group has one page per React component (`previews/react/<Name>.tsx`, bundled on request). The toolbar switches theme, light / dark / system, brand and width (full, 720, 360). `PORT=5200 pnpm dev` picks another port.
 
 ## Commands
 
-| Command                  | What it does                                                             |
-| ------------------------ | ------------------------------------------------------------------------ |
-| `pnpm build`             | generate `dist/tokens.css`, `dist/tokens.json`, `dist/styles.css`        |
-| `pnpm check`             | everything CI runs (below)                                               |
-| `pnpm dev` / `pnpm stop` | preview site                                                             |
-| `pnpm baseline`          | accept the current build as the new baseline after an intentional change |
-| `pnpm format`            | format with Biome                                                        |
-| `pnpm test:react`        | Playwright interaction tests of the React components (`test/react/`)     |
-| `pnpm smoke`             | install the packed package into an empty project, type-check and bundle  |
-| `pnpm typecheck`         | TypeScript only                                                          |
+| Command                  | What it does                                                                        |
+| ------------------------ | ----------------------------------------------------------------------------------- |
+| `pnpm build`             | generate `dist/tokens.css`, `dist/tokens.json`, `dist/styles.css`, `dist/reset.css` |
+| `pnpm check`             | everything CI runs (below)                                                          |
+| `pnpm dev` / `pnpm stop` | preview site                                                                        |
+| `pnpm baseline`          | accept the current build as the new baseline after an intentional change            |
+| `pnpm format`            | format with Biome                                                                   |
+| `pnpm test:react`        | Playwright interaction tests of the React components (`test/react/`)                |
+| `pnpm smoke`             | install the packed package into an empty project, type-check and bundle             |
+| `pnpm typecheck`         | TypeScript only                                                                     |
 
 `pnpm check` runs: tokens equal the baseline byte for byte; component styles equal the baseline rule for rule; `dist/` (CSS and `dist/react`) is current; TypeScript; a static scan (font sizes 12/14/15/18/20, no weight ≥ 600, spacing in multiples of 4, colours only through variables, monospace only on code classes); contrast for 8 themes × 3 brands (text 4.5, marks 3); data colours under simulated colour-vision deficiency; the Tailwind theme compile; every preview card rendered in headless Chromium against the baseline, computed style by computed style; the density table at 1000 and overflow at 360, for the cards and the React pages; every page loads without a failed request; React elements against the same state on the static card, computed style by computed style; a scan for local paths, private names and images; Biome. The browser checks need Chromium once: `pnpm exec playwright install chromium`.
 

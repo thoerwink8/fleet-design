@@ -1,11 +1,6 @@
 /* fleet-ade 组件库 — component styles. Every colour is a role token (tokens.css); every length is a token or a multiple of 4. */
-*,*::before,*::after{box-sizing:border-box}
-html,body{margin:0}
-body{background:var(--fa-bg);color:var(--fa-fg);font:400 15px/24px var(--fa-font-sans);-webkit-font-smoothing:antialiased}
-/* Reset native controls once: every component then states its own padding. Without this a bare <button> keeps the UA's 1px 6px and an <input> keeps 1px 2px. */
-button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;letter-spacing:inherit}
-/* [hidden] always wins over a component's display (a popover with display:grid must still hide) */
-[hidden]{display:none!important}
+/* No rule here reaches an element outside the library: every selector names a .fa- class, or sets only --fa-* variables and color-scheme where a theme is set.
+   The components expect what any page reset gives (border-box sizing, native controls without UA padding that inherit font and colour, [hidden] hiding): reset.css or Tailwind's preflight. */
 .fa-stage{padding:var(--fa-space-4);display:flex;flex-direction:column;gap:var(--fa-space-4)}
 .fa-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--fa-space-2)}
 .fa-col{display:flex;flex-direction:column;gap:var(--fa-space-2)}
@@ -17,13 +12,13 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 .fa-panel{background:var(--fa-panel);border:var(--fa-bw-1) solid var(--fa-border);border-radius:var(--fa-radius-lg)}
 .fa-ic{width:16px;height:16px;flex:none;display:inline-block;vertical-align:middle}
 .fa-ic--lg{width:20px;height:20px}
-:focus-visible{outline:var(--fa-bw-focus) solid var(--fa-focus-ring);outline-offset:2px}
+/* Keyboard focus ring for the components and whatever sits inside them, whether or not the page has a focus style of its own. */
+:where([class^="fa-"],[class*=" fa-"]):focus-visible,:where([class^="fa-"],[class*=" fa-"]) :focus-visible{outline:var(--fa-bw-focus) solid var(--fa-focus-ring);outline-offset:2px}
 /* Two layers of the hover wash: the quiet fill for tags, chips, kbd and quiet counts. Defined wherever a theme is set so it follows that theme. */
 :root,[data-theme]{--fa-wash2:linear-gradient(var(--fa-hover),var(--fa-hover)),linear-gradient(var(--fa-hover),var(--fa-hover))}
 .fa-hv{--fa-hv:linear-gradient(var(--fa-hover),var(--fa-hover))}
 .fa-btn,.fa-seg button,.fa-item,.fa-icon-btn,.fa-trow{--fa-hv:linear-gradient(var(--fa-hover),var(--fa-hover))}
 .fa-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:var(--fa-ctrl-2xs);padding:0 var(--fa-space-1);border-radius:var(--fa-radius-sm);background-image:var(--fa-wash2);font:400 12px/16px var(--fa-font-sans);font-variant-numeric:tabular-nums;color:var(--fa-fg-muted);white-space:nowrap}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 .fa-panel,.fa-dp,.fa-app__side,.fa-drawer{--fa-ring:var(--fa-panel)}
 /* native scrollbars and form controls follow the theme */
 [data-theme=light],[data-theme=solarized]{color-scheme:light}
@@ -515,10 +510,10 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 .fa-chg:hover .acts,.fa-chg:focus-within .acts,.fa-chg.is-hover .acts,.fa-chg.is-focus .acts{visibility:visible}
 @media (hover:none){.fa-chg .acts{visibility:visible}}
 .fa-chg .fa-icon-btn{width:var(--fa-ctrl-xs);height:var(--fa-ctrl-xs)}
-.pr-open{color:var(--fa-success)}
-.pr-merged{color:var(--fa-fg-muted)}
-.pr-closed{color:var(--fa-danger)}
-.pr-draft{color:var(--fa-fg-muted)}
+.fa-pr-open{color:var(--fa-success)}
+.fa-pr-merged{color:var(--fa-fg-muted)}
+.fa-pr-closed{color:var(--fa-danger)}
+.fa-pr-draft{color:var(--fa-fg-muted)}
 /* ChangeRow: two lines, 52 = 2 + 6 + 20 + 16 + 6 + 2; repo #n is plain sans 12 grey with tabular figures, 8 before +adds */
 .fa-chg{column-gap:var(--fa-space-icon-gap);padding:calc(var(--fa-space-row-y) - var(--fa-space-row-seam)) var(--fa-space-2) calc(var(--fa-space-row-y) - var(--fa-space-row-seam)) var(--fa-space-row-x)}
 .fa-chg .s{gap:var(--fa-space-2)}

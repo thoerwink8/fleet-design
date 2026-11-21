@@ -1,0 +1,11 @@
+/* fleet-ade 组件库 — optional page reset, not part of styles.css. Import it after tokens.css when fleet-design owns the page.
+   A page that already has a reset (Tailwind's preflight, for example) leaves it out and keeps its own body, buttons and focus style. */
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--fa-bg);color:var(--fa-fg);font:400 15px/24px var(--fa-font-sans);-webkit-font-smoothing:antialiased}
+/* Reset native controls once: every component then states its own padding. Without this a bare <button> keeps the UA's 1px 6px and an <input> keeps 1px 2px. */
+button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;letter-spacing:inherit}
+/* [hidden] always wins over a component's display (a popover with display:grid must still hide) */
+[hidden]{display:none!important}
+:focus-visible{outline:var(--fa-bw-focus) solid var(--fa-focus-ring);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}

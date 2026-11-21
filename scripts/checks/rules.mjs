@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import postcss from 'postcss';
 import { splitList } from '../lib/css.mjs';
-import { styleFiles, stylesDir } from '../lib/styles.mjs';
+import { RESET, styleFiles, stylesDir } from '../lib/styles.mjs';
 import { cssVar, PREFIX, tokensJson } from '../lib/tokens.mjs';
 
 export const FONT_SIZES = [12, 14, 15, 18, 20];
@@ -26,6 +26,11 @@ export const ROW_SPECS = [['.fa-table td', 'height', 'var(--fa-row-table)']];
 
 // The only looping animation: the in-turn indicator, which steps and stops under reduced motion. No spinners.
 export const LOOP_ALLOWED = ['.fa-dots3 i'];
+
+// styles.css must not style the page it is loaded into. A selector names a .fa- class (or the [class] scope that stands
+// for "any .fa- element"), or it is a theme hook that sets nothing but --fa-* variables and color-scheme.
+const OWN = /\.fa-|\[class[\^*]=" ?fa-"\]/;
+const THEME_HOOK = /^(:root|\[data-(theme|project)(=[\w-]+)?\])$/;
 
 const SPACING_PROPS = /^(padding|margin)(-(top|right|bottom|left|block|inline)(-(start|end))?)?$|^(gap|row-gap|column-gap)$/;
 const NAMED =
@@ -68,7 +73,7 @@ export default async function rules() {
   const T = tokensJson();
   const vars = lengths(T);
   const problems = [];
-  const seen = { sizes: new Set(), weights: new Set(), spacing: 0, mono: [], rowSpecs: 0, vars: new Set() };
+  const seen = { sizes: new Set(), weights: new Set(), spacing: 0, mono: [], rowSpecs: 0, vars: new Set(), selectors: 0 };
   const exceptionsHit = new Set();
 
   for (const t of T.spacing.tokens) {
@@ -83,8 +88,17 @@ export default async function rules() {
     }
   }
 
-  for (const file of styleFiles()) {
+  for (const file of [...styleFiles(), RESET]) {
     const root = postcss.parse(fs.readFileSync(path.join(stylesDir, file), 'utf8'), { from: file });
+    root.walkRules((rule) => {
+      if (file === RESET || (rule.parent.type === 'atrule' && rule.parent.name.endsWith('keyframes'))) return;
+      const hookOnly = rule.nodes.every((n) => n.type !== 'decl' || n.prop.startsWith(`--${PREFIX}`) || n.prop === 'color-scheme');
+      for (const sel of splitList(rule.selector)) {
+        seen.selectors++;
+        if (OWN.test(sel) || (THEME_HOOK.test(sel) && hookOnly)) continue;
+        problems.push(`selector reaches outside the library (page-wide rules belong in ${RESET}): ${file}: ${sel}`);
+      }
+    });
     root.walkDecls((d) => {
       if (d.parent.type !== 'rule') return;
       const where = `${file}: ${d.parent.selector} { ${d.prop}: ${d.value} }`;
@@ -97,6 +111,9 @@ export default async function rules() {
         seen.vars.add(name);
         if (!name.startsWith(`--${PREFIX}`)) problems.push(`custom property ${name} lacks the --${PREFIX} prefix: ${where}`);
       }
+      // tokens.css collapses the duration tokens under reduced motion; a literal duration would keep moving.
+      if (file !== RESET && /^transition(-duration)?$/.test(prop) && value !== 'none' && !value.includes(`--${PREFIX}dur-`))
+        problems.push(`transition without a duration token (reduced motion would not reach it): ${where}`);
       if (prop === 'font' || prop === 'font-size') {
         const m = prop === 'font' ? value.match(/(\d+)px\/\d+px/) : value.match(/^(\d+)px$/);
         if (m) {
@@ -154,6 +171,7 @@ export default async function rules() {
     `monospace on: ${seen.mono.join(', ')}`,
     'colours: every colour in styles/ is a var() reference',
     `names: ${seen.vars.size} custom properties declared or referenced in styles/, all --${PREFIX}*`,
+    `scope: ${seen.selectors} selectors in styles.css, each names a .${PREFIX} class or is a theme hook; page-wide rules are only in ${RESET}`,
     `looping animations only on: ${LOOP_ALLOWED.join(', ')}`,
     `row specs: ${seen.rowSpecs}/${ROW_SPECS.length} found (table row = var(--fa-row-table), 40)`,
   ];

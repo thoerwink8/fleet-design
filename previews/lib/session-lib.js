@@ -113,7 +113,7 @@ const CHG = [
   { st: 'closed', t: 'fix(close): 残留空会话目录不再挡住新建', repo: 'acme-web', n: 17, a: 9, d: 3 },
   { st: 'open', t: 'fix(sweep): 按分支过滤后再清理已合并的工作树', repo: 'acme-web', n: 18, a: 27, d: 12 },
 ];
-const PR_IC = { open: ['prOpen', 'pr-open', '开着'], merged: ['prMerged', 'pr-merged', '已合并'], closed: ['prClosed', 'pr-closed', '已关闭'] };
+const PR_IC = { open: ['prOpen', 'fa-pr-open', '开着'], merged: ['prMerged', 'fa-pr-merged', '已合并'], closed: ['prClosed', 'fa-pr-closed', '已关闭'] };
 function chgRow(c, i) {
   const p = PR_IC[c.st];
   return '<div class="fa-chg" tabindex="0" role="link" data-i="' + i + '" aria-label="' + esc(c.t) + '，' + p[2] + '，' + c.repo + ' #' + c.n + '，增加 ' + c.a + ' 行，删除 ' + c.d + ' 行"><span class="ty ' + p[1] + '" title="' + p[2] + '">' + ic(p[0]) + '</span>'

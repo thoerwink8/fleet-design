@@ -57,6 +57,7 @@ const lib = (f) => fs.readFileSync(path.join(previews, 'lib', f), 'utf8');
 
 const HEAD = `<script>(()=>{const q=new URLSearchParams(location.search),r=document.documentElement;const t=q.get('theme');if(t)r.dataset.theme=t;const p=q.get('project');if(p&&p!=='fleet')r.dataset.project=p;})()</script>
 <link rel="stylesheet" href="/dist/tokens.css">
+<link rel="stylesheet" href="/dist/reset.css">
 <link rel="stylesheet" href="/dist/styles.css">`;
 
 // A card is an HTML fragment; the page around it loads the built dist/ styles, never a copy.

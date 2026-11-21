@@ -10,10 +10,10 @@
 .fa-chg:hover .acts,.fa-chg:focus-within .acts,.fa-chg.is-hover .acts,.fa-chg.is-focus .acts{visibility:visible}
 @media (hover:none){.fa-chg .acts{visibility:visible}}
 .fa-chg .fa-icon-btn{width:var(--fa-ctrl-xs);height:var(--fa-ctrl-xs)}
-.pr-open{color:var(--fa-success)}
-.pr-merged{color:var(--fa-fg-muted)}
-.pr-closed{color:var(--fa-danger)}
-.pr-draft{color:var(--fa-fg-muted)}
+.fa-pr-open{color:var(--fa-success)}
+.fa-pr-merged{color:var(--fa-fg-muted)}
+.fa-pr-closed{color:var(--fa-danger)}
+.fa-pr-draft{color:var(--fa-fg-muted)}
 /* ChangeRow: two lines, 52 = 2 + 6 + 20 + 16 + 6 + 2; repo #n is plain sans 12 grey with tabular figures, 8 before +adds */
 .fa-chg{column-gap:var(--fa-space-icon-gap);padding:calc(var(--fa-space-row-y) - var(--fa-space-row-seam)) var(--fa-space-2) calc(var(--fa-space-row-y) - var(--fa-space-row-seam)) var(--fa-space-row-x)}
 .fa-chg .s{gap:var(--fa-space-2)}

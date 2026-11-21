@@ -16,6 +16,7 @@
     "./tokens.css": "./dist/tokens.css",
     "./tokens.json": "./dist/tokens.json",
     "./styles.css": "./dist/styles.css",
+    "./reset.css": "./dist/reset.css",
     "./styles/*": "./styles/*",
     "./tailwind": "./tailwind/theme.css",
     "./react": {
