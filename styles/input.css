@@ -1,0 +1,13 @@
+.fa-field{display:flex;flex-direction:column;gap:var(--space-1)}
+.fa-field label{font:400 14px/20px var(--font-sans)}
+.fa-input{width:100%;height:var(--ctrl);padding:0 var(--space-3);border:var(--bw-1) solid var(--border);border-radius:var(--radius-md);background:var(--bg);color:var(--fg);font:400 14px/20px var(--font-sans);transition:border-color var(--dur-fast) var(--ease-out)}
+.fa-input::placeholder{color:var(--fg-muted)}
+.fa-input:hover:not(:disabled){border-color:var(--fg-muted)}
+.fa-input:focus-visible{outline:var(--bw-focus) solid var(--focus-ring);outline-offset:0;border-color:var(--accent)}
+.fa-input:disabled{background:var(--panel);color:var(--fg-muted);border-color:var(--border);cursor:not-allowed}
+.fa-input[aria-invalid=true]{border-color:var(--danger)}
+.fa-hint{font:400 12px/16px var(--font-sans);color:var(--fg-muted);display:flex;gap:var(--space-1);align-items:flex-start}
+.fa-hint--error{color:var(--fg)}
+.fa-hint--error .fa-ic{color:var(--danger)}
+/* forms: label to input 8 */
+.fa-field{gap:var(--space-2)}

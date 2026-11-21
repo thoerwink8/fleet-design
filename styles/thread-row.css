@@ -1,0 +1,41 @@
+.fa-trow{display:grid;grid-template-columns:16px minmax(0,1fr) auto;column-gap:var(--space-2);align-items:center;min-height:var(--row-2);padding:var(--space-1) var(--space-3) var(--space-1) var(--space-2);border-radius:var(--radius-md);background-color:transparent;cursor:pointer;position:relative}
+.fa-trow:hover,.fa-trow:focus-within{background-image:var(--hv)}
+.fa-trow[aria-selected=true]{background-color:var(--selected)}
+.fa-trow .t{font:400 14px/20px var(--font-sans);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fa-trow .s{font:400 12px/16px var(--font-sans);color:var(--fg-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fa-trow .tm{font:400 12px/16px var(--font-sans);font-variant-numeric:tabular-nums;color:var(--fg-muted);white-space:nowrap}
+.fa-trow .acts{display:none;gap:0}
+.fa-trow .acts .fa-icon-btn{width:var(--ctrl-xs);height:var(--ctrl-xs)}
+.fa-trow:hover .acts,.fa-trow:focus-within .acts{display:inline-flex}
+.fa-trow:hover .tm,.fa-trow:focus-within .tm{display:none}
+.fa-trow .lead{display:flex;align-items:center;justify-content:center;align-self:start;height:20px}
+.fa-trow .end{display:flex;align-items:center;justify-content:flex-end;align-self:start;height:20px}
+.fa-trow .l2{display:flex;align-items:center;gap:var(--space-2)}
+/* ThreadRow densities. row-1 (32, default, long lists like 最近 / 工作区): agent + title + time.
+   row-2 (44, only the 等你处理 group): agent + title + time, second line is the reason. */
+.fa-trow--1{min-height:var(--row-1);padding-block:var(--space-1)}
+.fa-trow--1 .lead,.fa-trow--1 .end{align-self:center}
+.fa-glist{display:flex;flex-direction:column}
+.fa-ghead{display:flex;align-items:center;gap:var(--space-2);height:var(--ctrl-sm);padding:0 var(--space-2);font:500 12px/16px var(--font-sans);color:var(--fg-muted)}
+.fa-ghead .fa-count{margin-left:auto}
+/* ThreadRow additions: PR marker and the Shift multi-select batch bar on top */
+.fa-trow .pr{display:inline-flex;flex:none;align-items:center}
+.fa-trow .pr .fa-ic{width:12px;height:12px}
+.fa-trow .end{gap:var(--space-2)}
+.fa-batch{display:flex;align-items:center;gap:var(--space-1);height:var(--ctrl);padding:0 var(--space-1) 0 var(--space-2);margin-bottom:var(--space-1);border-bottom:var(--bw-1) solid var(--border);font:400 14px/20px var(--font-sans);font-variant-numeric:tabular-nums;white-space:nowrap}
+.fa-batch .n{flex:1 0 auto;min-width:0;color:var(--fg-muted);overflow:hidden;text-overflow:ellipsis}
+.fa-batch .is-danger{color:var(--danger)}
+.fa-batch .fa-btn--sm{padding:0 var(--space-1)}
+.fa-trow.is-picked{background-color:var(--selected)}
+/* ThreadRow: 52 two-line (等你处理), 32 one-line; panel keeps 8 around its rows */
+.fa-trow{column-gap:var(--space-icon-gap);padding:calc(var(--space-row-y) - var(--space-row-seam)) var(--space-row-x)}
+.fa-trow--1{padding-block:var(--space-1)}
+.fa-trow .end{gap:var(--space-2);padding-left:var(--space-1)}
+.fa-ghead{padding:0 var(--space-row-x);height:var(--ctrl)}
+.fa-batch{padding:0 var(--space-1) 0 var(--space-row-x);margin-bottom:var(--space-2)}
+.fa-batch{gap:var(--space-2)}
+.fa-batch{container:batch / inline-size}
+@container batch (max-width: 319px){
+  .fa-batch .is-overflow{display:none}
+  .fa-batch .fa-batch__more{display:inline-flex}
+}

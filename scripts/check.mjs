@@ -1,6 +1,8 @@
 const CHECKS = [
   ['tokens match baseline', './checks/tokens.mjs'],
+  ['styles match baseline', './checks/styles.mjs'],
   ['dist is current', './checks/dist.mjs'],
+  ['format and lint (biome)', './checks/lint.mjs'],
 ];
 
 const only = process.argv.slice(2);

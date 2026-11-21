@@ -1,0 +1,18 @@
+/* TaskRow: type icon | title (+ expand chevron) | agent slot + elapsed + stop. 32 high; optional 12px second line */
+.fa-task{display:grid;grid-template-columns:16px minmax(0,1fr) auto;column-gap:var(--space-2);align-items:center;min-height:var(--row-1);padding:var(--space-1) var(--space-1) var(--space-1) var(--space-2);border-radius:var(--radius-md);cursor:pointer;outline:0}
+.fa-task>.ty{display:inline-flex;color:var(--fg-muted)}
+.fa-task .t{display:flex;align-items:center;gap:var(--space-1);min-width:0;font:400 14px/20px var(--font-sans);color:var(--fg)}
+.fa-task .t .x{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fa-task .t .fa-ic{flex:none;width:12px;height:12px;color:var(--fg-muted);transition:transform var(--dur-fast) var(--ease-out)}
+.fa-task[aria-expanded=true] .t .fa-ic{transform:rotate(90deg)}
+.fa-task .end{display:flex;align-items:center;gap:var(--space-2);white-space:nowrap}
+.fa-task .tm{font:400 12px/16px var(--font-sans);font-variant-numeric:tabular-nums;color:var(--fg-muted);min-width:40px;text-align:right}
+.fa-task .fa-icon-btn{width:var(--ctrl-xs);height:var(--ctrl-xs)}
+.fa-task .sub{grid-column:2 / 4;display:flex;flex-wrap:wrap;gap:0 var(--space-2);font:400 12px/16px var(--font-sans);font-variant-numeric:tabular-nums;color:var(--fg-muted)}
+.fa-task .sub .bad{color:var(--danger)}
+.fa-task.is-done .t{color:var(--fg-muted)}
+.fa-task.is-failed>.ty{color:var(--danger)}
+/* TaskRow: 32 collapsed (2 seam + 4 + 20 + 4 + 2), 52 expanded (2 + 6 + 20 + 16 + 6 + 2) */
+.fa-task{column-gap:var(--space-icon-gap);padding:calc(var(--space-1) - var(--space-row-seam)) var(--space-2) calc(var(--space-1) - var(--space-row-seam)) var(--space-row-x)}
+.fa-task[aria-expanded=true]{padding-block:calc(var(--space-row-y) - var(--space-row-seam))}
+.fa-task .end{gap:var(--space-2)}

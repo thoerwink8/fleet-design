@@ -1,0 +1,41 @@
+/* Command palette. Three-line result rows: title + time / summary / meta (left: model, turns; right: workspace, branch).
+   Every variable-length field truncates on its own innermost element. Right edge of text sits 20px from the overlay edge (list 8 + row 12). */
+.fa-cmd{width:640px;max-width:100%;padding:0;overflow:hidden}
+.fa-cmd__in{display:flex;align-items:center;gap:var(--space-2);height:48px;padding:0 var(--space-4);border-bottom:var(--bw-1) solid var(--border);color:var(--fg-muted)}
+.fa-cmd__in input{flex:1;min-width:0;height:100%;border:0;outline:0;background:transparent;font:400 14px/20px var(--font-sans);color:var(--fg)}
+.fa-cmd__in input::placeholder{color:var(--fg-muted)}
+.fa-cmd__list{padding:var(--space-1) var(--space-2) var(--space-2);max-height:368px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.fa-cmd__list .fa-glabel{padding:var(--space-2) var(--space-3) var(--space-1)}
+.fa-cmd__row{display:flex;flex-direction:column;justify-content:center;min-height:var(--ctrl);padding:var(--space-2) var(--space-3);border-radius:var(--radius-md);cursor:pointer;background-color:transparent}
+.fa-cmd__row--1{padding-block:var(--space-1)}
+.fa-cmd__row:hover{background-image:linear-gradient(var(--hover),var(--hover))}
+.fa-cmd__row[data-active=true]{background-color:var(--selected);background-image:none}
+.fa-cmd__row .l{display:flex;align-items:baseline;gap:var(--space-2);min-width:0}
+.fa-cmd__row .l1{height:20px;font:400 14px/20px var(--font-sans);color:var(--fg)}
+.fa-cmd__row .l1>.fa-ic{align-self:center;color:var(--fg-muted)}
+.fa-cmd__row .l2,.fa-cmd__row .l3{height:16px;font:400 12px/16px var(--font-sans);color:var(--fg-muted)}
+.fa-cmd__row .l3{justify-content:space-between}
+.fa-cmd__row .x{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fa-cmd__row .grow{flex:1 1 auto}
+.fa-cmd__row .fix{flex:none;white-space:nowrap}
+/* time is sans with tabular digits: "3 分钟" in a mono face spaces the CJK out */
+.fa-cmd__row .tm{flex:none;min-width:40px;text-align:right;font:400 12px/16px var(--font-sans);font-variant-numeric:tabular-nums;color:var(--fg-muted);white-space:nowrap}
+.fa-cmd__row .mono{font-family:var(--font-mono)}
+/* branch keeps its tail: "…/42-login-fix" rather than "local/42-lo…" */
+.fa-cmd__row .tail{direction:rtl;text-align:right}
+.fa-cmd__row .tail>bdi{direction:ltr;unicode-bidi:isolate}
+.fa-cmd__row .l3 .lt{display:flex;gap:var(--space-2);min-width:0;flex:0 1 auto;max-width:55%}
+.fa-cmd__row .l3 .rt{display:flex;gap:var(--space-1);min-width:0;flex:1 1 0;justify-content:flex-end}
+.fa-cmd__foot{display:flex;gap:var(--space-4);align-items:center;height:var(--ctrl);padding:0 var(--space-4);border-top:var(--bw-1) solid var(--border);font:400 12px/16px var(--font-sans);color:var(--fg-muted);white-space:nowrap;overflow:hidden}
+.fa-cmd__foot>span{display:inline-flex;align-items:center;gap:var(--space-1);flex:none}
+.fa-cmd__foot .hint{margin-left:auto;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:480px){.fa-cmd__foot .hint{display:none}.fa-cmd__row .l3 .lt .fix+.fix{display:none}}
+.fa-mark{background-color:transparent;background-image:var(--wash2);color:var(--fg);border-radius:var(--radius-sm)}
+.fa-cmd{--ring:var(--overlay)}
+.fa-cmd__row.has-lead{display:grid;grid-template-columns:16px minmax(0,1fr);column-gap:var(--space-2);align-items:start}
+.fa-cmd__row.has-lead>.lead{display:flex;align-items:center;height:20px}
+.fa-cmd__row .body{display:flex;flex-direction:column;min-width:0}
+.fa-cmd__row .st{flex:none;font:400 12px/16px var(--font-sans);color:var(--fg-muted);white-space:nowrap}
+/* palette three-line rows: 2 seam + 8 + 20 + 16 + 16 + 8 + 2 = 72 */
+.fa-cmd__row{padding:var(--space-2) var(--space-row-x)}
+.fa-cmd__row.has-lead{column-gap:var(--space-icon-gap)}

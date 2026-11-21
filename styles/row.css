@@ -1,0 +1,18 @@
+/* Weight 500 is earned: an unread / new-reply row title. Read rows stay 400 + fg; the summary is fg-muted. */
+.fa-trow.is-unread .t,.fa-cmd__row.is-unread .l1 .x{font-weight:500}
+/* shared row behaviour for the new rows: hover one wash, press two, keyboard focus ring inside the row */
+.fa-task,.fa-chg,.fa-run{--hv:linear-gradient(var(--hover),var(--hover))}
+.fa-task:hover,.fa-task.is-hover,.fa-chg:hover,.fa-chg.is-hover,.fa-run:hover,.fa-run.is-hover{background-image:var(--hv)}
+.fa-task:active,.fa-task.is-press,.fa-chg:active,.fa-chg.is-press,.fa-run:active,.fa-run.is-press{background-image:var(--hv),var(--hv)}
+.fa-task:focus-visible,.fa-task.is-focus,.fa-chg:focus-visible,.fa-chg.is-focus{outline:var(--bw-focus) solid var(--focus-ring);outline-offset:-2px}
+.fa-grp__h .chev,.fa-sec__h .chev{display:inline-flex;color:var(--fg-muted);transition:transform var(--dur-fast) var(--ease-out)}
+.fa-grp__h[aria-expanded=true] .chev,.fa-sec__h[aria-expanded=true] .chev{transform:rotate(90deg)}
+/* Density: clickable one-line row 32 · data row 24 · two-line row 52 · icon→text 12 · text→trailing 12.
+   Every clickable row carries a 2px transparent seam top and bottom (background-clip), so two adjacent fills keep 4px apart. */
+.fa-trow,.fa-task,.fa-chg,.fa-conn{border-block:var(--space-row-seam) solid transparent;background-clip:padding-box}
+/* menus, selects, palette rows, turn steps: same 2px seam so adjacent fills keep 4 apart */
+.fa-item,.fa-cmd__row,.fa-step{border-block:var(--space-row-seam) solid transparent;background-clip:padding-box}
+/* collapsible summaries and the in-turn line are clickable: 32 */
+.fa-fold__sum,.fa-run{height:var(--ctrl);min-height:var(--ctrl)}
+/* buttons in an icon/time cluster must not stretch a 20px text line */
+.fa-task .fa-icon-btn,.fa-trow .acts .fa-icon-btn{margin-block:calc(-1 * var(--space-row-seam))}

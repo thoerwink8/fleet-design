@@ -1,0 +1,27 @@
+/* RunStatusLine: one clickable line in the conversation, and the composer footer */
+.fa-run{display:inline-flex;align-items:center;gap:var(--space-2);max-width:100%;min-height:var(--ctrl-sm);padding:0 var(--space-2);margin-left:calc(-1 * var(--space-2));border:0;border-radius:var(--radius-sm);background:transparent;color:var(--fg-muted);font:400 14px/20px var(--font-sans);font-variant-numeric:tabular-nums;cursor:pointer;text-align:left}
+.fa-run:hover{color:var(--fg)}
+.fa-run .x{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fa-run .lead{color:var(--fg);white-space:nowrap}
+.fa-run>.fa-ic{flex:none;width:12px;height:12px;transition:transform var(--dur-fast) var(--ease-out)}
+.fa-run[aria-expanded=true]>.fa-ic{transform:rotate(90deg)}
+/* in-turn status: three dots switch brightness in discrete steps (one lit dot moves every 0.4s; 3 repaints per 1.2s cycle, no per-frame tween), paused off-screen, static under reduced motion */
+.fa-dots3{display:inline-flex;gap:3px;flex:none;width:16px;justify-content:center}
+.fa-dots3 i{width:3px;height:3px;border-radius:var(--radius-full);background:currentColor;opacity:.25;animation:fa-dot3 1.2s steps(1,end) infinite}
+.fa-dots3 i:nth-child(2){animation-delay:.4s}
+.fa-dots3 i:nth-child(3){animation-delay:.8s}
+.fa-dots3.is-paused i{animation-play-state:paused}
+@keyframes fa-dot3{0%{opacity:1}33.334%{opacity:.25}100%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.fa-dots3 i{animation:none;opacity:.7}}
+/* turn steps: one 32px row per step; raw command/output/diff only when a step is opened */
+.fa-steps{display:flex;flex-direction:column;padding-left:var(--space-3);margin-left:var(--space-2);border-left:var(--bw-1) solid var(--border)}
+.fa-step{display:flex;align-items:center;gap:var(--space-2);width:100%;min-height:var(--row-1);padding:0 var(--space-2);border:0;border-radius:var(--radius-sm);background:transparent;color:var(--fg-muted);font:400 14px/20px var(--font-sans);text-align:left;cursor:pointer;--hv:linear-gradient(var(--hover),var(--hover))}
+.fa-step:hover{background-image:var(--hv);color:var(--fg)}
+.fa-step:active{background-image:var(--hv),var(--hv)}
+.fa-step .x{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fa-step .bad{color:var(--danger)}
+.fa-step.is-now{color:var(--fg)}
+.fa-step>.fa-ic:last-child{flex:none;width:12px;height:12px;transition:transform var(--dur-fast) var(--ease-out)}
+.fa-step[aria-expanded=true]>.fa-ic:last-child{transform:rotate(90deg)}
+.fa-step__raw{margin:0 0 var(--space-1) var(--space-2)}
+.fa-step{padding:0 var(--space-row-x-menu)}

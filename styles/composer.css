@@ -1,0 +1,37 @@
+.fa-composer{border:var(--bw-1) solid var(--border);border-radius:var(--radius-lg);background:var(--bg);transition:border-color var(--dur-fast) var(--ease-out)}
+.fa-composer:focus-within{border-color:var(--accent);outline:var(--bw-focus) solid var(--focus-ring);outline-offset:0}
+.fa-composer__chips{display:flex;flex-wrap:wrap;gap:var(--space-2);padding:var(--space-3) var(--space-3) 0}
+.fa-composer textarea{display:block;width:100%;min-height:56px;max-height:200px;resize:none;border:0;outline:0;background:transparent;padding:var(--space-3);font:400 15px/24px var(--font-sans)}
+.fa-composer textarea::placeholder{color:var(--fg-muted)}
+.fa-composer__bar{display:flex;align-items:center;gap:var(--space-1);padding:0 var(--space-2) var(--space-2) var(--space-2)}
+.fa-composer__grow{flex:1}
+/* Compact composer: one line, 44 high including the border. Same tokens as the standard one. */
+.fa-composer--compact{display:flex;align-items:center;gap:var(--space-1);min-height:44px;padding:0 var(--space-2)}
+.fa-composer--compact textarea{flex:1;min-width:0;min-height:24px;height:24px;padding:0 var(--space-1)}
+.fa-composer__meta{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);min-width:0;white-space:nowrap;padding:var(--space-2) var(--space-3) 0;font:400 12px/16px var(--font-sans);color:var(--fg-muted)}
+.fa-chip{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--ctrl-xs);padding:0 var(--space-2);border-radius:var(--radius-sm);background-color:transparent;background-image:var(--wash2);font:400 12px/16px var(--font-sans);color:var(--fg);max-width:240px;min-width:0}
+.fa-chip--sm{height:var(--ctrl-2xs);padding:0 var(--space-1)}
+.fa-chip .fa-ic{width:12px;height:12px}
+.fa-chip--ref{color:var(--accent)}
+.fa-chip span.t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fa-chip button{display:inline-flex;border:0;background:none;padding:0;color:var(--fg-muted);cursor:pointer;border-radius:var(--radius-sm)}
+.fa-chip button:hover{color:var(--fg)}
+.fa-composer__foot{display:flex;align-items:center;gap:0;min-width:0;padding:0 var(--space-2) var(--space-2) var(--space-1)}
+.fa-composer__foot .fa-select--ghost{min-width:0;flex:0 1 auto}
+.fa-composer__foot .fa-select--ghost .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fa-ring{flex:none;display:inline-flex;align-items:center;justify-content:center;width:var(--ctrl-sm);height:var(--ctrl-sm);padding:0;border:0;border-radius:var(--radius-sm);background:transparent;cursor:pointer;--hv:linear-gradient(var(--hover),var(--hover))}
+.fa-ring:hover{background-image:var(--hv)}
+.fa-ring svg{width:16px;height:16px;transform:rotate(-90deg)}
+.fa-ring .trk{stroke:var(--border)}
+.fa-ring .val{stroke:var(--accent)}
+.fa-ring.is-full .val{stroke:var(--danger)}
+/* composer bars: elements at least 12 apart */
+.fa-composer__bar,.fa-composer__foot,.fa-composer--compact{gap:var(--space-3)}
+.fa-composer{container:composer / inline-size}
+.fa-composer__more,.fa-batch__more{display:none}
+@container composer (max-width: 519px){
+  .fa-composer__foot .is-effort,.fa-composer__foot .is-perm,.fa-composer__foot .is-model .lbl{display:none}
+  .fa-composer__foot .fa-composer__more{display:inline-flex}
+}
+@container composer (max-width: 399px){ .fa-composer__bar .is-model .acct{display:none} }
+@container composer (max-width: 299px){ .fa-composer__bar .is-model .lbl{display:none} }

@@ -1,0 +1,5 @@
+.fa-up{color:var(--up)}
+.fa-down{color:var(--down)}
+.fa-flat{color:var(--flat)}
+.fa-mv{display:inline-flex;align-items:center;gap:var(--space-1);font:400 14px/20px var(--font-sans);font-variant-numeric:tabular-nums}
+.fa-mv svg{width:12px;height:12px}

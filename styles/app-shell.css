@@ -1,0 +1,4 @@
+.fa-app{display:grid;grid-template-columns:240px 1fr;min-height:360px;border:var(--bw-1) solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg)}
+.fa-app__side{background:var(--panel);border-right:var(--bw-1) solid var(--border);padding:var(--space-2);display:flex;flex-direction:column;gap:var(--space-1)}
+.fa-app__main{display:flex;flex-direction:column;padding:var(--space-4);gap:var(--space-3);min-width:0}
+@media (max-width:640px){.fa-app{grid-template-columns:1fr}.fa-app__side{display:none}}

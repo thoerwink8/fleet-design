@@ -1,0 +1,9 @@
+.fa-toast{display:flex;align-items:center;gap:var(--space-3);width:360px;max-width:100%;min-height:var(--ctrl-lg);padding:var(--space-2) var(--space-3);border-radius:var(--radius-lg);background:var(--overlay);border:var(--bw-1) solid var(--border);box-shadow:var(--shadow-overlay);font:400 14px/20px var(--font-sans)}
+.fa-toast .grow{flex:1;min-width:0}
+.fa-toast .fa-btn{flex:none}
+.fa-toast .m-success{color:var(--success)}
+.fa-toast .m-info{color:var(--info)}
+.fa-toast .m-danger{color:var(--danger)}
+.fa-toast .m-warning{color:var(--warning)}
+@keyframes fa-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.fa-enter{animation:fa-in var(--dur-base) var(--ease-out)}
