@@ -39,7 +39,6 @@ function Page() {
                   type="button"
                   className="fa-item"
                   aria-current={t === current ? 'true' : undefined}
-                  aria-selected={t === current}
                   onClick={() => {
                     setCurrent(t);
                     setOpen(false);
