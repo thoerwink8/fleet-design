@@ -167,6 +167,9 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 /* palette three-line rows: 2 seam + 8 + 20 + 16 + 16 + 8 + 2 = 72 */
 .fa-cmd__row{padding:var(--space-2) var(--space-row-x)}
 .fa-cmd__row.has-lead{column-gap:var(--space-icon-gap)}
+/* as a modal layer (React CommandPalette): fixed in the upper part of the viewport over the scrim; an empty result says so in one muted line */
+.fa-cmd--modal{position:fixed;top:15%;left:50%;z-index:41;transform:translateX(-50%);max-width:calc(100% - 2 * var(--space-4))}
+.fa-cmd__empty{display:flex;align-items:center;min-height:var(--ctrl);padding:0 var(--space-row-x);font:400 14px/20px var(--font-sans);color:var(--fg-muted)}
 .fa-pop{background:var(--overlay);border:var(--bw-1) solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-overlay);padding:var(--space-1);color:var(--fg)}
 .fa-pop--pad{padding:var(--space-3)}
 .fa-item{display:flex;align-items:center;gap:var(--space-2);width:100%;height:var(--ctrl);padding:0 var(--space-2);border:0;border-radius:var(--radius-sm);background:transparent;color:var(--fg);font:400 14px/20px var(--font-sans);text-align:left;cursor:pointer}

@@ -39,3 +39,6 @@
 /* palette three-line rows: 2 seam + 8 + 20 + 16 + 16 + 8 + 2 = 72 */
 .fa-cmd__row{padding:var(--space-2) var(--space-row-x)}
 .fa-cmd__row.has-lead{column-gap:var(--space-icon-gap)}
+/* as a modal layer (React CommandPalette): fixed in the upper part of the viewport over the scrim; an empty result says so in one muted line */
+.fa-cmd--modal{position:fixed;top:15%;left:50%;z-index:41;transform:translateX(-50%);max-width:calc(100% - 2 * var(--space-4))}
+.fa-cmd__empty{display:flex;align-items:center;min-height:var(--ctrl);padding:0 var(--space-row-x);font:400 14px/20px var(--font-sans);color:var(--fg-muted)}

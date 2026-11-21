@@ -283,5 +283,61 @@
         }
       ]
     ]
+  },
+  {
+    "name": "CommandPalette",
+    "card": "CommandPalette",
+    "subtitle": "React：CommandPalette（Base UI Dialog + 组合框）。过滤、键盘选择、回车执行、分组",
+    "compare": [
+      [
+        ".fa-cmd",
+        ".fa-cmd",
+        {
+          "ignore": [
+            "position",
+            "top",
+            "left",
+            "bottom",
+            "right",
+            "inset-block-start",
+            "inset-block-end",
+            "inset-inline-start",
+            "inset-inline-end",
+            "z-index",
+            "transform",
+            "max-width",
+            "max-inline-size",
+            "block-size",
+            "height",
+            "min-block-size",
+            "min-height",
+            "min-inline-size",
+            "min-width"
+          ],
+          "why": "the card shows the palette inline; the component fixes it over the scrim, and its height follows the results"
+        }
+      ],
+      [".fa-cmd__in", ".fa-cmd__in"],
+      [
+        ".fa-cmd__in input",
+        "#q",
+        {
+          "ignore": ["outline-offset"],
+          "why": "the component input has focus when the palette opens (its outline stays none)"
+        }
+      ],
+      [
+        ".fa-cmd__list",
+        "#list",
+        {
+          "ignore": ["block-size", "height"],
+          "why": "different number of results"
+        }
+      ],
+      [".fa-cmd__list .fa-glabel", "#list .fa-glabel"],
+      [".fa-cmd__row[data-active=true]", ".fa-cmd__row[data-active=true]"],
+      [".fa-cmd__row[data-active=false]:not(.fa-cmd__row--1)", ".fa-cmd__row[data-active=false]"],
+      [".fa-cmd__foot", ".fa-cmd__foot"]
+    ]
   }
 ]
