@@ -1,7 +1,10 @@
 import { expect, type Page, test } from '@playwright/test';
 import { open } from './helpers';
 
-test.beforeEach(async ({ page }) => open(page, 'CommandPalette'));
+test.beforeEach(async ({ page }) => {
+  await open(page, 'CommandPalette');
+  await expect(page.getByRole('combobox', { name: '命令面板' })).toBeFocused();
+});
 
 const box = (page: Page) => page.getByRole('combobox', { name: '命令面板' });
 const options = (page: Page) => page.getByRole('listbox', { name: '命令面板' }).getByRole('option');

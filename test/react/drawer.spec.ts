@@ -26,6 +26,7 @@ test('picking an item closes it and updates state; scrim closes it', async ({ pa
 
 test('focus is trapped inside while open', async ({ page }) => {
   const drawer = page.getByRole('dialog', { name: '会话列表' });
+  await expect(drawer.locator(':focus')).toHaveCount(1);
   for (let i = 0; i < 6; i++) {
     await page.keyboard.press('Tab');
     await expect(drawer.locator(':focus')).toHaveCount(1);

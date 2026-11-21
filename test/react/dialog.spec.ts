@@ -28,6 +28,7 @@ test('confirm dialog: focus starts on cancel, Esc cancels, focus returns to the 
 test('confirm dialog: Tab stays inside, the scrim does not dismiss, confirm runs the action', async ({ page }) => {
   await opener(page).click();
   const dlg = page.getByRole('alertdialog', { name: '删除 4 个会话' });
+  await expect(dlg.getByRole('button', { name: '取消' })).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(dlg.getByRole('button', { name: '删除 4 个会话' })).toBeFocused();
   await page.keyboard.press('Tab');
