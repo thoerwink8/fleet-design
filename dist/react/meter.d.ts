@@ -1,4 +1,3 @@
-import type * as React from 'react';
 import { type LayoutProps } from './internal.js';
 export interface MeterSegment {
     label: string;
@@ -24,4 +23,4 @@ export interface MeterProps extends LayoutProps {
  * A static measure of how full something is (context window, quota): `<Meter label="上下文占用" value={70} showValue />`.
  * Not a progress indicator for running work.
  */
-export declare function Meter({ label, value, max, size, showValue, segments, dangerAt, className, style, }: MeterProps): React.JSX.Element;
+export declare function Meter({ label, value, max, size, showValue, segments, dangerAt, className, style, }: MeterProps): import("react").JSX.Element;

@@ -583,3 +583,12 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 .fa-fold__sum,.fa-run{height:var(--ctrl);min-height:var(--ctrl)}
 /* buttons in an icon/time cluster must not stretch a 20px text line */
 .fa-task .fa-icon-btn,.fa-trow .acts .fa-icon-btn{margin-block:calc(-1 * var(--space-row-seam))}
+/* Checkbox: a 16px box that sits inside a row or label at least 32 high. Checked is neutral (fg fill, bg mark), like selected rows: the brand accent is not a selection colour. */
+.fa-checkbox{display:inline-flex;align-items:center;justify-content:center;flex:none;width:16px;height:16px;padding:0;border:var(--bw-1) solid var(--fg-muted);border-radius:var(--radius-sm);background:var(--bg);color:var(--bg);cursor:pointer}
+.fa-checkbox[data-checked],.fa-checkbox[aria-checked=true],.fa-checkbox[data-indeterminate],.fa-checkbox[aria-checked=mixed]{background:var(--fg);border-color:var(--fg)}
+.fa-checkbox .fa-ic{width:12px;height:12px}
+.fa-checkbox[data-disabled]{border-color:var(--border);background:var(--panel);cursor:not-allowed}
+.fa-checkbox[data-disabled][data-checked]{border-color:var(--fg-muted);background:var(--fg-muted)}
+/* checkbox with its text: the whole line is the click target, 32 high */
+.fa-check-label{display:inline-flex;align-items:center;gap:var(--space-2);min-height:var(--row-1);font:400 14px/20px var(--font-sans);cursor:pointer}
+.fa-check-label:has([data-disabled]){color:var(--fg-muted);cursor:not-allowed}

@@ -1,5 +1,4 @@
 import { Meter as BaseMeter } from '@base-ui/react/meter';
-import type * as React from 'react';
 import { cx, type LayoutProps } from './internal.js';
 
 export interface MeterSegment {

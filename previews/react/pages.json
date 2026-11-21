@@ -339,5 +339,11 @@
       [".fa-cmd__row[data-active=false]:not(.fa-cmd__row--1)", ".fa-cmd__row[data-active=false]"],
       [".fa-cmd__foot", ".fa-cmd__foot"]
     ]
+  },
+  {
+    "name": "Checkbox",
+    "card": "ThreadRow",
+    "subtitle": "React：Checkbox（Base UI Checkbox）。带文字、半选、禁用；ThreadRow 多选也用它",
+    "compare": []
   }
 ]

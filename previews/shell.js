@@ -2,10 +2,22 @@ const $ = (s) => document.querySelector(s);
 const frame = $('#frame');
 const query = new URLSearchParams(location.search);
 
-const [cards, meta] = await Promise.all([
+const [staticCards, reactPages, meta] = await Promise.all([
   fetch('/previews/cards.json').then((r) => r.json()),
+  fetch('/previews/react/pages.json').then((r) => r.json()),
   fetch('/tokens/themes.json').then((r) => r.json()),
 ]);
+// Static cards, then one React page per component under the React group.
+const cards = [
+  ...staticCards.map((c) => ({ ...c, url: `/cards/${c.name}.html` })),
+  ...reactPages.map((r) => ({
+    name: `react/${r.name}`,
+    label: r.name,
+    group: 'React',
+    subtitle: r.subtitle,
+    url: `/react/${r.name}.html`,
+  })),
+];
 const kind = Object.fromEntries(meta.themes.map((t) => [t.id, t.kind]));
 const dark = matchMedia('(prefers-color-scheme: dark)');
 
@@ -41,13 +53,13 @@ for (const c of cards) {
   const item = document.createElement('button');
   item.className = 'fa-item';
   item.dataset.card = c.name;
-  item.textContent = c.name;
+  item.textContent = c.label || c.name;
   item.addEventListener('click', () => {
     state.card = c.name;
     load();
   });
   nav.append(item);
-  pick.append(new Option(c.name, c.name));
+  pick.append(new Option(c.label ? `${c.label} (React)` : c.name, c.name));
 }
 pick.addEventListener('change', () => {
   state.card = pick.value;
@@ -68,7 +80,7 @@ function paint(doc) {
 
 function cardUrl() {
   const q = new URLSearchParams({ theme: resolvedTheme(), project: state.project });
-  return `/cards/${state.card}.html?${q}`;
+  return `${cards.find((c) => c.name === state.card).url}?${q}`;
 }
 
 function sync() {
@@ -90,7 +102,7 @@ function sync() {
   pick.value = state.card;
   $('.shell__frame').dataset.width = state.width;
   const card = cards.find((c) => c.name === state.card);
-  $('#title').textContent = card.name;
+  $('#title').textContent = card.label ? `${card.label} (React)` : card.name;
   $('#subtitle').textContent = card.subtitle;
   $('#open').href = cardUrl();
   history.replaceState(

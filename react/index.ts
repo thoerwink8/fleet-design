@@ -12,3 +12,4 @@ export * from './drawer.js';
 export * from './collapsible.js';
 export * from './meter.js';
 export * from './command-palette.js';
+export * from './checkbox.js';

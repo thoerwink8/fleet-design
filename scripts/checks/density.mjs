@@ -73,7 +73,7 @@ function audit(S) {
     const ic = [...e.children].find(
       (c) =>
         vis(c) &&
-        (c.matches('svg,.fa-agent,.lead,.ty,.fa-dot,input[type=checkbox]') ||
+        (c.matches('svg,.fa-agent,.lead,.ty,.fa-dot,.fa-checkbox,input[type=checkbox]') ||
           (c.querySelector && c.children.length === 1 && c.querySelector(':scope>svg'))),
     );
     if (!ic) continue;

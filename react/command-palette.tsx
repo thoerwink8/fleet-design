@@ -186,6 +186,7 @@ export function CommandPalette({
             {groups.map((g, gi) => {
               const head = `${listId}-g${gi}`;
               return (
+                // biome-ignore lint/a11y/useSemanticElements: an option group inside a listbox is role=group, not a fieldset
                 <div key={g.name ?? gi} role="group" aria-labelledby={g.name ? head : undefined}>
                   {g.name && (
                     <div className="fa-glabel" id={head}>
