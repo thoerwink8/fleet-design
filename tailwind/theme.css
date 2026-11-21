@@ -1,0 +1,79 @@
+/* Tailwind v4 theme for fleet-design. Import after tailwindcss and dist/tokens.css:
+   @import "tailwindcss"; @import "@fleet/design/tokens.css"; @import "@fleet/design/tailwind";
+   Utilities resolve to the role variables, so data-theme and data-project keep working. */
+@theme inline {
+  --color-*: initial;
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-overlay: var(--overlay);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-on-danger: var(--on-danger);
+  --color-info: var(--info);
+  --color-selected: var(--selected);
+  --color-hover: var(--hover);
+  --color-scrim: var(--scrim);
+  --color-ring: var(--focus-ring);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --color-flat: var(--flat);
+  --color-data-1: var(--data-1);
+  --color-data-2: var(--data-2);
+  --color-data-3: var(--data-3);
+  --color-data-4: var(--data-4);
+  --color-data-5: var(--data-5);
+  --color-data-6: var(--data-6);
+
+  --spacing: 4px;
+  --spacing-row-x: var(--space-row-x);
+  --spacing-row-x-menu: var(--space-row-x-menu);
+  --spacing-row-y: var(--space-row-y);
+  --spacing-icon-gap: var(--space-icon-gap);
+  --spacing-trail-gap: var(--space-trail-gap);
+  --spacing-list-inset: var(--space-list-inset);
+  --spacing-sec-y: var(--space-sec-y);
+  --spacing-demo: var(--space-demo);
+  --spacing-ctrl-2xs: var(--ctrl-2xs);
+  --spacing-ctrl-xs: var(--ctrl-xs);
+  --spacing-ctrl-sm: var(--ctrl-sm);
+  --spacing-ctrl: var(--ctrl);
+  --spacing-ctrl-lg: var(--ctrl-lg);
+  --spacing-row-1: var(--row-1);
+  --spacing-row-2: var(--row-2);
+  --spacing-row-3: var(--row-3);
+  --spacing-row-data: var(--row-data);
+
+  --radius-*: initial;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  --font-*: initial;
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+
+  --text-*: initial;
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 15px;
+  --text-base--line-height: 24px;
+  --text-lg: 18px;
+  --text-lg--line-height: 28px;
+  --text-xl: 20px;
+  --text-xl--line-height: 28px;
+
+  --shadow-*: initial;
+  --shadow-overlay: var(--shadow-overlay);
+}
