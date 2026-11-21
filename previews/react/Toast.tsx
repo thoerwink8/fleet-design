@@ -7,6 +7,7 @@ function Buttons() {
   const toast = useToast();
   const [said, say] = useState('');
   const [n, setN] = useState(0);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the demo toast is shown once, on mount
   useEffect(() => {
     // Demo state: one toast with 撤销 that stays until closed.
     toast.show({ text: '已归档「排查登录超时」', action: { label: '撤销', onClick: () => say('已恢复') }, timeout: 0 });
