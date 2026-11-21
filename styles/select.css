@@ -10,7 +10,7 @@
 .fa-pop--two>div:first-child{background:var(--panel);border-right:var(--bw-1) solid var(--border)}
 .fa-pop--two>div{padding:var(--space-2)}
 .fa-pop--two{padding:0}
-.fa-select--ghost{white-space:nowrap;min-width:0;overflow:hidden}
+.fa-select--ghost{white-space:nowrap;min-width:0}
 /* narrow composers collapse instead of truncating (container queries: a split-pane second session is just as narrow).
    Breakpoints are the size tokens bp-composer-foot (520), bp-composer-account (400), bp-composer-icon (300), bp-batch (320);
    container queries cannot read var(), so the numbers are repeated here. */

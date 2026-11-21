@@ -36,6 +36,29 @@ function settledLater(base, newIndex, i, j, sels, props) {
   return false;
 }
 
+// A swap is also harmless when, for every shared property, the unconditional rules with one of the two exact
+// selectors end on the same declaration in the baseline order and in the new order (for example two rules that
+// both state the same value, so either order gives the same result).
+function sameOutcome(base, newIndex, i, j, sels, props) {
+  if (base[i].context.length || base[j].context.length) return false;
+  const rules = [];
+  base.forEach((R, r) => {
+    if (R.kind === 'rule' && !R.context.length && splitList(R.selector).some((s) => sels.includes(s))) rules.push(r);
+  });
+  const winner = (atom, order) => {
+    let best = null;
+    for (const r of [...rules].sort((x, y) => order(x) - order(y))) {
+      for (const [p, v, imp] of base[r].decls) {
+        if (!atoms(p).includes(atom)) continue;
+        if (best && best.imp && !imp) continue;
+        best = { decl: `${p}:${v}`, imp };
+      }
+    }
+    return best ? `${best.decl}${best.imp ? '!important' : ''}` : '';
+  };
+  return props.flatMap(atoms).every((atom) => winner(atom, (r) => r) === winner(atom, (r) => newIndex[r]));
+}
+
 // Pairs of rules whose relative order differs from the baseline, and whether that can change the cascade.
 export function orderReport(base, next, together) {
   const pos = new Map();
@@ -68,6 +91,7 @@ export function orderReport(base, next, together) {
           const rel = relation(sa, sb, together);
           if (rel === 'disjoint') continue;
           if (rel === 'same' && settledLater(base, newIndex, i, j, [sa, sb], props)) continue;
+          if (rel === 'same' && sameOutcome(base, newIndex, i, j, [sa, sb], props)) continue;
           const item = { earlier: show(a), later: show(b), sa, sb, props, lineA: a.line, lineB: b.line };
           (rel === 'same' ? conflicts : assumed).push(item);
         }

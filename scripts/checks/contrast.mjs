@@ -1,5 +1,5 @@
 import { flatten, ratio } from '../lib/color.mjs';
-import { loadSource, PROJECTS, resolveTheme, tokensJson } from '../lib/tokens.mjs';
+import { loadSource, projectIds, resolveTheme, tokensJson } from '../lib/tokens.mjs';
 
 const TEXT = 4.5;
 const MARK = 3;
@@ -42,7 +42,7 @@ export default async function contrast() {
   let total = 0;
   for (const { id } of T.color.themes) {
     const row = [];
-    for (const project of Object.keys(PROJECTS)) {
+    for (const project of projectIds(T)) {
       const v = resolveTheme(T, id, project);
       const results = pairs(v).map(([name, f, b, min]) => ({ name, r: ratio(f, b), min }));
       total += results.length;

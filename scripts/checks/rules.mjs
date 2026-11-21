@@ -20,6 +20,13 @@ export const SPACING_EXCEPTIONS = [
   ['.fa-trend i[data-ev]::after', 'margin-left', '-3px'],
 ];
 
+// Row heights with a spec of their own. The table row (40) is the only one that is neither row-1 nor row-2/3;
+// it must come from its token, and the token is not used outside tables.
+export const ROW_SPECS = [['.fa-table td', 'height', 'var(--row-table)']];
+
+// The only looping animation: the in-turn indicator, which steps and stops under reduced motion. No spinners.
+export const LOOP_ALLOWED = ['.fa-dots3 i'];
+
 const SPACING_PROPS = /^(padding|margin)(-(top|right|bottom|left|block|inline)(-(start|end))?)?$|^(gap|row-gap|column-gap)$/;
 const NAMED =
   'aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet brown burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod darkgray darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey dodgerblue firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green greenyellow grey honeydew hotpink indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon lightseagreen lightskyblue lightslategray lightslategrey lightsteelblue lightyellow lime limegreen linen magenta maroon mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen mediumslateblue mediumspringgreen mediumturquoise mediumvioletred midnightblue mintcream mistyrose moccasin navajowhite navy oldlace olive olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum powderblue purple rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown seagreen seashell sienna silver skyblue slateblue slategray slategrey snow springgreen steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen'.split(
@@ -61,7 +68,7 @@ export default async function rules() {
   const T = tokensJson();
   const vars = lengths(T);
   const problems = [];
-  const seen = { sizes: new Set(), weights: new Set(), spacing: 0, mono: [] };
+  const seen = { sizes: new Set(), weights: new Set(), spacing: 0, mono: [], rowSpecs: 0 };
   const exceptionsHit = new Set();
 
   for (const t of T.spacing.tokens) {
@@ -110,6 +117,16 @@ export default async function rules() {
           }
         }
       }
+      for (const [sel, p, v] of ROW_SPECS) {
+        if (d.parent.selector === sel && prop === p) {
+          seen.rowSpecs++;
+          if (value !== v) problems.push(`row height must be ${v}: ${where}`);
+        }
+      }
+      if (value.includes('--row-table') && !splitList(d.parent.selector).every((x) => x.startsWith('.fa-table')))
+        problems.push(`--row-table outside a table: ${where}`);
+      if (/^animation(-iteration-count)?$/.test(prop) && /\binfinite\b/.test(value) && !LOOP_ALLOWED.includes(d.parent.selector))
+        problems.push(`looping animation (only ${LOOP_ALLOWED.join(', ')} may loop): ${where}`);
       if (prop !== 'white-space') {
         const words = value.toLowerCase().split(/[^a-z-]+/);
         if (/#[0-9a-f]{3,8}\b/i.test(value) || COLOR_FN.test(value) || words.some((w) => NAMED.includes(w)))
@@ -124,11 +141,14 @@ export default async function rules() {
     });
   }
 
+  if (seen.rowSpecs < ROW_SPECS.length) problems.push(`row specs: only ${seen.rowSpecs} of ${ROW_SPECS.length} found in styles/`);
   const lines = [
     `font sizes used: ${[...seen.sizes].sort((a, b) => a - b).join(', ')}px; weights used: ${[...seen.weights].sort().join(', ')}`,
     `${seen.spacing} spacing values checked; known exceptions still present: ${exceptionsHit.size}/${SPACING_EXCEPTIONS.length}`,
     `monospace on: ${seen.mono.join(', ')}`,
     'colours: every colour in styles/ is a var() reference',
+    `looping animations only on: ${LOOP_ALLOWED.join(', ')}`,
+    `row specs: ${seen.rowSpecs}/${ROW_SPECS.length} found (table row = var(--row-table), 40)`,
   ];
   if (problems.length) lines.push(`${problems.length} problem(s):`, ...problems.map((p) => `  ${p}`));
   return { ok: problems.length === 0, lines };

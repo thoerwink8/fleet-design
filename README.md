@@ -6,11 +6,11 @@ Version 0.1 ships tokens, component CSS, a Tailwind v4 theme and a preview site.
 
 ## Three layers
 
-| Layer             | Variables                                                                                                                                                                                                      | Who uses it                                                                     |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| 1. Base palette   | `--palette-n0` … `--palette-n9`, `--palette-red`, `-green`, `-amber`, `-blue`, `-cyan`                                                                                                                         | Only the semantic layer. Changing theme swaps this layer.                       |
-| 2. Semantic roles | `--bg`, `--panel`, `--overlay`, `--fg`, `--fg-muted`, `--border`, `--accent`, `--on-accent`, `--success`, `--warning`, `--danger`, `--on-danger`, `--info`, `--selected`, `--hover`, `--scrim`, `--focus-ring` | Components and pages. Never use `--palette-*` directly.                         |
-| 3. Brand          | `--brand-fleet`, `--brand-ashare`, `--brand-jiqun`                                                                                                                                                             | Re-points `--accent` per product. Everything else is identical across products. |
+| Layer             | Variables                                                                                                                                                                                                      | Who uses it                                                                                                                            |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Base palette   | `--palette-n0` … `--palette-n9`, `--palette-red`, `-green`, `-amber`, `-blue`, `-cyan`                                                                                                                         | Only the semantic layer. Changing theme swaps this layer.                                                                              |
+| 2. Semantic roles | `--bg`, `--panel`, `--overlay`, `--fg`, `--fg-muted`, `--border`, `--accent`, `--on-accent`, `--success`, `--warning`, `--danger`, `--on-danger`, `--info`, `--selected`, `--hover`, `--scrim`, `--focus-ring` | Components and pages. Never use `--palette-*` directly.                                                                                |
+| 3. Brand          | `--brand-fleet`, `--brand-trade`, `--brand-board`                                                                                                                                                              | Re-points `--accent` per product; `--focus-ring` follows it. `--on-accent`, `--selected` and `--hover` stay the same in every product. |
 
 Two more colour groups sit beside the roles:
 
@@ -29,20 +29,20 @@ pnpm add github:thoerwink8/fleet-design#v0.1.0
 
 The package is not published to npm. `dist/` is committed, so installing from git needs no build step and no extra tools, on Windows and Linux alike (see [Why dist/ is committed](#why-dist-is-committed)).
 
-| Import                            | File                                                                                         |
-| --------------------------------- | -------------------------------------------------------------------------------------------- |
-| `@fleet/design/tokens.css`        | all variables, eight themes                                                                  |
-| `@fleet/design/tokens.json`       | the same values as data                                                                      |
-| `@fleet/design/styles.css`        | every component class, in cascade order                                                      |
-| `@fleet/design/styles/<name>.css` | one component, e.g. `styles/button.css`; `styles/base.css` holds resets and the brand switch |
-| `@fleet/design/tailwind`          | Tailwind v4 theme mapped to the variables                                                    |
+| Import                            | File                                                                                       |
+| --------------------------------- | ------------------------------------------------------------------------------------------ |
+| `@fleet/design/tokens.css`        | all variables, eight themes                                                                |
+| `@fleet/design/tokens.json`       | the same values as data                                                                    |
+| `@fleet/design/styles.css`        | every component class, in cascade order                                                    |
+| `@fleet/design/styles/<name>.css` | one component, e.g. `styles/button.css`; `styles/base.css` holds resets and shared helpers |
+| `@fleet/design/tailwind`          | Tailwind v4 theme mapped to the variables                                                  |
 
 ## Use it
 
 ### Plain CSS
 
 ```html
-<html data-theme="dark" data-project="jiqun">
+<html data-theme="dark" data-project="board">
   <head>
     <link rel="stylesheet" href="node_modules/@fleet/design/dist/tokens.css">
     <link rel="stylesheet" href="node_modules/@fleet/design/dist/styles.css">
@@ -61,11 +61,11 @@ With a bundler: `import '@fleet/design/tokens.css'; import '@fleet/design/styles
 ```css
 @import "tailwindcss";
 @import "@fleet/design/tokens.css";
-@import "@fleet/design/styles/base.css"; /* or styles.css for all component classes */
+@import "@fleet/design/styles.css"; /* only if you use the .fa-* component classes */
 @import "@fleet/design/tailwind";
 ```
 
-Then `bg-panel`, `text-fg-muted`, `border-border`, `text-up`, `px-row-x`, `h-ctrl`, `text-sm`, `rounded-md`, `font-medium` resolve to the variables. Tailwind's default palette, the 13/16/24px sizes and weights 600+ are removed, so off-scale classes do not exist. Import `tokens.css` unlayered as shown: the theme refers to `--font-sans`, `--font-mono` and `--shadow-overlay` by the same names. Tailwind is optional; projects without it use the plain CSS above.
+Then `bg-panel`, `text-fg-muted`, `border-border`, `text-up`, `px-row-x`, `h-ctrl`, `text-sm`, `rounded-md`, `font-medium` resolve to the variables. Tailwind's default palette, the 13/16/24px sizes and weights 600+ are removed, so off-scale classes do not exist. `tokens.css` alone is enough for the variables, the eight themes and the brand switch. Import `tokens.css` unlayered as shown: the theme refers to `--font-sans`, `--font-mono` and `--shadow-overlay` by the same names. Tailwind is optional; projects without it use the plain CSS above.
 
 ### React (next step)
 
@@ -76,7 +76,7 @@ Then `bg-panel`, `text-fg-muted`, `border-border`, `text-up`, `px-row-x`, `h-ctr
 Set two attributes on the root element:
 
 ```html
-<html data-theme="nord" data-project="ashare">
+<html data-theme="nord" data-project="trade">
 ```
 
 | `data-theme`                                                    | kind  |
@@ -86,13 +86,15 @@ Set two attributes on the root element:
 
 Each theme is either light or dark; to follow the system, pick one light and one dark theme and switch `data-theme` on `prefers-color-scheme`. Native scrollbars and form controls follow through `color-scheme`.
 
-| `data-project` | product             | accent                    | market colours     |
-| -------------- | ------------------- | ------------------------- | ------------------ |
-| none           | coding-agent client | `--brand-fleet` (blue)    | up green, down red |
-| `ashare`       | trading review app  | `--brand-ashare` (indigo) | up red, down green |
-| `jiqun`        | fleet dashboard     | `--brand-jiqun` (teal)    | up green, down red |
+| `data-project` | product             | accent                   | market colours     |
+| -------------- | ------------------- | ------------------------ | ------------------ |
+| none           | coding-agent client | `--brand-fleet` (blue)   | up green, down red |
+| `trade`        | trading review app  | `--brand-trade` (indigo) | up red, down green |
+| `board`        | fleet dashboard     | `--brand-board` (teal)   | up green, down red |
 
-The brand rules live in `styles/base.css` (also inside `styles.css`). The accent appears in five places only: primary button, links, progress and meters, focus ring, unread dot. Selected and hovered rows use the neutral `--selected` / `--hover` in every brand.
+The brand rules are part of `tokens.css` (generated from `projects` in `tokens/brand.json`), so a project that imports only the tokens switches brand too. A brand re-points `--accent`; `--focus-ring` follows it, `--on-accent` stays equal to `--bg`, and the trading brand also flips `--up` / `--down`. Nothing else changes. The accent appears in five places only: primary button, links, progress and meters, focus ring, unread dot. Selected and hovered rows use the neutral `--selected` / `--hover` in every brand.
+
+No decorative gradients. Two gradients are intentional and are not colours of their own: the hover wash, layered as `linear-gradient(var(--hover), var(--hover))` so it works on any surface, and the scroll hint at the right edge of a wide table (`styles/table.css`).
 
 ## Density
 
@@ -104,6 +106,7 @@ The brand rules live in `styles/base.css` (also inside `styles.css`). The accent
 | Data-only row, not clickable (context breakdown, expanded group items)                   | 24                                           | `row-data`                        |
 | Two-line row (changes, threads that need you, expanded task, menu item with description) | 52 = 8 + 20 + 16 + 8                         | `row-2`, `space-row-y`            |
 | Three-line result row (command palette)                                                  | 72                                           | `row-3`                           |
+| Table body row (header row 32)                                                           | 40                                           | `row-table`                       |
 | Icon or agent slot to text                                                               | 12                                           | `space-icon-gap`                  |
 | Text to trailing value, time or buttons                                                  | ≥ 12                                         | `space-trail-gap`                 |
 | Row side padding                                                                         | 12 in panels, 8 in floating layers           | `space-row-x`, `space-row-x-menu` |
@@ -116,7 +119,7 @@ The brand rules live in `styles/base.css` (also inside `styles.css`). The accent
 | Content floating layers: hover card / dialog                                             | 16 / 20                                      | `space-4`, `space-5`              |
 | Caption to demo / between demo blocks                                                    | ≥ 12 / 24                                    | `space-demo`                      |
 
-Anything clickable is at least 32 high; 24 is only for rows you cannot click. Narrow containers collapse controls with container queries instead of truncating them (`bp-composer-foot` 520, `bp-composer-account` 400, `bp-composer-icon` 300, `bp-batch` 320).
+Rows and standalone controls you can click are at least 32 high; 24 is only for rows you cannot click. Smaller controls live only inside a bar or row that is itself at least 32: small buttons (28, `fa-btn--sm`) grouped as secondary actions in a toolbar, status strip, composer bar or batch bar, icon buttons (28) inside rows, and segmented-control items (24) inside their 32 group. Table rows are 40 (`row-table`), a spec of their own. Narrow containers collapse controls with container queries instead of truncating them (`bp-composer-foot` 520, `bp-composer-account` 400, `bp-composer-icon` 300, `bp-batch` 320); below 400 the strip under the composer drops the branch name and keeps project and usage.
 
 The full rules (type scale, weights, colour use, motion, interaction) are in [AGENTS.md](AGENTS.md).
 

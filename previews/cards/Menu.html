@@ -1,6 +1,6 @@
 <div class="fa-stage">
   <div class="fa-cap">演示态：菜单默认展开。不放装饰图标；勾号只表示开关开着；右侧单字母是快捷键，菜单开着时直接按；删除单独一组放最后、红字。右键或点「更多」重新打开，方向键、Enter、Esc 都能用</div>
-  <div style="position:relative;width:360px">
+  <div style="position:relative;width:360px;max-width:100%">
     <div class="fa-trow" id="row" tabindex="0" >
       <span class="lead"><span class="fa-agent" title="Claude Code">C<span class="fa-dot fa-dot--running" role="img" aria-label="运行中"></span></span></span>
       <div style="min-width:0"><div class="t">排查登录超时</div><div class="s">local/42-login-fix · 有未提交的改动</div></div>
@@ -29,7 +29,7 @@ function build() {
   setTimeout(() => { const u = $('#u'); if (u) u.textContent = '81K tokens'; }, 500);
 }
 function hi(k, quiet) { act = k; buttons.forEach((b, j) => b.dataset.active = j === k); if (!quiet) buttons[k].focus(); }
-function openAt(x, y, quiet) { build(); menu.hidden = false; menu.style.left = Math.max(0, Math.min(x, 360 - 248)) + 'px'; menu.style.top = y + 'px'; hi(0, quiet); }
+function openAt(x, y, quiet) { build(); menu.hidden = false; menu.style.left = Math.max(0, Math.min(x, menu.parentElement.clientWidth - 248)) + 'px'; menu.style.top = y + 'px'; hi(0, quiet); }
 function close(f) { menu.hidden = true; if (f) row.focus(); }
 function run(n) { const it = ITEMS[n]; if (it.toggle) { it.on = !it.on; buttons.find(b => +b.dataset.n === n).setAttribute('aria-checked', it.on); $('#say').textContent = '闲置时释放内存：' + (it.on ? '开' : '关') + '（开关项点了菜单不关）'; return; } $('#say').textContent = it.say || it.l; close(true); }
 row.addEventListener('contextmenu', e => { e.preventDefault(); const r = row.getBoundingClientRect(); openAt(e.clientX - r.left, e.clientY - r.top); });

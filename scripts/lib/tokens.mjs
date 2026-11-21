@@ -10,6 +10,7 @@ export function loadSource() {
     meta: read('themes.json'),
     palette: read('palette.json').tokens,
     brand: read('brand.json').tokens,
+    projects: read('brand.json').projects,
     semantic: read('semantic.json'),
     data: read('data.json').tokens,
     type: read('type.json'),
@@ -18,13 +19,14 @@ export function loadSource() {
 }
 
 export function tokensJson(src = loadSource()) {
-  const { meta, palette, brand, semantic, data, type, scales } = src;
+  const { meta, palette, brand, projects, semantic, data, type, scales } = src;
   return {
     name: meta.name,
     version: meta.version,
     color: {
       themes: meta.themes.map(({ id, name }) => ({ id, name })),
       tokens: [...palette, ...brand, ...semantic.roles, ...semantic.market, ...data],
+      projects,
     },
     type,
     spacing: scales.spacing,
@@ -48,6 +50,11 @@ export function renderCss(T) {
     T.shadow.tokens.map((t) => `--${t.name}:${t.value[id]};`).join('');
   let css = `:root,[data-theme="${ids[0]}"]{${block(ids[0])}}\n`;
   for (const id of ids.slice(1)) css += `[data-theme="${id}"]{${block(id)}}\n`;
+  // Project (brand) layer after the theme blocks: same specificity, so it wins when both attributes sit on one element.
+  for (const p of T.color.projects) {
+    const set = Object.entries(p.set);
+    if (set.length) css += `[data-project="${p.id}"]{${set.map(([k, v]) => `--${k}:${ref(v)};`).join('')}}\n`;
+  }
   const scales = ['spacing', 'radius', 'size', 'border', 'duration', 'easing'];
   css += `:root{${scales.flatMap((k) => T[k].tokens.map((t) => `--${t.name}:${t.value};`)).join('')}--font-sans:${T.type.families.sans};--font-mono:${T.type.families.mono};}\n`;
   css += `${T.type.groups
@@ -57,16 +64,14 @@ export function renderCss(T) {
 }
 
 // Resolved colour values for one theme and one project (brand), following aliases and the project layer.
-// The project layer mirrors styles/base.css: it only re-points accent (and, for ashare, up/down).
-export const PROJECTS = {
-  fleet: {},
-  ashare: { accent: '{brand-ashare}', up: '{palette-red}', down: '{palette-green}' },
-  jiqun: { accent: '{brand-jiqun}' },
-};
+// The project layer comes from tokens/brand.json, the same data that writes the [data-project] rules in tokens.css.
+export const projectIds = (T) => T.color.projects.map((p) => p.id);
 
 export function resolveTheme(T, themeId, project = 'fleet') {
   const raw = Object.fromEntries(T.color.tokens.map((t) => [t.name, t.value[themeId]]));
-  Object.assign(raw, PROJECTS[project]);
+  const layer = T.color.projects.find((p) => p.id === project);
+  if (!layer) throw new Error(`unknown project ${project}`);
+  Object.assign(raw, layer.set);
   const out = {};
   const get = (name, seen = new Set()) => {
     if (name in out) return out[name];

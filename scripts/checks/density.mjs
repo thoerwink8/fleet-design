@@ -13,6 +13,7 @@ export function densitySpec(T = tokensJson()) {
   return {
     clickableRow: px('row-1'),
     twoLineRow: px('row-2'),
+    tableRow: px('row-table'),
     rowPadY: px('space-row-y'),
     iconGap: px('space-icon-gap'),
     seam: px('space-row-seam'),
@@ -51,10 +52,15 @@ function audit(S) {
     ...all('.fa-chg'),
     ...all('.fa-trow:not(.fa-trow--1)').filter((e) => e.querySelector('.s')),
     ...all('.fa-task[aria-expanded=true]').filter((e) => e.querySelector('.sub')),
+    ...all('.fa-cmd__row').filter((e) => e.querySelector('.l2') && !e.querySelector('.l3')),
   ];
   for (const e of two) {
     const h = Math.round(R(e).height);
     add('two-line row height', `${S.twoLineRow}`, h, h === S.twoLineRow, e);
+  }
+  for (const e of all('.fa-table tbody tr')) {
+    const h = Math.round(R(e).height);
+    add('table row height', `${S.tableRow}`, h, h === S.tableRow, e);
   }
   for (const e of all('.fa-cmd__row')) {
     if (!e.querySelector('.l3')) continue;
@@ -137,7 +143,7 @@ function audit(S) {
   }
   for (const p of all('.fa-pop:not(.fa-pop--pad):not(.fa-pop--two),.fa-cmd,.fa-toast')) {
     const v = px(getComputedStyle(p).paddingTop);
-    add('list layer padding', `${S.listLayerPad}`, v, v === S.listLayerPad || p.matches('.fa-cmd'), p);
+    add('list layer padding', `${S.listLayerPad}`, v, v === S.listLayerPad, p);
   }
   for (const p of all('.fa-pop--pad,.fa-dialog')) {
     const v = px(getComputedStyle(p).paddingTop);
@@ -146,19 +152,32 @@ function audit(S) {
   return out;
 }
 
+// At a phone width: the page does not scroll sideways, and no control or read-only strip cuts its text with an
+// ellipsis. Titles and summaries of variable length may truncate; controls collapse with container queries instead.
+function narrow(width) {
+  const out = [];
+  const over = Math.round(document.documentElement.scrollWidth - innerWidth);
+  out.push({ check: `${width}px: page overflow`, spec: '0', actual: Math.max(0, over), ok: over <= 0, where: '' });
+  const CONTROLS = '.fa-btn,.fa-select,.fa-seg,.fa-composer__meta,.fa-composer__bar,.fa-composer__foot';
+  for (const e of document.querySelectorAll('body *')) {
+    if (getComputedStyle(e).textOverflow !== 'ellipsis' || !e.getBoundingClientRect().width || !e.closest(CONTROLS)) continue;
+    const cut = e.scrollWidth > e.clientWidth + 1;
+    const where = `${typeof e.className === 'string' && e.className ? e.className : e.tagName} "${e.textContent.trim().slice(0, 20)}"`;
+    out.push({ check: `${width}px: control text cut`, spec: '0', actual: cut ? 1 : 0, ok: !cut, where });
+  }
+  return out;
+}
+
+export const NARROW = 360;
+
 export default async function density() {
-  const { base, browser, cards } = await browserSession();
+  const { base, browser, pages } = await browserSession();
   const spec = densitySpec();
-  const context = await browser.newContext({ viewport: { width: 1000, height: 900 }, deviceScaleFactor: 1 });
-  const page = await context.newPage();
   const lines = [];
   let total = 0;
   let bad = 0;
   const byCheck = new Map();
-  for (const card of cards) {
-    await page.goto(`${base}/cards/${card}.html?theme=light`);
-    await page.waitForTimeout(700);
-    const rows = await page.evaluate(audit, spec);
+  const record = (label, rows) => {
     for (const r of rows) {
       total++;
       const agg = byCheck.get(r.check) || { spec: r.spec, n: 0, min: Infinity, max: -Infinity, fails: [] };
@@ -167,13 +186,23 @@ export default async function density() {
       agg.max = Math.max(agg.max, r.actual);
       if (!r.ok) {
         bad++;
-        agg.fails.push(`${card}: ${r.where} = ${r.actual}`);
+        agg.fails.push(`${label}: ${r.where} = ${r.actual}`);
       }
       byCheck.set(r.check, agg);
     }
+  };
+  for (const width of [1000, NARROW]) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
+    const page = await context.newPage();
+    for (const p of pages) {
+      await page.goto(`${base}${p.url}?theme=light`);
+      await p.ready(page);
+      if (width === NARROW) record(`${p.label} @${NARROW}`, await page.evaluate(narrow, NARROW));
+      else record(p.label, await page.evaluate(audit, spec));
+    }
+    await context.close();
   }
-  await context.close();
-  lines.push(`${cards.length} cards at 1000px, ${total} measurements, ${bad} below spec`);
+  lines.push(`${pages.length} pages at 1000px (density table) and ${NARROW}px (overflow), ${total} measurements, ${bad} below spec`);
   lines.push('check                            spec   measured   count  fails');
   for (const [check, a] of byCheck) {
     lines.push(`${check.padEnd(32)} ${a.spec.padEnd(6)} ${`${a.min}-${a.max}`.padEnd(10)} ${String(a.n).padStart(5)}  ${a.fails.length}`);

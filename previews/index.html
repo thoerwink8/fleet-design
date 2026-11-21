@@ -15,15 +15,15 @@
     <div class="shell__bar">
       <label class="shell__pick fa-cap">组件 <select class="fa-input shell__input" id="pick" aria-label="组件"></select></label>
       <label class="fa-cap shell__field">主题 <select class="fa-input shell__input" id="theme" aria-label="主题"></select></label>
-      <div class="fa-seg" role="radiogroup" aria-label="亮暗" id="mode">
+      <div class="shell__field"><span class="fa-cap" id="mode-label">外观</span><div class="fa-seg" role="radiogroup" aria-labelledby="mode-label" id="mode">
         <button type="button" role="radio" aria-checked="false" data-v="light">浅色</button><button type="button" role="radio" aria-checked="false" data-v="dark">深色</button><button type="button" role="radio" aria-checked="false" data-v="system">跟随系统</button>
-      </div>
-      <div class="fa-seg" role="radiogroup" aria-label="品牌" id="project">
-        <button type="button" role="radio" aria-checked="false" data-v="fleet">fleet-ade</button><button type="button" role="radio" aria-checked="false" data-v="ashare">交易复盘</button><button type="button" role="radio" aria-checked="false" data-v="jiqun">机群看板</button>
-      </div>
-      <div class="fa-seg" role="radiogroup" aria-label="宽度" id="width">
+      </div></div>
+      <div class="shell__field"><span class="fa-cap" id="project-label">品牌</span><div class="fa-seg" role="radiogroup" aria-labelledby="project-label" id="project">
+        <button type="button" role="radio" aria-checked="false" data-v="fleet">fleet-ade</button><button type="button" role="radio" aria-checked="false" data-v="trade">交易复盘</button><button type="button" role="radio" aria-checked="false" data-v="board">机群看板</button>
+      </div></div>
+      <div class="shell__field"><span class="fa-cap" id="width-label">宽度</span><div class="fa-seg" role="radiogroup" aria-labelledby="width-label" id="width">
         <button type="button" role="radio" aria-checked="false" data-v="full">自适应</button><button type="button" role="radio" aria-checked="false" data-v="720">720</button><button type="button" role="radio" aria-checked="false" data-v="360">360</button>
-      </div>
+      </div></div>
     </div>
     <div class="shell__head">
       <h1 class="shell__title" id="title">fleet-design</h1>

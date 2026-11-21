@@ -12,7 +12,7 @@ const PATTERNS = [
   ['local Windows user path', new RegExp(j('[A-Za-z]:', '\\\\{1,2}', 'Users', '\\\\{1,2}', '(?!dev\\b)\\w+'), 'i')],
   ['machine or account name', new RegExp(j('Admin', 'istrator', '|DESK', 'TOP-[A-Z0-9]'), 'i')],
   ['email address', /[\w.+-]+@[\w-]+\.[a-z]{2,}\b/i],
-  ['private project name', new RegExp(j('mira', 'sim|fleet-', 'dao|fleet-', 'base|ashare-', 'copilot'), 'i')],
+  ['private project name', new RegExp(j('mira', 'sim|fleet-', 'dao|fleet-', 'base|ash', 'are|ji', 'qun'), 'i')],
   ['product named as a density reference', new RegExp(j('Claude ', '(desktop|桌面)'), 'i')],
 ];
 const ALLOW_EMAIL = /noreply|@fleet\/design|@biomejs|@tailwindcss|@playwright|@types/;

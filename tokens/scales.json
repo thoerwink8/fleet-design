@@ -162,7 +162,7 @@
       {
         "name": "ctrl-lg",
         "value": "40px",
-        "usage": "Large button, status strip, toast, table row, touch targets on phones."
+        "usage": "Large button, status strip, toast, touch targets on phones."
       },
       {
         "name": "row-1",
@@ -203,6 +203,11 @@
         "name": "row-3",
         "value": "72px",
         "usage": "Three-line result row (command palette): 2 seam + 8 + 20 title + 16 summary + 16 meta + 8 + 2 seam."
+      },
+      {
+        "name": "row-table",
+        "value": "40px",
+        "usage": "Table body row (`.fa-table td`): 40, a spec of its own. A table row carries several aligned columns of numbers that are read across, so it gets more height than a list row (row-1, 32). The header row stays ctrl (32). Not used outside tables."
       }
     ]
   },

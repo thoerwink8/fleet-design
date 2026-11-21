@@ -13,7 +13,7 @@ const state = {
   card: cards.some((c) => c.name === query.get('card')) ? query.get('card') : cards[0].name,
   theme: kind[query.get('theme')] ? query.get('theme') : 'light',
   mode: ['light', 'dark', 'system'].includes(query.get('mode')) ? query.get('mode') : null,
-  project: ['fleet', 'ashare', 'jiqun'].includes(query.get('project')) ? query.get('project') : 'fleet',
+  project: ['fleet', 'trade', 'board'].includes(query.get('project')) ? query.get('project') : 'fleet',
   width: ['full', '720', '360'].includes(query.get('width')) ? query.get('width') : 'full',
 };
 state.mode ||= kind[state.theme];

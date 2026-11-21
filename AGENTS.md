@@ -17,7 +17,7 @@ Rules for anyone changing this repository. Each rule says what we do and why. `p
 ## Tokens are the single source of truth / 变量是唯一真相
 
 - Change values only in `tokens/*.json`, then `pnpm build`. `dist/tokens.css` and `dist/tokens.json` are generated; editing them is overwritten and fails `dist is current`.
-- Components and pages use role variables (`--bg`, `--fg-muted`, `--space-4`, `--radius-md`), never `--palette-*` and never a literal. 不许写死值：no hex, `rgb()`, named colours, `color-mix()` or new gradients in `styles/`. Need a translucent fill? Use `--hover` / `--selected`, or add a role. The existing `linear-gradient(var(--hover), var(--hover))` is how a wash is layered on any surface; it is not a colour.
+- Components and pages use role variables (`--bg`, `--fg-muted`, `--space-4`, `--radius-md`), never `--palette-*` and never a literal. 不许写死值：no hex, `rgb()`, named colours, `color-mix()` or new gradients in `styles/`. Need a translucent fill? Use `--hover` / `--selected`, or add a role. No decorative gradients. Two gradients are intentional: `linear-gradient(var(--hover), var(--hover))`, which is how a wash is layered on any surface (it is not a colour), and the scroll hint at the right edge of a wide table in `styles/table.css`.
 - A new value means a new token with a `usage` line that says where it goes.
 
 ## Type / 字阶字重
@@ -37,7 +37,7 @@ Rules for anyone changing this repository. Each rule says what we do and why. `p
 ## Colour use / 颜色
 
 - Pick the role first. `--bg` page; `--panel` sidebars, detail panels, table heads, chips; `--overlay` menus, selects, palette, hover cards, tooltips, toasts, dialogs.
-- Selected and hovered rows use the neutral `--selected` / `--hover` in every brand. 选中和悬停用中性灰. The brand accent appears in five places only: primary button, links, progress and meters, focus ring, unread dot. 品牌色只用在这五处. It never marks status and never fills a selected row, so all three products share one set of rows.
+- The brand layer (`projects` in `tokens/brand.json`, emitted into `tokens.css`) re-points `--accent` only; `--focus-ring` follows it and `--on-accent` stays `--bg`. The trading brand also flips `--up` / `--down`. Selected and hovered rows use the neutral `--selected` / `--hover` in every brand. 选中和悬停用中性灰. The brand accent appears in five places only: primary button, links, progress and meters, focus ring, unread dot. 品牌色只用在这五处. It never marks status and never fills a selected row, so all three products share one set of rows.
 - Status colours (`--success`, `--info`, `--danger`, `--warning`) are marks: dots, icons, thin bars, edges. The words next to them are `--fg`. `--danger` alone may be text or a solid fill (with `--on-danger`).
 - `--warning` (amber) means two things only: spending money, and deleting something that cannot be recovered. Signed out uses `--info`, errors use `--danger`, paused is grey.
 - Market direction `--up` / `--down` / `--flat` says which way a number moved; `--success` / `--danger` say how an operation went. Both may appear side by side. In the trading brand red means both "up" and danger, so numbers always carry ▲ ▼ and a sign, flat is "—", and `--danger` always comes with an icon and words.
@@ -46,13 +46,15 @@ Rules for anyone changing this repository. Each rule says what we do and why. `p
 
 ## Rows, density and narrow widths / 可点高度
 
-- Anything clickable is at least 32 high (`--row-1`). 24 (`--row-data`) is only for rows you cannot click. Two-line rows are 52, three-line palette rows 72. The full table is in the README; `pnpm check` measures every preview card against it.
+- Rows and standalone controls you can click are at least 32 high (`--row-1`, `--ctrl`). 24 (`--row-data`) is only for rows you cannot click. Two-line rows are 52, three-line palette rows 72, table body rows 40 (`--row-table`, a spec of its own for tables only; the rules check requires `.fa-table td` to use it and rejects it anywhere else). The full table is in the README; `pnpm check` measures every preview page against it.
+- Smaller controls sit only inside a bar or row that is at least 32 high: small buttons (28, `.fa-btn--sm`) are secondary actions grouped in a toolbar, status strip, composer bar or batch bar; icon buttons (28) sit inside rows; segmented-control items (24) sit inside their 32 group. A standalone action is a 32 button.
+- At 360 wide no preview page scrolls sideways and no button, select, segmented control or composer strip cuts its text with an ellipsis (the density check renders every page at 360). Titles and summaries of variable length may truncate.
 - When a container gets narrow, controls collapse into a "⋯" menu with container queries; text is not truncated into "S…". 窄宽度用容器查询收起，不截断. Container queries respond to the container, so a second session in a split pane collapses too. Breakpoints are tokens (`--bp-*`), but container queries cannot read `var()`, so the numbers are repeated in `styles/composer.css` and `styles/thread-row.css`; change both together.
 
 ## Motion and interaction
 
 - Durations 100 / 160 / 240 ms with `--ease-out`. Hover and press add `--hover` layers instead of changing colour. Reduced motion removes transitions.
-- No looping animation: no spinners, no skeleton shimmer. The in-turn indicator steps between states with `steps()` and stops under reduced motion.
+- No looping animation: no spinners, no skeleton shimmer. The in-turn indicator steps between states with `steps()` and stops under reduced motion; the rules check rejects `infinite` on any other selector. The ring next to the composer send button is a static context-usage gauge, not a spinner.
 - Focus ring only on keyboard focus: 2px `--focus-ring`, offset 2px.
 - Disabled is not faded with opacity: neutral fill, `--fg-muted` text (still 4.5:1), and a reason nearby.
 - Prefer undo over confirmation: reversible actions finish with a toast that offers undo; only irreversible ones open a confirm dialog.

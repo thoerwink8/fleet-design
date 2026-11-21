@@ -12,7 +12,7 @@
 .fa-trow .end{display:flex;align-items:center;justify-content:flex-end;align-self:start;height:20px}
 .fa-trow .l2{display:flex;align-items:center;gap:var(--space-2)}
 /* ThreadRow densities. row-1 (32, default, long lists like 最近 / 工作区): agent + title + time.
-   row-2 (44, only the 等你处理 group): agent + title + time, second line is the reason. */
+   row-2 (52, only the 等你处理 group): agent + title + time, second line is the reason. */
 .fa-trow--1{min-height:var(--row-1);padding-block:var(--space-1)}
 .fa-trow--1 .lead,.fa-trow--1 .end{align-self:center}
 .fa-glist{display:flex;flex-direction:column}

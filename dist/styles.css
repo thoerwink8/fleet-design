@@ -22,9 +22,6 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 :root,[data-theme]{--wash2:linear-gradient(var(--hover),var(--hover)),linear-gradient(var(--hover),var(--hover))}
 .fa-hv{--hv:linear-gradient(var(--hover),var(--hover))}
 .fa-btn,.fa-seg button,.fa-item,.fa-icon-btn,.fa-trow{--hv:linear-gradient(var(--hover),var(--hover))}
-/* Project layer: only the accent changes. No literals here, every value is a token. */
-[data-project="ashare"]{--accent:var(--brand-ashare);--up:var(--palette-red);--down:var(--palette-green)}
-[data-project="jiqun"]{--accent:var(--brand-jiqun)}
 .fa-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:var(--ctrl-2xs);padding:0 var(--space-1);border-radius:var(--radius-sm);background-image:var(--wash2);font:400 12px/16px var(--font-sans);font-variant-numeric:tabular-nums;color:var(--fg-muted);white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 .fa-panel,.fa-dp,.fa-app__side,.fa-drawer{--ring:var(--panel)}
@@ -91,7 +88,7 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 /* Compact composer: one line, 44 high including the border. Same tokens as the standard one. */
 .fa-composer--compact{display:flex;align-items:center;gap:var(--space-1);min-height:44px;padding:0 var(--space-2)}
 .fa-composer--compact textarea{flex:1;min-width:0;min-height:24px;height:24px;padding:0 var(--space-1)}
-.fa-composer__meta{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);min-width:0;white-space:nowrap;padding:var(--space-2) var(--space-3) 0;font:400 12px/16px var(--font-sans);color:var(--fg-muted)}
+.fa-composer__meta{container:composer-meta / inline-size;display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);min-width:0;white-space:nowrap;padding:var(--space-2) var(--space-3) 0;font:400 12px/16px var(--font-sans);color:var(--fg-muted)}
 .fa-chip{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--ctrl-xs);padding:0 var(--space-2);border-radius:var(--radius-sm);background-color:transparent;background-image:var(--wash2);font:400 12px/16px var(--font-sans);color:var(--fg);max-width:240px;min-width:0}
 .fa-chip--sm{height:var(--ctrl-2xs);padding:0 var(--space-1)}
 .fa-chip .fa-ic{width:12px;height:12px}
@@ -118,9 +115,12 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 }
 @container composer (max-width: 399px){ .fa-composer__bar .is-model .acct{display:none} }
 @container composer (max-width: 299px){ .fa-composer__bar .is-model .lbl{display:none} }
-/* Command palette. Three-line result rows: title + time / summary / meta (left: model, turns; right: workspace, branch).
+/* the read-only strip under the composer: below 400 (bp-composer-account) the branch name goes, project and usage stay; it is hidden, never cut to "local/42-lo…" */
+.fa-composer__meta .branch{display:inline-flex;align-items:center;gap:var(--space-1);min-width:0}
+@container composer-meta (max-width: 399px){ .fa-composer__meta .branch{display:none} }
+/* Command palette. A list floating layer, so 8 padding like menus and selects (stated here so the result does not depend on file order). Three-line result rows: title + time / summary / meta (left: model, turns; right: workspace, branch).
    Every variable-length field truncates on its own innermost element. Right edge of text sits 20px from the overlay edge (list 8 + row 12). */
-.fa-cmd{width:640px;max-width:100%;padding:0;overflow:hidden}
+.fa-cmd{width:640px;max-width:100%;padding:var(--space-2);overflow:hidden}
 .fa-cmd__in{display:flex;align-items:center;gap:var(--space-2);height:48px;padding:0 var(--space-4);border-bottom:var(--bw-1) solid var(--border);color:var(--fg-muted)}
 .fa-cmd__in input{flex:1;min-width:0;height:100%;border:0;outline:0;background:transparent;font:400 14px/20px var(--font-sans);color:var(--fg)}
 .fa-cmd__in input::placeholder{color:var(--fg-muted)}
@@ -198,7 +198,7 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 .fa-pop--two>div:first-child{background:var(--panel);border-right:var(--bw-1) solid var(--border)}
 .fa-pop--two>div{padding:var(--space-2)}
 .fa-pop--two{padding:0}
-.fa-select--ghost{white-space:nowrap;min-width:0;overflow:hidden}
+.fa-select--ghost{white-space:nowrap;min-width:0}
 /* narrow composers collapse instead of truncating (container queries: a split-pane second session is just as narrow).
    Breakpoints are the size tokens bp-composer-foot (520), bp-composer-account (400), bp-composer-icon (300), bp-batch (320);
    container queries cannot read var(), so the numbers are repeated here. */
@@ -266,7 +266,7 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 .fa-trow .end{display:flex;align-items:center;justify-content:flex-end;align-self:start;height:20px}
 .fa-trow .l2{display:flex;align-items:center;gap:var(--space-2)}
 /* ThreadRow densities. row-1 (32, default, long lists like 最近 / 工作区): agent + title + time.
-   row-2 (44, only the 等你处理 group): agent + title + time, second line is the reason. */
+   row-2 (52, only the 等你处理 group): agent + title + time, second line is the reason. */
 .fa-trow--1{min-height:var(--row-1);padding-block:var(--space-1)}
 .fa-trow--1 .lead,.fa-trow--1 .end{align-self:center}
 .fa-glist{display:flex;flex-direction:column}
@@ -333,12 +333,14 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
   background:linear-gradient(to right,transparent,var(--bg) 70%) right/24px 100% no-repeat local,linear-gradient(to left,var(--border),transparent) right/12px 100% no-repeat scroll}
 .fa-table{width:100%;border-collapse:collapse;font:400 14px/20px var(--font-sans)}
 .fa-table th{height:var(--ctrl);padding:0 var(--space-3);text-align:left;font:400 14px/20px var(--font-sans);color:var(--fg-muted);background:var(--panel);border-bottom:var(--bw-1) solid var(--border);white-space:nowrap}
-.fa-table td{height:var(--ctrl-lg);padding:0 var(--space-3);border-bottom:var(--bw-1) solid var(--border);white-space:nowrap}
+.fa-table td{height:var(--row-table);padding:0 var(--space-3);border-bottom:var(--bw-1) solid var(--border);white-space:nowrap}
 .fa-table tr:last-child td{border-bottom:0}
 .fa-table tbody tr:hover{background-image:linear-gradient(var(--hover),var(--hover))}
 .fa-table tbody tr[aria-selected=true]{background-color:var(--selected)}
 .fa-table .num{text-align:right;font-family:var(--font-sans);font-variant-numeric:tabular-nums}
 .fa-table th button{all:unset;cursor:pointer;display:inline-flex;gap:var(--space-1);align-items:center}
+/* an empty sort-arrow slot takes no room, so a right-aligned number header ends on the same line as its numbers */
+.fa-table th button>:empty{display:none}
 .fa-table th button:focus-visible{outline:var(--bw-focus) solid var(--focus-ring);outline-offset:2px}
 .fa-bar5{display:inline-flex;gap:var(--space-1);vertical-align:middle}
 .fa-bar5 i{width:8px;height:16px;border-radius:var(--radius-sm);background:var(--success)}

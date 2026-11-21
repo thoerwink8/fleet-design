@@ -5,6 +5,10 @@ import { root } from './tokens.mjs';
 
 const previews = path.join(root, 'previews');
 export const cards = () => JSON.parse(fs.readFileSync(path.join(previews, 'cards.json'), 'utf8'));
+// Every page the browser checks visit: the static cards (their scripts settle within a fixed delay).
+export const previewPages = () =>
+  cards().map((c) => ({ label: c.name, url: `/cards/${c.name}.html`, ready: (page) => page.waitForTimeout(700) }));
+
 const lib = (f) => fs.readFileSync(path.join(previews, 'lib', f), 'utf8');
 
 const HEAD = `<script>(()=>{const q=new URLSearchParams(location.search),r=document.documentElement;const t=q.get('theme');if(t)r.dataset.theme=t;const p=q.get('project');if(p&&p!=='fleet')r.dataset.project=p;})()</script>

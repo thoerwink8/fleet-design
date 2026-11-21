@@ -1,4 +1,5 @@
 {
+  "note": "Layer 3. A project re-points --accent (and with it --focus-ring, which follows accent). --on-accent stays bg and --selected / --hover stay neutral in every project. The trading project also flips market direction. Rules are emitted into tokens.css as [data-project=\"<id>\"] after the theme blocks.",
   "tokens": [
     {
       "name": "brand-fleet",
@@ -15,8 +16,8 @@
       }
     },
     {
-      "name": "brand-ashare",
-      "usage": "Project layer, trading review app (`data-project=\"ashare\"`): indigo accent. Not red or green, which belong to market direction.",
+      "name": "brand-trade",
+      "usage": "Project layer, trading review app (`data-project=\"trade\"`): indigo accent. Not red or green, which belong to market direction.",
       "value": {
         "light": "#5a5df0",
         "solarized": "#4d51ef",
@@ -29,8 +30,8 @@
       }
     },
     {
-      "name": "brand-jiqun",
-      "usage": "Project layer, fleet dashboard (static page): teal accent.",
+      "name": "brand-board",
+      "usage": "Project layer, fleet dashboard (`data-project=\"board\"`): teal accent.",
       "value": {
         "light": "#0e7d71",
         "solarized": "#0d7469",
@@ -40,6 +41,30 @@
         "dracula": "#14b8a6",
         "nord": "#15c3b0",
         "tokyo-night": "#14b8a6"
+      }
+    }
+  ],
+  "projects": [
+    {
+      "id": "fleet",
+      "name": "coding-agent client",
+      "default": true,
+      "set": {}
+    },
+    {
+      "id": "trade",
+      "name": "trading review app",
+      "set": {
+        "accent": "{brand-trade}",
+        "up": "{palette-red}",
+        "down": "{palette-green}"
+      }
+    },
+    {
+      "id": "board",
+      "name": "fleet dashboard",
+      "set": {
+        "accent": "{brand-board}"
       }
     }
   ]

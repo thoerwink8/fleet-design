@@ -10,6 +10,7 @@ const CHECKS = [
   ['tailwind theme compiles to the variables', './checks/tailwind.mjs'],
   ['rendered styles match baseline (browser)', './checks/render.mjs'],
   ['density spec (browser)', './checks/density.mjs'],
+  ['preview pages load every resource (browser)', './checks/requests.mjs'],
   ['public-repo hygiene', './checks/hygiene.mjs'],
   ['format and lint (biome)', './checks/lint.mjs'],
 ];
