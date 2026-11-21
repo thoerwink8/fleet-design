@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Button",
+    "card": "Button",
+    "subtitle": "React：Button、IconButton。变体、尺寸、进行中、禁用",
+    "compare": [
+      ["[data-cmp=primary]", ".fa-btn.fa-btn--primary"],
+      ["[data-cmp=secondary]", ".fa-btn.fa-btn--secondary"],
+      ["[data-cmp=ghost]", ".fa-btn:not([class*=fa-btn--])"],
+      ["[data-cmp=danger]", ".fa-btn.fa-btn--danger"],
+      ["[data-cmp=sm]", ".fa-btn--secondary.fa-btn--sm:not(.fa-btn--icon)"],
+      ["[data-cmp=lg]", ".fa-btn--secondary.fa-btn--lg"],
+      ["[data-cmp=icon-sm]", ".fa-btn--icon.fa-btn--secondary.fa-btn--sm"],
+      ["[data-cmp=busy]", "#go"],
+      ["[data-cmp=disabled-primary]", ".fa-btn--primary[disabled]"],
+      ["[data-cmp=disabled-secondary]", ".fa-btn--secondary[disabled]"]
+    ]
+  },
+  {
+    "name": "SegmentedControl",
+    "card": "SegmentedControl",
+    "subtitle": "React：SegmentedControl（Base UI RadioGroup）。受控、非受控、禁用项",
+    "compare": [
+      ["[aria-label=字号]", "#fs"],
+      ["[aria-label=字号] [aria-checked=true]", "#fs [aria-checked=true]"],
+      ["[aria-label=字号] [aria-checked=false]", "#fs [aria-checked=false]"],
+      ["[aria-label=上下文] [disabled]", ".fa-seg button[disabled][aria-checked=false]"]
+    ]
+  },
+  {
+    "name": "Input",
+    "card": "Input",
+    "subtitle": "React：Input（Base UI Field）。提示、错误态、前后缀、禁用",
+    "compare": [
+      ["input[data-cmp=plain]", "#a"],
+      [".fa-field label", ".fa-field label"],
+      ["input[data-cmp=plain]", "#a"],
+      ["input[data-cmp=branch]", "#b"],
+      [
+        ".fa-hint--error",
+        "#bh",
+        {
+          "ignore": ["block-size", "height"],
+          "why": "the card wraps its icon in a span, which adds 2px of line box; the component puts the 16px icon straight into the flex row"
+        }
+      ],
+      [".fa-input--group", ".fa-input--group"],
+      ["input[data-cmp=affix]", "#e"],
+      [".fa-input__affix", ".fa-input__affix"],
+      ["input[data-cmp=disabled]", "#d"]
+    ]
+  },
+  {
+    "name": "Tooltip",
+    "card": "Tooltip",
+    "subtitle": "React：Tooltip（Base UI Tooltip）。悬停、聚焦、Esc、快捷键",
+    "compare": [
+      [
+        ".fa-tip",
+        ".fa-tip[style*=max-width]",
+        {
+          "ignore": ["tag", "display", "min-block-size", "min-height", "min-inline-size", "min-width", "unicode-bidi"],
+          "why": "the card shows the tip as a span inside a flex row (blockified); the component renders the popup as a div inside its positioner; the popup also isolates its text direction (unicode-bidi: isolate)"
+        }
+      ]
+    ]
+  }
+]
