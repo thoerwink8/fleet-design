@@ -1,4 +1,4 @@
-import type * as React from 'react';
+import * as React from 'react';
 export interface DrawerProps {
     open?: boolean;
     defaultOpen?: boolean;
@@ -9,9 +9,4 @@ export interface DrawerProps {
     label: string;
     children?: React.ReactNode;
 }
-/**
- * A panel that slides in from the left edge on narrow screens (the session list on a phone). Modal: focus is trapped,
- * Esc or the scrim closes it, focus returns to the trigger, and closed it leaves no shadow at the edge.
- * `<Drawer label="会话列表" trigger={<IconButton label="打开会话列表">…</IconButton>}>…</Drawer>`
- */
 export declare function Drawer({ open, defaultOpen, onOpenChange, trigger, label, children }: DrawerProps): React.JSX.Element;

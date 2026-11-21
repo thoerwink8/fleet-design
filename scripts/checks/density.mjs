@@ -28,6 +28,10 @@ export function densitySpec(T = tokensJson()) {
   };
 }
 
+// Clickable rows: at least row-1 high at 1000, and their content stays inside them at 360.
+export const ROWS =
+  '.fa-item,.fa-trow,.fa-task,.fa-chg,.fa-conn,.fa-grp__h,.fa-step,.fa-cmd__row,.fa-more,.fa-fold__sum,button.fa-fold__cmd,.fa-run,.fa-dp summary,.fa-dp__head,.fa-sec__h--btn,tr[tabindex]';
+
 // Runs inside the page: measures rendered geometry, not CSS text. Returns [{check, spec, actual, ok, where}].
 function audit(S) {
   const out = [];
@@ -42,9 +46,8 @@ function audit(S) {
   const add = (check, spec, actual, ok, e) => out.push({ check, spec, actual, ok, where: e ? name(e) : '' });
   const all = (s) => [...document.querySelectorAll(s)].filter(vis);
 
-  const ROWS =
-    '.fa-item,.fa-trow,.fa-task,.fa-chg,.fa-conn,.fa-grp__h,.fa-step,.fa-cmd__row,.fa-more,.fa-fold__sum,button.fa-fold__cmd,.fa-run,.fa-dp summary,.fa-dp__head,.fa-sec__h--btn,tr[tabindex]';
-  for (const e of all(ROWS)) {
+  const rows = S.rows;
+  for (const e of all(rows)) {
     const h = Math.round(R(e).height);
     add('clickable row height', `>= ${S.clickableRow}`, h, h >= S.clickableRow, e);
   }
@@ -57,6 +60,10 @@ function audit(S) {
   for (const e of two) {
     const h = Math.round(R(e).height);
     add('two-line row height', `${S.twoLineRow}`, h, h === S.twoLineRow, e);
+  }
+  for (const e of all('.fa-cmd__row--1')) {
+    const h = Math.round(R(e).height);
+    add('one-line command row height', `${S.clickableRow}`, h, h === S.clickableRow, e);
   }
   for (const e of all('.fa-table tbody tr')) {
     const h = Math.round(R(e).height);
@@ -154,7 +161,7 @@ function audit(S) {
 
 // At a phone width: the page does not scroll sideways, and no control or read-only strip cuts its text with an
 // ellipsis. Titles and summaries of variable length may truncate; controls collapse with container queries instead.
-function narrow(width) {
+function narrow({ width, rows }) {
   const out = [];
   const over = Math.round(document.documentElement.scrollWidth - innerWidth);
   out.push({ check: `${width}px: page overflow`, spec: '0', actual: Math.max(0, over), ok: over <= 0, where: '' });
@@ -165,6 +172,19 @@ function narrow(width) {
     const where = `${typeof e.className === 'string' && e.className ? e.className : e.tagName} "${e.textContent.trim().slice(0, 20)}"`;
     out.push({ check: `${width}px: control text cut`, spec: '0', actual: cut ? 1 : 0, ok: !cut, where });
   }
+  // Row content stays inside its row: a line that wraps and spills over the next row fails.
+  for (const row of document.querySelectorAll(rows)) {
+    const r = row.getBoundingClientRect();
+    if (!r.width || !r.height) continue;
+    let spill = 0;
+    for (const d of row.querySelectorAll('*')) {
+      const b = d.getBoundingClientRect();
+      if (!b.width || !b.height || getComputedStyle(d).visibility === 'hidden') continue;
+      spill = Math.max(spill, Math.round(b.bottom - r.bottom), Math.round(r.top - b.top));
+    }
+    const where = `${typeof row.className === 'string' ? row.className.split(' ')[0] : row.tagName} "${row.textContent.trim().slice(0, 16)}"`;
+    out.push({ check: `${width}px: row content spills`, spec: '0', actual: Math.max(0, spill), ok: spill <= 0, where });
+  }
   return out;
 }
 
@@ -172,7 +192,7 @@ export const NARROW = 360;
 
 export default async function density() {
   const { base, browser, pages } = await browserSession();
-  const spec = densitySpec();
+  const spec = { ...densitySpec(), rows: ROWS };
   const lines = [];
   let total = 0;
   let bad = 0;
@@ -197,7 +217,7 @@ export default async function density() {
     for (const p of pages) {
       await page.goto(`${base}${p.url}?theme=light`);
       await p.ready(page);
-      if (width === NARROW) record(`${p.label} @${NARROW}`, await page.evaluate(narrow, NARROW));
+      if (width === NARROW) record(`${p.label} @${NARROW}`, await page.evaluate(narrow, { width: NARROW, rows: ROWS }));
       else record(p.label, await page.evaluate(audit, spec));
     }
     await context.close();

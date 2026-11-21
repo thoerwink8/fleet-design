@@ -53,8 +53,6 @@ export interface MenuProps {
   /** The button that opens the menu. Must accept a ref and props (use `Button` or `IconButton`). */
   trigger: React.ReactElement;
   items: readonly MenuEntry[];
-  /** `plain` (default): text-only items with 12px side padding, for context menus. `icons`: 8px padding for items that lead with an icon. */
-  variant?: 'plain' | 'icons';
   side?: 'top' | 'bottom' | 'left' | 'right';
   align?: 'start' | 'center' | 'end';
   /** Popup width in px (layout only; default 248). */
@@ -102,7 +100,7 @@ function CheckboxEntry({ entry }: { entry: MenuCheckboxItem }) {
   );
 }
 
-function Entries({ entries, variant, width }: { entries: readonly MenuEntry[]; variant: 'plain' | 'icons'; width: number }) {
+function Entries({ entries, width }: { entries: readonly MenuEntry[]; width: number }) {
   return entries.map((e, i) => {
     const key = e.id ?? String(i);
     switch (e.type) {
@@ -112,7 +110,7 @@ function Entries({ entries, variant, width }: { entries: readonly MenuEntry[]; v
         return (
           <BaseMenu.Group key={key}>
             <BaseMenu.GroupLabel className="fa-glabel">{e.label}</BaseMenu.GroupLabel>
-            <Entries entries={e.items} variant={variant} width={width} />
+            <Entries entries={e.items} width={width} />
           </BaseMenu.Group>
         );
       case 'checkbox':
@@ -126,7 +124,7 @@ function Entries({ entries, variant, width }: { entries: readonly MenuEntry[]; v
                 <Icon name="chevR" />
               </span>
             </BaseMenu.SubmenuTrigger>
-            <Popup entries={e.items} variant={variant} width={width} side="right" align="start" offset={4} />
+            <Popup entries={e.items} width={width} side="right" align="start" offset={4} />
           </BaseMenu.SubmenuRoot>
         );
       default:
@@ -151,7 +149,6 @@ function Entries({ entries, variant, width }: { entries: readonly MenuEntry[]; v
 
 function Popup({
   entries,
-  variant,
   width,
   side,
   align,
@@ -159,7 +156,6 @@ function Popup({
   label,
 }: {
   entries: readonly MenuEntry[];
-  variant: 'plain' | 'icons';
   width: number;
   side: 'top' | 'bottom' | 'left' | 'right';
   align: 'start' | 'center' | 'end';
@@ -169,8 +165,8 @@ function Popup({
   return (
     <BaseMenu.Portal>
       <BaseMenu.Positioner side={side} align={align} sideOffset={offset} collisionPadding={8}>
-        <BaseMenu.Popup className={cx('fa-pop', variant === 'plain' && 'fa-pop--plain')} style={{ width }} aria-label={label}>
-          <Entries entries={entries} variant={variant} width={width} />
+        <BaseMenu.Popup className="fa-pop" style={{ width }} aria-label={label}>
+          <Entries entries={entries} width={width} />
         </BaseMenu.Popup>
       </BaseMenu.Positioner>
     </BaseMenu.Portal>
@@ -185,7 +181,6 @@ function Popup({
 export function Menu({
   trigger,
   items,
-  variant = 'plain',
   side = 'bottom',
   align = 'end',
   width = 248,
@@ -225,7 +220,7 @@ export function Menu({
   return (
     <BaseMenu.Root open={isOpen} onOpenChange={(next) => setOpen(next)}>
       <BaseMenu.Trigger render={trigger} />
-      <Popup entries={items} variant={variant} width={width} side={side} align={align} offset={4} label={label} />
+      <Popup entries={items} width={width} side={side} align={align} offset={4} label={label} />
     </BaseMenu.Root>
   );
 }

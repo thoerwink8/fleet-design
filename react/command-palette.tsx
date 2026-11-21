@@ -10,7 +10,7 @@ export interface CommandItem {
   group?: string;
   /** Second line, 12px muted (a summary). Its presence makes the row a two- or three-line result. */
   summary?: React.ReactNode;
-  /** Third line, left side (model, turns) and right side (workspace, branch). */
+  /** Third line, left side (model, turns) and right side (workspace, branch). One line each; a long value is cut with an ellipsis and the full text goes to its tooltip when it is a string. */
   meta?: React.ReactNode;
   metaEnd?: React.ReactNode;
   /** Right end of the first line: a time, a shortcut. */
@@ -223,8 +223,16 @@ export function CommandPalette({
                           )}
                           {(item.meta !== undefined || item.metaEnd !== undefined) && (
                             <div className="l l3">
-                              <span className="lt">{item.meta}</span>
-                              <span className="rt">{item.metaEnd}</span>
+                              <span className="lt">
+                                <span className="x" title={typeof item.meta === 'string' ? item.meta : undefined}>
+                                  {item.meta}
+                                </span>
+                              </span>
+                              <span className="rt">
+                                <span className="x" title={typeof item.metaEnd === 'string' ? item.metaEnd : undefined}>
+                                  {item.metaEnd}
+                                </span>
+                              </span>
                             </div>
                           )}
                         </div>

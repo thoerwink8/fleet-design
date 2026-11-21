@@ -43,8 +43,6 @@ export interface MenuProps {
     /** The button that opens the menu. Must accept a ref and props (use `Button` or `IconButton`). */
     trigger: React.ReactElement;
     items: readonly MenuEntry[];
-    /** `plain` (default): text-only items with 12px side padding, for context menus. `icons`: 8px padding for items that lead with an icon. */
-    variant?: 'plain' | 'icons';
     side?: 'top' | 'bottom' | 'left' | 'right';
     align?: 'start' | 'center' | 'end';
     /** Popup width in px (layout only; default 248). */
@@ -59,5 +57,5 @@ export interface MenuProps {
  * Arrow keys move, Enter runs, Esc closes and returns focus to the trigger; checkbox items stay open when toggled.
  * For full control compose the Base UI parts with the same classes (`fa-pop`, `fa-item`, `fa-sep`, `fa-glabel`).
  */
-export declare function Menu({ trigger, items, variant, side, align, width, open, defaultOpen, onOpenChange, 'aria-label': label, }: MenuProps): React.JSX.Element;
+export declare function Menu({ trigger, items, side, align, width, open, defaultOpen, onOpenChange, 'aria-label': label, }: MenuProps): React.JSX.Element;
 export {};

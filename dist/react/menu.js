@@ -17,32 +17,32 @@ function Key({ shortcut }) {
 function CheckboxEntry({ entry }) {
     return (_jsxs(BaseMenu.CheckboxItem, { nativeButton: true, render: _jsx("button", { type: "button" }), className: "fa-item", checked: entry.checked, defaultChecked: entry.defaultChecked, onCheckedChange: (checked) => entry.onCheckedChange?.(checked), disabled: entry.disabled, "aria-keyshortcuts": entry.shortcut, children: [_jsx("span", { className: "grow", children: entry.label }), _jsx("span", { className: "tick", children: _jsx(Icon, { name: "check" }) }), _jsx(Key, { shortcut: entry.shortcut })] }));
 }
-function Entries({ entries, variant, width }) {
+function Entries({ entries, width }) {
     return entries.map((e, i) => {
         const key = e.id ?? String(i);
         switch (e.type) {
             case 'separator':
                 return _jsx(BaseMenu.Separator, { className: "fa-sep" }, key);
             case 'group':
-                return (_jsxs(BaseMenu.Group, { children: [_jsx(BaseMenu.GroupLabel, { className: "fa-glabel", children: e.label }), _jsx(Entries, { entries: e.items, variant: variant, width: width })] }, key));
+                return (_jsxs(BaseMenu.Group, { children: [_jsx(BaseMenu.GroupLabel, { className: "fa-glabel", children: e.label }), _jsx(Entries, { entries: e.items, width: width })] }, key));
             case 'checkbox':
                 return _jsx(CheckboxEntry, { entry: e }, key);
             case 'submenu':
-                return (_jsxs(BaseMenu.SubmenuRoot, { children: [_jsxs(BaseMenu.SubmenuTrigger, { nativeButton: true, render: _jsx("button", { type: "button" }), className: "fa-item", disabled: e.disabled, children: [_jsx("span", { className: "grow", children: e.label }), _jsx("span", { className: "end", children: _jsx(Icon, { name: "chevR" }) })] }), _jsx(Popup, { entries: e.items, variant: variant, width: width, side: "right", align: "start", offset: 4 })] }, key));
+                return (_jsxs(BaseMenu.SubmenuRoot, { children: [_jsxs(BaseMenu.SubmenuTrigger, { nativeButton: true, render: _jsx("button", { type: "button" }), className: "fa-item", disabled: e.disabled, children: [_jsx("span", { className: "grow", children: e.label }), _jsx("span", { className: "end", children: _jsx(Icon, { name: "chevR" }) })] }), _jsx(Popup, { entries: e.items, width: width, side: "right", align: "start", offset: 4 })] }, key));
             default:
                 return (_jsxs(BaseMenu.Item, { nativeButton: true, render: _jsx("button", { type: "button" }), className: cx('fa-item', e.danger && 'fa-item--danger'), disabled: e.disabled, onClick: () => e.onSelect?.(), "aria-keyshortcuts": e.shortcut, children: [_jsx("span", { className: "grow", children: e.label }), e.end !== undefined && _jsx("span", { className: "end", children: e.end }), _jsx(Key, { shortcut: e.shortcut })] }, key));
         }
     });
 }
-function Popup({ entries, variant, width, side, align, offset, label, }) {
-    return (_jsx(BaseMenu.Portal, { children: _jsx(BaseMenu.Positioner, { side: side, align: align, sideOffset: offset, collisionPadding: 8, children: _jsx(BaseMenu.Popup, { className: cx('fa-pop', variant === 'plain' && 'fa-pop--plain'), style: { width }, "aria-label": label, children: _jsx(Entries, { entries: entries, variant: variant, width: width }) }) }) }));
+function Popup({ entries, width, side, align, offset, label, }) {
+    return (_jsx(BaseMenu.Portal, { children: _jsx(BaseMenu.Positioner, { side: side, align: align, sideOffset: offset, collisionPadding: 8, children: _jsx(BaseMenu.Popup, { className: "fa-pop", style: { width }, "aria-label": label, children: _jsx(Entries, { entries: entries, width: width }) }) }) }));
 }
 /**
  * An action menu from data: `<Menu trigger={<IconButton label="更多">…</IconButton>} items={[{ label: '置顶', shortcut: 'P', onSelect }]} />`.
  * Arrow keys move, Enter runs, Esc closes and returns focus to the trigger; checkbox items stay open when toggled.
  * For full control compose the Base UI parts with the same classes (`fa-pop`, `fa-item`, `fa-sep`, `fa-glabel`).
  */
-export function Menu({ trigger, items, variant = 'plain', side = 'bottom', align = 'end', width = 248, open, defaultOpen = false, onOpenChange, 'aria-label': label, }) {
+export function Menu({ trigger, items, side = 'bottom', align = 'end', width = 248, open, defaultOpen = false, onOpenChange, 'aria-label': label, }) {
     const [inner, setInner] = React.useState(defaultOpen);
     const isOpen = open ?? inner;
     const setOpen = (next) => {
@@ -77,5 +77,5 @@ export function Menu({ trigger, items, variant = 'plain', side = 'bottom', align
         document.addEventListener('keydown', onKey, true);
         return () => document.removeEventListener('keydown', onKey, true);
     }, [isOpen]);
-    return (_jsxs(BaseMenu.Root, { open: isOpen, onOpenChange: (next) => setOpen(next), children: [_jsx(BaseMenu.Trigger, { render: trigger }), _jsx(Popup, { entries: items, variant: variant, width: width, side: side, align: align, offset: 4, label: label })] }));
+    return (_jsxs(BaseMenu.Root, { open: isOpen, onOpenChange: (next) => setOpen(next), children: [_jsx(BaseMenu.Trigger, { render: trigger }), _jsx(Popup, { entries: items, width: width, side: side, align: align, offset: 4, label: label })] }));
 }

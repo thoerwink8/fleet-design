@@ -4,7 +4,8 @@
 .fa-drawer{position:absolute;top:0;bottom:0;left:0;width:272px;background:var(--panel);border-right:var(--bw-1) solid var(--border);box-shadow:none;visibility:hidden;transform:translateX(-100%);transition:transform var(--dur-base) var(--ease-out),visibility 0s linear var(--dur-base),box-shadow 0s linear var(--dur-base);display:flex;flex-direction:column;padding:var(--space-2);gap:var(--space-1)}
 .fa-phone[data-open=true] .fa-drawer{transform:none;visibility:visible;box-shadow:var(--shadow-overlay);transition:transform var(--dur-base) var(--ease-out)}
 .fa-phone[data-open=true] .fa-scrim{opacity:1;pointer-events:auto}
-/* the drawer as a modal layer of its own (React Drawer): fixed to the viewport edge, open while data-open is set; it slides in from the starting style and out again before it unmounts */
+/* the drawer as a modal layer of its own (React Drawer): fixed to the viewport edge, open while data-open is set; it slides in from the starting style and out again before it unmounts. It is visible from the first frame (only moved off-screen), so focus can move into it as it opens */
 .fa-drawer--fixed{position:fixed;z-index:41;max-width:calc(100% - var(--space-12))}
-.fa-drawer--fixed[data-open]:not([data-starting-style]){transform:none;visibility:visible;box-shadow:var(--shadow-overlay);transition:transform var(--dur-base) var(--ease-out)}
+.fa-drawer--fixed[data-open]{visibility:visible}
+.fa-drawer--fixed[data-open]:not([data-starting-style]){transform:none;box-shadow:var(--shadow-overlay);transition:transform var(--dur-base) var(--ease-out)}
 .fa-drawer:focus-visible{outline:none;outline-offset:0}

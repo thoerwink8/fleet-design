@@ -32,3 +32,25 @@ test('focus is trapped inside while open', async ({ page }) => {
     await expect(drawer.locator(':focus')).toHaveCount(1);
   }
 });
+
+test('opened by a click, focus moves into the drawer', async ({ page }) => {
+  await page.keyboard.press('Escape');
+  const drawer = page.getByRole('dialog', { name: '会话列表' });
+  await expect(drawer).toHaveCount(0);
+  await page.getByRole('button', { name: '打开会话列表' }).click();
+  await expect(drawer).toBeVisible();
+  await expect(drawer.locator(':focus')).toHaveCount(1);
+  await expect(drawer.getByRole('button', { name: '关闭' })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(drawer.getByRole('button', { name: '排查登录超时' })).toBeFocused();
+});
+
+test('opened with Enter, focus moves into the drawer', async ({ page }) => {
+  await page.keyboard.press('Escape');
+  const trigger = page.getByRole('button', { name: '打开会话列表' });
+  await expect(trigger).toBeFocused();
+  await page.keyboard.press('Enter');
+  const drawer = page.getByRole('dialog', { name: '会话列表' });
+  await expect(drawer).toBeVisible();
+  await expect(drawer.getByRole('button', { name: '关闭' })).toBeFocused();
+});

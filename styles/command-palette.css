@@ -7,7 +7,8 @@
 .fa-cmd__list{padding:var(--space-1) var(--space-2) var(--space-2);max-height:368px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .fa-cmd__list .fa-glabel{padding:var(--space-2) var(--space-3) var(--space-1)}
 .fa-cmd__row{display:flex;flex-direction:column;justify-content:center;min-height:var(--ctrl);padding:var(--space-2) var(--space-3);border-radius:var(--radius-md);cursor:pointer;background-color:transparent}
-.fa-cmd__row--1{padding-block:var(--space-1)}
+/* one-line rows: 2 seam + 4 + 20 + 4 + 2 = 32; the doubled class keeps this ahead of the .fa-cmd__row padding below whatever the order */
+.fa-cmd__row.fa-cmd__row--1{padding-block:var(--space-1)}
 .fa-cmd__row:hover{background-image:linear-gradient(var(--hover),var(--hover))}
 .fa-cmd__row[data-active=true]{background-color:var(--selected);background-image:none}
 .fa-cmd__row .l{display:flex;align-items:baseline;gap:var(--space-2);min-width:0}
