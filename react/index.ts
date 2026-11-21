@@ -9,3 +9,5 @@ export * from './select.js';
 export * from './toast.js';
 export * from './dialog.js';
 export * from './drawer.js';
+export * from './collapsible.js';
+export * from './meter.js';

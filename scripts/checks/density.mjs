@@ -43,7 +43,7 @@ function audit(S) {
   const all = (s) => [...document.querySelectorAll(s)].filter(vis);
 
   const ROWS =
-    '.fa-item,.fa-trow,.fa-task,.fa-chg,.fa-conn,.fa-grp__h,.fa-step,.fa-cmd__row,.fa-more,.fa-fold__sum,button.fa-fold__cmd,.fa-run,.fa-dp summary,.fa-sec__h--btn,tr[tabindex]';
+    '.fa-item,.fa-trow,.fa-task,.fa-chg,.fa-conn,.fa-grp__h,.fa-step,.fa-cmd__row,.fa-more,.fa-fold__sum,button.fa-fold__cmd,.fa-run,.fa-dp summary,.fa-dp__head,.fa-sec__h--btn,tr[tabindex]';
   for (const e of all(ROWS)) {
     const h = Math.round(R(e).height);
     add('clickable row height', `>= ${S.clickableRow}`, h, h >= S.clickableRow, e);

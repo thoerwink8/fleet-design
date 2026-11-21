@@ -235,5 +235,53 @@
         }
       ]
     ]
+  },
+  {
+    "name": "Collapsible",
+    "card": "DetailsPanel",
+    "subtitle": "React：Collapsible、DetailsPanel（Base UI Collapsible）。分节和对话折叠行",
+    "compare": [
+      [
+        ".fa-dp__head",
+        ".fa-dp summary",
+        {
+          "ignore": ["tag", "text-align", "list-style-type", "display", "cursor", "appearance", "counter-increment"],
+          "why": "the card uses details/summary; the component head is a button with aria-expanded (UA defaults of button vs summary)"
+        }
+      ],
+      [
+        ".fa-fold__sum",
+        ".fa-fold__sum",
+        {
+          "card": "ToolCallFold",
+          "ignore": ["display", "min-inline-size", "min-width"],
+          "why": "inside the component root (a flex column) the summary button is blockified: flex instead of inline-flex, same box"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Meter",
+    "card": "ContextMeter",
+    "subtitle": "React：Meter（Base UI Meter）。细条、默认、危险色、分段",
+    "compare": [
+      [".fa-meter--thin", ".fa-meter--thin"],
+      [
+        ".fa-meter--seg",
+        "#bar",
+        {
+          "ignore": ["flex-basis", "flex-grow", "flex-shrink", "max-inline-size", "max-width"],
+          "why": "layout of the demo"
+        }
+      ],
+      [
+        "[aria-label=\"上下文占用 97%\"]",
+        "[aria-label=\"上下文占用 97%\"]",
+        {
+          "ignore": ["flex-basis", "flex-grow", "flex-shrink"],
+          "why": "the card stretches the bar with flex:1 in a row"
+        }
+      ]
+    ]
   }
 ]
