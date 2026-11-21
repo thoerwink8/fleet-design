@@ -2,7 +2,7 @@
 
 Shared design tokens and component styles for three products that use one interface language: a coding-agent client ([fleet-ade](https://github.com/thoerwink8/fleet-ade)), a trading review app and a fleet dashboard. Behaviour comes from [Base UI](https://base-ui.com); this package owns the look: CSS variables and the `.fa-*` component classes. Each product writes its own business components on top.
 
-Version 0.2 ships tokens, component CSS, a Tailwind v4 theme, React components built on Base UI, and a preview site. What changed is under [Changes in 0.2.1](#changes-in-021) and [Changes in 0.2.0](#changes-in-020).
+Version 0.3 ships tokens, component CSS, an optional page reset, two Tailwind v4 entries, React components built on Base UI, and a preview site. Everything it puts into a page is prefixed (`--fa-*` variables, `.fa-*` classes), so it can sit inside a project that already has a design system. Coming from 0.2: [Upgrading from 0.2](#upgrading-from-02). Adding it to an app that already uses Tailwind: [Adding it to an existing Tailwind project](#adding-it-to-an-existing-tailwind-project).
 
 ## Three layers
 
@@ -24,20 +24,22 @@ The source of every value is `tokens/*.json`. `pnpm build` generates `dist/token
 ## Install
 
 ```sh
-pnpm add github:thoerwink8/fleet-design#v0.2.1
+pnpm add github:thoerwink8/fleet-design#v0.3.0
 ```
 
 The package is not published to npm. `dist/` is committed, so installing from git needs no build step and no extra tools, on Windows and Linux alike (see [Why dist/ is committed](#why-dist-is-committed)).
 
-| Import                            | File                                                                                |
-| --------------------------------- | ----------------------------------------------------------------------------------- |
-| `@fleet/design/tokens.css`        | all variables, eight themes                                                         |
-| `@fleet/design/tokens.json`       | the same values as data                                                             |
-| `@fleet/design/styles.css`        | every component class, in cascade order                                             |
-| `@fleet/design/styles/<name>.css` | one component, e.g. `styles/button.css`; `styles/base.css` holds the shared helpers |
-| `@fleet/design/tailwind`          | Tailwind v4 theme mapped to the variables                                           |
-| `@fleet/design/react`             | all React components (see [React](#react))                                          |
-| `@fleet/design/react/<name>`      | one component, e.g. `react/button`, `react/command-palette`                         |
+| Import                            | File                                                                                              |
+| --------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `@fleet/design/tokens.css`        | all variables, eight themes                                                                       |
+| `@fleet/design/tokens.json`       | the same values as data                                                                           |
+| `@fleet/design/styles.css`        | every component class, in cascade order; styles nothing outside `.fa-*`                           |
+| `@fleet/design/reset.css`         | optional page reset: `box-sizing`, body colours and font, native controls, `[hidden]`, focus ring |
+| `@fleet/design/styles/<name>.css` | one component, e.g. `styles/button.css`; `styles/base.css` holds the shared helpers               |
+| `@fleet/design/tailwind`          | Tailwind v4 theme that replaces Tailwind's scale with the tokens (new projects)                   |
+| `@fleet/design/tailwind/extend`   | Tailwind v4 theme that only adds `fa-` keys (projects with a theme of their own)                  |
+| `@fleet/design/react`             | all React components (see [React](#react))                                                        |
+| `@fleet/design/react/<name>`      | one component, e.g. `react/button`, `react/command-palette`                                       |
 
 ## Use it
 
@@ -47,6 +49,7 @@ The package is not published to npm. `dist/` is committed, so installing from gi
 <html data-theme="dark" data-project="board">
   <head>
     <link rel="stylesheet" href="node_modules/@fleet/design/dist/tokens.css">
+    <link rel="stylesheet" href="node_modules/@fleet/design/dist/reset.css">
     <link rel="stylesheet" href="node_modules/@fleet/design/dist/styles.css">
   </head>
   <body>
@@ -56,9 +59,20 @@ The package is not published to npm. `dist/` is committed, so installing from gi
 </html>
 ```
 
-With a bundler: `import '@fleet/design/tokens.css'; import '@fleet/design/styles.css';` once at the app entry. Your own CSS uses roles only: `background: var(--fa-panel); color: var(--fa-fg-muted); padding: var(--fa-space-4);`.
+With a bundler: `import '@fleet/design/tokens.css'; import '@fleet/design/reset.css'; import '@fleet/design/styles.css';` once at the app entry, in that order. Your own CSS uses roles only: `background: var(--fa-panel); color: var(--fa-fg-muted); padding: var(--fa-space-4);`.
+
+`reset.css` is the only file that styles bare elements, and it is optional. Import it when fleet-design owns the page. A page that already has a reset leaves it out: `styles.css` does not touch `body`, `button` or any element without a `.fa-*` class. The components expect what any reset gives: `box-sizing: border-box`, native controls without the browser's padding that inherit font and colour, and `[hidden]` hiding. Tailwind's preflight is such a reset. Two things do not depend on the reset. The keyboard focus ring is part of `styles.css`, scoped to `.fa-*` elements and what sits inside them. Reduced motion is part of `tokens.css`: under `prefers-reduced-motion` the duration tokens collapse to 0.01ms.
 
 ### Tailwind v4
+
+Tailwind is optional. There are two entries; import one of them, never both.
+
+| Entry                           | For                                                  | What it does to Tailwind's theme                                                                                                                              | Utilities                                                                                                          |
+| ------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `@fleet/design/tailwind`        | a project that takes its whole scale from the tokens | Clears the default colours, radii, fonts, weights, text sizes and shadows and puts the tokens in their place, so off-scale classes do not exist               | `bg-panel`, `text-fg-muted`, `border-border`, `px-row-x`, `h-ctrl`, `text-sm`, `rounded-md`                        |
+| `@fleet/design/tailwind/extend` | a project that already has a Tailwind theme          | Adds keys under `fa-` names (`--color-fa-accent`, `--radius-fa-md`, `--font-fa-sans`, …) and clears nothing: every utility the project had compiles as before | `bg-fa-panel`, `text-fa-fg-muted`, `border-fa-border`, `px-fa-row-x`, `h-fa-ctrl`, `text-fa-body`, `rounded-fa-md` |
+
+A new project:
 
 ```css
 @import "tailwindcss";
@@ -67,14 +81,36 @@ With a bundler: `import '@fleet/design/tokens.css'; import '@fleet/design/styles
 @import "@fleet/design/tailwind";
 ```
 
-Then `bg-panel`, `text-fg-muted`, `border-border`, `text-up`, `px-row-x`, `h-ctrl`, `text-sm`, `rounded-md`, `font-medium` resolve to the variables. Tailwind's default palette, the 13/16/24px sizes and weights 600+ are removed, so off-scale classes do not exist. `tokens.css` alone is enough for the variables, the eight themes and the brand switch. Import `tokens.css` unlayered as shown: the theme refers to `--fa-font-sans`, `--fa-font-mono` and `--fa-shadow-overlay` by the same names. Tailwind is optional; projects without it use the plain CSS above.
+Then `bg-panel`, `text-fg-muted`, `border-border`, `text-up`, `px-row-x`, `h-ctrl`, `text-sm`, `rounded-md`, `font-medium` resolve to the variables. Tailwind's default palette, the 13/16/24px sizes and weights 600+ are removed. Tailwind's preflight is the reset here; do not add `reset.css` as well.
+
+`extend` maps the same variables. Colours: `fa-bg`, `fa-panel`, `fa-overlay`, `fa-fg`, `fa-fg-muted`, `fa-border`, `fa-accent`, `fa-on-accent`, `fa-success`, `fa-warning`, `fa-danger`, `fa-on-danger`, `fa-info`, `fa-selected`, `fa-hover`, `fa-scrim`, `fa-ring`, `fa-up`, `fa-down`, `fa-flat`, `fa-data-1` … `fa-data-6`. Spacing and sizes: `fa-row-x`, `fa-row-y`, `fa-icon-gap`, `fa-ctrl`, `fa-ctrl-sm`, `fa-row-1`, `fa-row-2`, … Radii: `rounded-fa-sm|md|lg|full`. Fonts: `font-fa-sans`, `font-fa-mono`. Type steps: `text-fa-caption` (12/16), `text-fa-control` (14/20), `text-fa-body` (15/24), `text-fa-title` (18/28), `text-fa-heading` (20/28). Shadow: `shadow-fa-overlay`. Easings: `ease-fa-out`, `ease-fa-in-out`. The 4px spacing grid needs no keys: Tailwind's own `p-3` is already 12px.
+
+### Adding it to an existing Tailwind project
+
+A project that already has a theme (shadcn-style `--accent`, `--border`, `--ring`, `--radius-md`, its own `.dark` switch) keeps all of it. Nothing in fleet-design uses those names, and nothing resets the page.
+
+```css
+/* the project's entry stylesheet */
+@layer fleet-tokens, theme, base, fleet, components, utilities;
+@import "tailwindcss";
+@import "@fleet/design/tokens.css" layer(fleet-tokens);
+@import "@fleet/design/styles.css" layer(fleet); /* or single files: "@fleet/design/styles/base.css", "…/button.css" */
+@import "@fleet/design/tailwind/extend";
+```
+
+- **Layer order.** Declare the order once, before the imports. `fleet-tokens` comes first so anything the project declares can override a token. `fleet` comes after `base` so the component classes beat preflight, and before `components` and `utilities` so the project's layout utilities (`w-full`, `mt-2`) beat a `.fa-*` class. Keep the project's other layers in the list where they were.
+- **Do not import `@fleet/design/tailwind`** here. It clears Tailwind's defaults and the project's utilities with them. `tailwind/extend` only adds.
+- **Do not import `reset.css`** here. Preflight is the reset.
+- **Theme and brand.** Put `data-theme` on `<html>`, next to whatever the project already switches (`class="dark"`): `data-theme="light"` or `"dark"`, or one of the other six. Without the attribute the light theme applies. `data-project` goes on `<html>` too, for the `trade` and `board` brands; the default brand needs none. An element with `data-theme` also gets the matching `color-scheme`.
+- **Text colour and font.** The components set their own where the design fixes them and inherit the rest, as they do from `body` under `reset.css`. Around fleet components, set `color: var(--fa-fg)` and a `.fa-body` (15/24) or `.fa-control` (14/20) type class on the container, or point the project's own body variables at the tokens (`--foreground: var(--fa-fg)`).
+- **What is checked.** `pnpm check` builds such a project (preflight, its own `--accent`, `--border`, `--ring`, `--radius-md`, `--font-sans`, `--ease-out`) with and without these four lines and compares: the project's variables and every computed property of its `html`, `body`, button, input, link and heading are identical, a focused project button keeps the project's outline, `--fa-accent` has its value, `bg-fa-accent` and `rounded-fa-md` compute to the tokens, and `.fa-btn` renders 32 high with the fleet focus ring.
 
 ### React
 
 `@fleet/design/react` wraps [Base UI](https://base-ui.com) parts for behaviour (keyboard, focus, ARIA) and maps a few `variant` / `size` props onto the same `.fa-*` classes. It adds no styles of its own and imports no CSS.
 
 ```sh
-pnpm add github:thoerwink8/fleet-design#v0.2.1 @base-ui/react react react-dom
+pnpm add github:thoerwink8/fleet-design#v0.3.0 @base-ui/react react react-dom
 ```
 
 Peer dependencies: `react` and `react-dom` 18.2+ or 19, `@base-ui/react` 1.9+ (built and tested with 1.9.0 and React 19.3). They are optional, so CSS-only projects get no warnings.
@@ -82,6 +118,7 @@ Peer dependencies: `react` and `react-dom` 18.2+ or 19, `@base-ui/react` 1.9+ (b
 ```tsx
 // once, at the app entry
 import '@fleet/design/tokens.css';
+import '@fleet/design/reset.css'; // leave out when the page has its own reset
 import '@fleet/design/styles.css'; // or only what you use: '@fleet/design/styles/button.css', …
 
 import { Button } from '@fleet/design/react/button';
@@ -96,7 +133,7 @@ import { Select } from '@fleet/design/react/select';
 - `className` and `style` go to the root element and are for layout only (margin, width, grid placement). Looks come from `variant` and `size`; there is no prop for colours or type.
 - Per-file CSS: `styles/<component>.css` plus `styles/base.css`; the floating ones also need `styles/menu.css` (`.fa-pop`, `.fa-item`) and the modal ones `styles/confirm-dialog.css` (`.fa-backdrop`).
 - TypeScript checks side-effect imports: if your bundler template does not already declare `*.css` modules, add `declare module '*.css';`.
-- With Tailwind: import `tokens.css`, then `styles.css` (for the components), then the theme, as in the Tailwind section. Utilities are fine for page layout around the components; do not restyle a component with utilities.
+- With Tailwind: import `tokens.css`, then `styles.css` (for the components), then one of the two theme entries, as in the Tailwind section. Utilities are fine for page layout around the components; do not restyle a component with utilities.
 
 | Component                     | What it is for                       | Shortest use                                                                         | Not obvious                                                                                                                                                                |
 | ----------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -192,14 +229,55 @@ The 31 cards in `previews/cards/` load the built `dist/tokens.css`, `dist/reset.
 | `pnpm smoke`             | install the packed package into an empty project, type-check and bundle             |
 | `pnpm typecheck`         | TypeScript only                                                                     |
 
-`pnpm check` runs: tokens equal the baseline byte for byte; component styles equal the baseline rule for rule; `dist/` (CSS and `dist/react`) is current; TypeScript; a static scan (font sizes 12/14/15/18/20, no weight ≥ 600, spacing in multiples of 4, colours only through variables, monospace only on code classes); contrast for 8 themes × 3 brands (text 4.5, marks 3); data colours under simulated colour-vision deficiency; the Tailwind theme compile; every preview card rendered in headless Chromium against the baseline, computed style by computed style; the density table at 1000 and overflow at 360, for the cards and the React pages; every page loads without a failed request; React elements against the same state on the static card, computed style by computed style; a scan for local paths, private names and images; Biome. The browser checks need Chromium once: `pnpm exec playwright install chromium`.
+`pnpm check` runs: tokens equal the baseline byte for byte; component styles and the reset equal the baseline rule for rule; `dist/` (CSS and `dist/react`) is current; TypeScript; a static scan (font sizes 12/14/15/18/20, no weight ≥ 600, spacing in multiples of 4, colours only through variables, monospace only on code classes, every custom property prefixed, no selector in `styles.css` outside `.fa-*`, transitions timed by duration tokens); contrast for 8 themes × 3 brands (text 4.5, marks 3); data colours under simulated colour-vision deficiency; both Tailwind entries compiled (`tailwind` replaces the scale, `tailwind/extend` leaves Tailwind's own utilities byte-identical); a project with its own Tailwind theme rendered with and without fleet-design, which must not change it; every preview card rendered in headless Chromium against the baseline, computed style by computed style; the density table at 1000 and overflow at 360, for the cards and the React pages; every page loads without a failed request; React elements against the same state on the static card, computed style by computed style; a scan for local paths, private names and images; Biome. The browser checks need Chromium once: `pnpm exec playwright install chromium`.
 
 ## Releasing
 
 1. Change `tokens/` or `styles/`, run `pnpm build` and `pnpm check`. If a value changed on purpose, run `pnpm baseline` and explain the change in the commit.
 2. Bump `version` in `package.json`, commit `dist/` with the change.
-3. Tag and push: `git tag v0.2.1 && git push origin main v0.2.1`.
-4. Consumers move to the tag: `pnpm add github:thoerwink8/fleet-design#v0.2.1`.
+3. Tag and push: `git tag v0.3.0 && git push origin main v0.3.0`.
+4. Consumers move to the tag: `pnpm add github:thoerwink8/fleet-design#v0.3.0`.
+
+## Upgrading from 0.2
+
+0.3.0 renames what the package puts into a page and moves the page reset into its own file. Values are unchanged: with `reset.css` loaded, every element of the preview site computes to the same styles as on 0.2.1. No alias for an old name is kept, because an alias would put `--accent` and `--border` back into the page, which is what the prefix removes.
+
+**1. Custom properties are `--fa-*`.** Every variable from `tokens.css` and the three that components set for themselves gained the prefix. The rule is mechanical: `--<name>` becomes `--fa-<name>`.
+
+| 0.2                                                                                          | 0.3                                               |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `--bg`, `--fg`, `--fg-muted`, `--panel`, `--overlay`, `--border`, `--accent`, `--focus-ring` | `--fa-bg`, `--fa-fg`, …, `--fa-focus-ring`        |
+| `--success`, `--warning`, `--danger`, `--info`, `--selected`, `--hover`, `--up`, `--down`    | `--fa-success`, …, `--fa-down`                    |
+| `--palette-*`, `--brand-*`, `--data-1` … `--data-6`                                          | `--fa-palette-*`, `--fa-brand-*`, `--fa-data-*`   |
+| `--space-*`, `--radius-sm\|md\|lg\|full`, `--ctrl-*`, `--row-*`, `--bp-*`, `--bw-*`          | `--fa-space-*`, `--fa-radius-*`, `--fa-ctrl-*`, … |
+| `--dur-*`, `--ease-out`, `--ease-in-out`, `--font-sans`, `--font-mono`, `--shadow-overlay`   | `--fa-dur-*`, `--fa-ease-*`, `--fa-font-*`, …     |
+| `--wash2`, `--hv`, `--ring` (set by components)                                              | `--fa-wash2`, `--fa-hv`, `--fa-ring`              |
+
+In a project that used only fleet-design's variables, replace `var(--` with `var(--fa-` in the places that refer to them. Token names in `tokens.json` are unchanged (`accent`, `space-4`).
+
+**2. Type classes and four helper classes are `.fa-*`.**
+
+| 0.2                                                                   | 0.3                                                                                  |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `.caption`, `.caption-strong`, `.control`, `.control-strong`, `.body` | `.fa-caption`, `.fa-caption-strong`, `.fa-control`, `.fa-control-strong`, `.fa-body` |
+| `.title`, `.heading`, `.code`, `.code-sm`                             | `.fa-title`, `.fa-heading`, `.fa-code`, `.fa-code-sm`                                |
+| `.pr-open`, `.pr-merged`, `.pr-closed`, `.pr-draft`                   | `.fa-pr-open`, `.fa-pr-merged`, `.fa-pr-closed`, `.fa-pr-draft`                      |
+| `.body` inside `.fa-cmd__row` (command palette result text)           | `.fa-cmd__body`                                                                      |
+| `.body` inside `.fa-dp` (details panel content)                       | `.fa-dp__body`                                                                       |
+
+The React components render the new names; only hand-written markup needs the last two.
+
+**3. The reset is its own file.** `styles.css` no longer contains rules on `*`, `html`, `body`, `button`, `input`, `textarea`, `select`, `[hidden]` or a page-wide `:focus-visible`. To keep a page looking as it did, import `reset.css` between the tokens and the styles:
+
+```css
+@import "@fleet/design/tokens.css";
+@import "@fleet/design/reset.css";
+@import "@fleet/design/styles.css";
+```
+
+A project that imported single files gets the same split: `styles/base.css` now holds only the shared helpers and the scoped focus ring, and `styles/reset.css` holds the reset. Projects with a reset of their own leave it out (see [Plain CSS](#plain-css)). Reduced motion moved from a page-wide rule into `tokens.css`, where the duration tokens collapse; `reset.css` still carries the page-wide rule for everything else on the page.
+
+**4. Tailwind: two entries.** `@fleet/design/tailwind` still replaces Tailwind's scale and keeps its utility names (`bg-panel`, `rounded-md`); it now points at the `--fa-*` variables, and no longer needs `tokens.css` to be unlayered. A project with its own Tailwind theme uses the new `@fleet/design/tailwind/extend` instead ([Tailwind v4](#tailwind-v4), [Adding it to an existing Tailwind project](#adding-it-to-an-existing-tailwind-project)).
 
 ## Changes in 0.2.1
 
