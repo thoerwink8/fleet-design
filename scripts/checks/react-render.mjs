@@ -3,7 +3,9 @@ import { reactPages } from '../lib/preview.mjs';
 
 const THEMES = ['light', 'dark'];
 // Properties that follow from the text inside the element rather than from its styles.
-const GEOMETRY = new Set(['width', 'inline-size', 'perspective-origin', 'transform-origin']);
+// unicode-bidi: elements given a dir attribute (Base UI sets one on popups and items) compute to isolate; with
+// left-to-right text it changes nothing on screen.
+const GEOMETRY = new Set(['width', 'inline-size', 'perspective-origin', 'transform-origin', 'unicode-bidi']);
 
 function styleOf(selector) {
   const e = document.querySelector(selector);
@@ -30,14 +32,18 @@ export default async function reactRender() {
       await page.goto(`${base}/react/${rp.name}.html?theme=${theme}`);
       await page.waitForSelector('body[data-ready]', { state: 'attached' });
       const react = await Promise.all(rp.compare.map(([sel]) => page.evaluate(styleOf, sel)));
-      await page.goto(`${base}/cards/${rp.card}.html?theme=${theme}`);
-      await page.waitForTimeout(700);
-      const card = await Promise.all(rp.compare.map(([, sel]) => page.evaluate(styleOf, sel)));
+      // A pair may point at another card ({ card: 'Composer' }), e.g. a variant that only that card shows.
+      const card = [];
+      for (const name of new Set(rp.compare.map(([, , k]) => k?.card || rp.card))) {
+        await page.goto(`${base}/cards/${name}.html?theme=${theme}`);
+        await page.waitForTimeout(700);
+        for (const [i, [, sel, k]] of rp.compare.entries()) if ((k?.card || rp.card) === name) card[i] = await page.evaluate(styleOf, sel);
+      }
       rp.compare.forEach(([rs, cs, known = {}], i) => {
         pairs++;
         const a = react[i];
         const b = card[i];
-        const where = `${rp.name}/${theme}: ${rs} vs ${rp.card} ${cs}`;
+        const where = `${rp.name}/${theme}: ${rs} vs ${known.card || rp.card} ${cs}`;
         if (!a || !b) {
           diffs.push(`${where}: ${!a ? 'React element' : 'card element'} not found`);
           return;

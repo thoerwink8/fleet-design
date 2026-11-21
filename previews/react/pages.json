@@ -59,8 +59,61 @@
         ".fa-tip",
         ".fa-tip[style*=max-width]",
         {
-          "ignore": ["tag", "display", "min-block-size", "min-height", "min-inline-size", "min-width", "unicode-bidi"],
-          "why": "the card shows the tip as a span inside a flex row (blockified); the component renders the popup as a div inside its positioner; the popup also isolates its text direction (unicode-bidi: isolate)"
+          "ignore": ["tag", "display", "min-block-size", "min-height", "min-inline-size", "min-width"],
+          "why": "the card shows the tip as a span inside a flex row (blockified); the component renders the popup as a div inside its positioner"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Menu",
+    "card": "Menu",
+    "subtitle": "React：Menu（Base UI Menu）。快捷键、勾选项、分组、子菜单、禁用项",
+    "compare": [
+      [
+        "[aria-label=视图]",
+        "#menu",
+        {
+          "ignore": [
+            "block-size",
+            "height",
+            "bottom",
+            "top",
+            "left",
+            "right",
+            "inset-block-end",
+            "inset-block-start",
+            "inset-inline-start",
+            "inset-inline-end",
+            "position",
+            "z-index"
+          ],
+          "why": "the popup is positioned by Base UI and holds different items; size and position are not styles"
+        }
+      ],
+      ["[aria-label=视图] [role=menuitem]", "#menu .fa-item[data-active=false]"],
+      ["[aria-label=视图] .fa-sep", "#menu .fa-sep"],
+      ["[aria-label=视图] [role=menuitemcheckbox]", "#menu [role=menuitemcheckbox]"],
+      [
+        "[aria-label=视图] .fa-glabel",
+        "#p2 .fa-glabel",
+        {
+          "card": "Select"
+        }
+      ]
+    ]
+  },
+  {
+    "name": "Select",
+    "card": "Select",
+    "subtitle": "React：Select（Base UI Select）。受控、幽灵变体、占位",
+    "compare": [
+      ["[aria-label=字号]", "#s1"],
+      [
+        ".fa-select--ghost",
+        ".fa-composer__bar .fa-select--ghost:not(.is-model)",
+        {
+          "card": "Composer"
         }
       ]
     ]
