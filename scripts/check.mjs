@@ -3,7 +3,8 @@ import { closeBrowserSession } from './lib/browser.mjs';
 const CHECKS = [
   ['tokens match baseline', './checks/tokens.mjs'],
   ['styles match baseline', './checks/styles.mjs'],
-  ['dist is current', './checks/dist.mjs'],
+  ['dist is current (CSS and dist/react)', './checks/dist.mjs'],
+  ['types (React components, previews, tests)', './checks/types.mjs'],
   ['rules: type scale, weights, spacing, colours, monospace', './checks/rules.mjs'],
   ['contrast, 8 themes x 3 brands', './checks/contrast.mjs'],
   ['data colours under colour-vision deficiency', './checks/cvd.mjs'],
