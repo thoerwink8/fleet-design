@@ -1,0 +1,31 @@
+fleet-design
+Copyright (c) 2026 fleet-design contributors. Licensed under the MIT License (see LICENSE).
+
+Six of the eight themes take their base colours from published open-source colour schemes.
+Only colour values are used, and some of them are adjusted in lightness to reach the contrast
+targets (4.5:1 for text, 3:1 for marks). No code, files or artwork from these projects is included.
+The names identify where the colours come from; they do not imply endorsement.
+
+Solarized
+  Ethan Schoonover, https://github.com/altercation/solarized
+  MIT License, Copyright (c) 2011 Ethan Schoonover
+
+Dracula
+  Dracula Theme, https://github.com/dracula/dracula-theme
+  MIT License, Copyright (c) 2023 Dracula Theme
+
+Nord
+  Sven Greb, https://github.com/nordtheme/nord
+  MIT License, Copyright (c) 2016-present Sven Greb
+
+Tokyo Night
+  Enkia, https://github.com/tokyo-night/tokyo-night-vscode-theme
+  MIT License, Copyright (c) 2018-present Enkia
+
+One Dark
+  GitHub Inc. (Atom One Dark syntax theme), https://github.com/atom/one-dark-syntax
+  MIT License, Copyright (c) 2016 GitHub Inc.
+
+Darcula
+  JetBrains s.r.o. (IntelliJ Platform), https://github.com/JetBrains/intellij-community
+  Source code licensed under the Apache License 2.0

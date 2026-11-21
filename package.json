@@ -20,14 +20,16 @@
   "files": [
     "dist",
     "styles",
-    "tailwind"
+    "tailwind",
+    "NOTICE"
   ],
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/dev.mjs",
     "stop": "node scripts/stop.mjs",
     "check": "node scripts/check.mjs",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "baseline": "node scripts/baseline.mjs"
   },
   "packageManager": "pnpm@12.14.0",
   "engines": {
@@ -38,5 +40,11 @@
     "playwright": "1.64.1",
     "postcss": "8.5.33",
     "tailwindcss": "4.3.5"
-  }
+  },
+  "keywords": [
+    "design-tokens",
+    "css",
+    "tailwind",
+    "design-system"
+  ]
 }
