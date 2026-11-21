@@ -92,3 +92,82 @@ test('controlled open state follows the trigger', async ({ page }) => {
   await expect(view).toHaveText('视图：收起');
   await expect(page.getByRole('menu', { name: '视图' })).toBeHidden();
 });
+
+interface Box {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+}
+
+function intersects(a: Box, b: Box): boolean {
+  return !(a.right <= b.left || a.left >= b.right || a.bottom <= b.top || a.top >= b.bottom);
+}
+
+test('narrow viewport keeps submenu inside viewport without overlapping trigger or sibling items; wide viewport opens right', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await trigger(page).click();
+  const menu = page.getByRole('menu', { name: '会话操作' });
+  await expect(menu).toBeVisible();
+  const subTrigger = menu.getByRole('menuitem', { name: '复制', exact: true });
+  await subTrigger.focus();
+  await page.keyboard.press('ArrowRight');
+  const subItem = page.getByRole('menuitem', { name: '复制会话标题' });
+  await expect(subItem).toBeVisible();
+  await expect(subItem).toBeFocused();
+
+  const subMenu = page.getByRole('menu', { name: '复制' });
+  await expect(subMenu).toBeVisible();
+  const subRect = await subMenu.boundingBox();
+  const trigRect = await subTrigger.boundingBox();
+  expect(subRect).not.toBeNull();
+  expect(trigRect).not.toBeNull();
+  if (!subRect || !trigRect) return;
+
+  const subBox: Box = { left: subRect.x, top: subRect.y, right: subRect.x + subRect.width, bottom: subRect.y + subRect.height };
+  const trigBox: Box = { left: trigRect.x, top: trigRect.y, right: trigRect.x + trigRect.width, bottom: trigRect.y + trigRect.height };
+
+  expect(subBox.left).toBeGreaterThanOrEqual(8);
+  expect(subBox.right).toBeLessThanOrEqual(360 - 8);
+  expect(subBox.top).toBeGreaterThanOrEqual(0);
+  expect(subBox.bottom).toBeLessThanOrEqual(740);
+  expect(intersects(subBox, trigBox)).toBe(false);
+
+  const siblings = await menu.evaluate((el) => {
+    const items = [...el.querySelectorAll(':scope > [role=menuitem], :scope > [role=menuitemcheckbox]')];
+    return items
+      .filter((item) => !item.textContent?.includes('复制'))
+      .map((item) => {
+        const r = item.getBoundingClientRect();
+        return { text: item.textContent?.trim() ?? '', left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+      });
+  });
+  for (const sib of siblings) {
+    expect(intersects(subBox, sib), `submenu overlapped parent item "${sib.text}"`).toBe(false);
+  }
+
+  await page.keyboard.press('ArrowLeft');
+  await expect(subMenu).toBeHidden();
+  await expect(subTrigger).toBeFocused();
+
+  await page.keyboard.press('ArrowRight');
+  await expect(subItem).toBeVisible();
+  await subItem.click();
+  await expect(page.getByTestId('say')).toHaveText('已复制会话标题');
+
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await trigger(page).click();
+  await subTrigger.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(subItem).toBeVisible();
+  const wideSubRect = await subMenu.boundingBox();
+  const wideTrigRect = await subTrigger.boundingBox();
+  expect(wideSubRect).not.toBeNull();
+  expect(wideTrigRect).not.toBeNull();
+  if (!wideSubRect || !wideTrigRect) return;
+  expect(wideSubRect.x).toBeGreaterThanOrEqual(wideTrigRect.x + wideTrigRect.width);
+  expect(wideSubRect.x + wideSubRect.width).toBeLessThanOrEqual(1280 - 8);
+  await expect(subMenu).toHaveAttribute('data-side', 'right');
+});

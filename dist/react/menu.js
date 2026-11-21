@@ -1,4 +1,4 @@
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Menu as BaseMenu } from '@base-ui/react/menu';
 import * as React from 'react';
 import { cx, Icon } from './internal.js';
@@ -17,25 +17,42 @@ function Key({ shortcut }) {
 function CheckboxEntry({ entry }) {
     return (_jsxs(BaseMenu.CheckboxItem, { nativeButton: true, render: _jsx("button", { type: "button" }), className: "fa-item", checked: entry.checked, defaultChecked: entry.defaultChecked, onCheckedChange: (checked) => entry.onCheckedChange?.(checked), disabled: entry.disabled, "aria-keyshortcuts": entry.shortcut, children: [_jsx("span", { className: "grow", children: entry.label }), _jsx("span", { className: "tick", children: _jsx(Icon, { name: "check" }) }), _jsx(Key, { shortcut: entry.shortcut })] }));
 }
-function Entries({ entries, width }) {
+function useNarrowSubmenu(width) {
+    const query = `(max-width: ${width * 2 + 23}px)`;
+    const [narrow, setNarrow] = React.useState(() => (typeof window === 'undefined' ? false : window.matchMedia(query).matches));
+    React.useEffect(() => {
+        const mq = window.matchMedia(query);
+        setNarrow(mq.matches);
+        const onChange = (event) => setNarrow(event.matches);
+        mq.addEventListener('change', onChange);
+        return () => mq.removeEventListener('change', onChange);
+    }, [query]);
+    return narrow;
+}
+function SubmenuEntry({ entry, width, narrow }) {
+    const [slot, setSlot] = React.useState(null);
+    return (_jsxs(BaseMenu.SubmenuRoot, { children: [_jsxs(BaseMenu.SubmenuTrigger, { nativeButton: true, render: _jsx("button", { type: "button" }), className: "fa-item", disabled: entry.disabled, children: [_jsx("span", { className: "grow", children: entry.label }), _jsx("span", { className: "end", children: _jsx(Icon, { name: "chevR" }) })] }), narrow ? (_jsxs(_Fragment, { children: [_jsx("div", { ref: setSlot }), _jsx(Popup, { entries: entry.items, width: width, side: "bottom", align: "start", offset: 4, narrow: narrow, inlineContainer: slot })] })) : (_jsx(Popup, { entries: entry.items, width: width, side: "right", align: "start", offset: 4, narrow: false }))] }));
+}
+function Entries({ entries, width, narrow }) {
     return entries.map((e, i) => {
         const key = e.id ?? String(i);
         switch (e.type) {
             case 'separator':
                 return _jsx(BaseMenu.Separator, { className: "fa-sep" }, key);
             case 'group':
-                return (_jsxs(BaseMenu.Group, { children: [_jsx(BaseMenu.GroupLabel, { className: "fa-glabel", children: e.label }), _jsx(Entries, { entries: e.items, width: width })] }, key));
+                return (_jsxs(BaseMenu.Group, { children: [_jsx(BaseMenu.GroupLabel, { className: "fa-glabel", children: e.label }), _jsx(Entries, { entries: e.items, width: width, narrow: narrow })] }, key));
             case 'checkbox':
                 return _jsx(CheckboxEntry, { entry: e }, key);
             case 'submenu':
-                return (_jsxs(BaseMenu.SubmenuRoot, { children: [_jsxs(BaseMenu.SubmenuTrigger, { nativeButton: true, render: _jsx("button", { type: "button" }), className: "fa-item", disabled: e.disabled, children: [_jsx("span", { className: "grow", children: e.label }), _jsx("span", { className: "end", children: _jsx(Icon, { name: "chevR" }) })] }), _jsx(Popup, { entries: e.items, width: width, side: "right", align: "start", offset: 4 })] }, key));
+                return _jsx(SubmenuEntry, { entry: e, width: width, narrow: narrow }, key);
             default:
                 return (_jsxs(BaseMenu.Item, { nativeButton: true, render: _jsx("button", { type: "button" }), className: cx('fa-item', e.danger && 'fa-item--danger'), disabled: e.disabled, onClick: () => e.onSelect?.(), "aria-keyshortcuts": e.shortcut, children: [_jsx("span", { className: "grow", children: e.label }), e.end !== undefined && _jsx("span", { className: "end", children: e.end }), _jsx(Key, { shortcut: e.shortcut })] }, key));
         }
     });
 }
-function Popup({ entries, width, side, align, offset, label, }) {
-    return (_jsx(BaseMenu.Portal, { children: _jsx(BaseMenu.Positioner, { side: side, align: align, sideOffset: offset, collisionPadding: 8, children: _jsx(BaseMenu.Popup, { className: "fa-pop", style: { width }, "aria-label": label, children: _jsx(Entries, { entries: entries, width: width }) }) }) }));
+function Popup({ entries, width, side, align, offset, label, narrow, inlineContainer, }) {
+    const inline = inlineContainer !== undefined;
+    return (_jsx(BaseMenu.Portal, { container: inline ? inlineContainer : undefined, children: _jsx(BaseMenu.Positioner, { side: side, align: align, sideOffset: offset, collisionPadding: 8, style: inline ? { position: 'static', transform: 'none', marginTop: 4, marginBottom: 4 } : undefined, children: _jsx(BaseMenu.Popup, { className: "fa-pop", style: { width: inline ? '100%' : width }, "aria-label": label, children: _jsx(Entries, { entries: entries, width: width, narrow: narrow }) }) }) }));
 }
 /**
  * An action menu from data: `<Menu trigger={<IconButton label="更多">…</IconButton>} items={[{ label: '置顶', shortcut: 'P', onSelect }]} />`.
@@ -77,5 +94,6 @@ export function Menu({ trigger, items, side = 'bottom', align = 'end', width = 2
         document.addEventListener('keydown', onKey, true);
         return () => document.removeEventListener('keydown', onKey, true);
     }, [isOpen]);
-    return (_jsxs(BaseMenu.Root, { open: isOpen, onOpenChange: (next) => setOpen(next), children: [_jsx(BaseMenu.Trigger, { render: trigger }), _jsx(Popup, { entries: items, width: width, side: side, align: align, offset: 4, label: label })] }));
+    const narrow = useNarrowSubmenu(width);
+    return (_jsxs(BaseMenu.Root, { open: isOpen, onOpenChange: (next) => setOpen(next), children: [_jsx(BaseMenu.Trigger, { render: trigger }), _jsx(Popup, { entries: items, width: width, side: side, align: align, offset: 4, label: label, narrow: narrow })] }));
 }
