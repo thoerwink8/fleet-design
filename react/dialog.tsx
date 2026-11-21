@@ -11,6 +11,59 @@ interface OpenState {
   trigger?: React.ReactElement;
 }
 
+const TABBABLE =
+  'a[href],area[href],button:not([disabled]),input:not([disabled]):not([type="hidden"]),select:not([disabled]),textarea:not([disabled]),summary,iframe,audio[controls],video[controls],[contenteditable]:not([contenteditable="false"]),[tabindex]:not([tabindex="-1"])';
+
+function isTabbableElement(el: HTMLElement, root: HTMLElement): boolean {
+  if (el.matches(':disabled') || el.closest('[inert],[hidden]') || el.tabIndex < 0) return false;
+  const cs = getComputedStyle(el);
+  if (cs.display === 'none' || cs.visibility === 'hidden') return false;
+  const r = el.getBoundingClientRect();
+  if (r.width === 0 && r.height === 0) return false;
+  if (el.tagName === 'SUMMARY') {
+    const details = el.closest('details');
+    if (!details || details.querySelector(':scope > summary') !== el) return false;
+  }
+  if (el instanceof HTMLInputElement && el.type === 'radio' && el.name) {
+    const scope = el.form ?? root;
+    const radios = [...scope.querySelectorAll<HTMLInputElement>('input[type="radio"]')].filter((r) => r.name === el.name && !r.disabled);
+    const checked = radios.find((r) => r.checked);
+    return (checked ?? radios[0]) === el;
+  }
+  return true;
+}
+
+function tabbables(root: HTMLElement): HTMLElement[] {
+  const candidates = [...root.querySelectorAll<HTMLElement>(TABBABLE)].filter((el) => isTabbableElement(el, root));
+  const positive = candidates.filter((el) => el.tabIndex > 0).sort((a, b) => a.tabIndex - b.tabIndex);
+  const regular = candidates.filter((el) => el.tabIndex === 0);
+  return [...positive, ...regular];
+}
+
+function trapTab(event: React.KeyboardEvent<HTMLElement>) {
+  if (event.defaultPrevented || event.key !== 'Tab' || event.altKey || event.ctrlKey || event.metaKey) return;
+  const popup = event.currentTarget;
+  const list = tabbables(popup);
+  if (list.length === 0) {
+    event.preventDefault();
+    popup.focus();
+    return;
+  }
+  const first = list[0];
+  const last = list[list.length - 1];
+  if (!first || !last) return;
+  const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  if (event.shiftKey) {
+    if (!active || active === first || active === popup || !popup.contains(active)) {
+      event.preventDefault();
+      last.focus();
+    }
+  } else if (!active || active === last || !popup.contains(active)) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
 export interface DialogProps extends OpenState {
   title: React.ReactNode;
   description?: React.ReactNode;
@@ -30,7 +83,7 @@ export function Dialog({ open, defaultOpen, onOpenChange, trigger, title, descri
       {trigger && <BaseDialog.Trigger render={trigger} />}
       <BaseDialog.Portal>
         <BaseDialog.Backdrop className="fa-backdrop" />
-        <BaseDialog.Popup className="fa-dialog fa-dialog--modal">
+        <BaseDialog.Popup className="fa-dialog fa-dialog--modal" onKeyDown={trapTab}>
           <BaseDialog.Title>{title}</BaseDialog.Title>
           {description !== undefined && <BaseDialog.Description>{description}</BaseDialog.Description>}
           {children}
@@ -80,7 +133,7 @@ export function ConfirmDialog({
       {trigger && <AlertDialog.Trigger render={trigger} />}
       <AlertDialog.Portal>
         <AlertDialog.Backdrop className="fa-backdrop" />
-        <AlertDialog.Popup className="fa-dialog fa-dialog--modal" initialFocus={cancel}>
+        <AlertDialog.Popup className="fa-dialog fa-dialog--modal" initialFocus={cancel} onKeyDown={trapTab}>
           <AlertDialog.Title>{title}</AlertDialog.Title>
           <AlertDialog.Description>{description}</AlertDialog.Description>
           {children !== undefined && <div className="fa-names">{children}</div>}

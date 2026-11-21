@@ -65,3 +65,45 @@ test('dialog: focus goes inside, scrim click closes, value change is kept', asyn
   await page.mouse.click(5, 5);
   await expect(dlg).toBeHidden();
 });
+
+async function assertFocusTrapped(page: Page, dlg: import('@playwright/test').Locator) {
+  const initial = await dlg.evaluate((el) => {
+    const ae = document.activeElement;
+    return { inside: el.contains(ae), isBody: ae === document.body, tag: ae?.tagName ?? '' };
+  });
+  expect(initial.inside, `initial focus leaked to ${initial.tag}`).toBe(true);
+  expect(initial.isBody).toBe(false);
+
+  for (const key of ['Tab', 'Shift+Tab'] as const) {
+    for (let i = 0; i < 20; i++) {
+      await page.keyboard.press(key);
+      const step = await dlg.evaluate((el) => {
+        const ae = document.activeElement;
+        return {
+          inside: el.contains(ae),
+          isBody: ae === document.body,
+          tag: ae?.tagName ?? '',
+          cls: typeof ae?.className === 'string' ? ae.className : '',
+        };
+      });
+      expect(step.isBody, `${key} #${i + 1}: focus landed on BODY`).toBe(false);
+      expect(step.inside, `${key} #${i + 1}: focus escaped to <${step.tag} class="${step.cls}">`).toBe(true);
+    }
+  }
+}
+
+test('Tab and Shift+Tab stay inside ConfirmDialog and Dialog for 20 presses each', async ({ page }) => {
+  await opener(page).click();
+  const confirm = page.getByRole('alertdialog', { name: '删除 4 个会话' });
+  await expect(confirm).toBeVisible();
+  await expect(confirm.getByRole('button', { name: '取消' })).toBeFocused();
+  await assertFocusTrapped(page, confirm);
+  await page.keyboard.press('Escape');
+  await expect(confirm).toBeHidden();
+
+  await page.getByRole('button', { name: '重命名…' }).click();
+  const dialog = page.getByRole('dialog', { name: '重命名会话' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole('textbox', { name: '会话标题' })).toBeFocused();
+  await assertFocusTrapped(page, dialog);
+});
