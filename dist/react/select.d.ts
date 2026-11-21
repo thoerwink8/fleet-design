@@ -1,4 +1,4 @@
-import type * as React from 'react';
+import * as React from 'react';
 import { type LayoutProps } from './internal.js';
 export interface SelectOption<V extends string> {
     value: V;

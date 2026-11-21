@@ -22,7 +22,7 @@ interface ToastData {
   icon?: React.ReactNode;
 }
 
-const MARK: Record<ToastKind, IconName> = { success: 'check', info: 'alert', danger: 'alert', warning: 'alert' };
+const MARK: Record<ToastKind, IconName> = { success: 'check', info: 'info', danger: 'alert', warning: 'warn' };
 
 function ToastList({ closeLabel }: { closeLabel: string }) {
   const { toasts } = BaseToast.useToastManager<ToastData>();

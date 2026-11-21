@@ -1,5 +1,5 @@
 import { Select as BaseSelect } from '@base-ui/react/select';
-import type * as React from 'react';
+import * as React from 'react';
 import { cx, Icon, type LayoutProps } from './internal.js';
 
 export interface SelectOption<V extends string> {
@@ -48,6 +48,13 @@ export function Select<V extends string>({
   style,
   ...aria
 }: SelectProps<V>) {
+  const [innerOpen, setInnerOpen] = React.useState(defaultOpen ?? false);
+  const isOpen = open ?? innerOpen;
+  const openRef = React.useRef(isOpen);
+  openRef.current = isOpen;
+  const [portalOpen, setPortalOpen] = React.useState(isOpen);
+  if (isOpen && !portalOpen) setPortalOpen(true);
+
   return (
     <BaseSelect.Root
       items={options.map((o) => ({ value: o.value, label: o.label }))}
@@ -58,9 +65,15 @@ export function Select<V extends string>({
       }}
       disabled={disabled}
       name={name}
-      open={open}
-      defaultOpen={defaultOpen}
-      onOpenChange={(next) => onOpenChange?.(next)}
+      open={isOpen}
+      onOpenChange={(next) => {
+        if (open === undefined) setInnerOpen(next);
+        if (next) setPortalOpen(true);
+        onOpenChange?.(next);
+      }}
+      onOpenChangeComplete={(next) => {
+        if (!next && !openRef.current) setPortalOpen(false);
+      }}
     >
       <BaseSelect.Trigger {...aria} className={cx('fa-select', variant === 'ghost' && 'fa-select--ghost', className)} style={style}>
         {lead}
@@ -69,22 +82,24 @@ export function Select<V extends string>({
           <Icon name="chevD" />
         </BaseSelect.Icon>
       </BaseSelect.Trigger>
-      <BaseSelect.Portal>
-        <BaseSelect.Positioner alignItemWithTrigger={false} side="bottom" align="start" sideOffset={4} collisionPadding={8}>
-          <BaseSelect.Popup className="fa-pop" style={{ minWidth: 'var(--anchor-width)' }}>
-            <BaseSelect.List>
-              {options.map((o) => (
-                <BaseSelect.Item key={o.value} value={o.value} disabled={o.disabled} className="fa-item">
-                  <BaseSelect.ItemText className="grow">{o.label}</BaseSelect.ItemText>
-                  <BaseSelect.ItemIndicator render={<span className="tick" />}>
-                    <Icon name="check" />
-                  </BaseSelect.ItemIndicator>
-                </BaseSelect.Item>
-              ))}
-            </BaseSelect.List>
-          </BaseSelect.Popup>
-        </BaseSelect.Positioner>
-      </BaseSelect.Portal>
+      {portalOpen && (
+        <BaseSelect.Portal>
+          <BaseSelect.Positioner alignItemWithTrigger={false} side="bottom" align="start" sideOffset={4} collisionPadding={8}>
+            <BaseSelect.Popup className="fa-pop" style={{ minWidth: 'var(--anchor-width)' }}>
+              <BaseSelect.List>
+                {options.map((o) => (
+                  <BaseSelect.Item key={o.value} value={o.value} disabled={o.disabled} className="fa-item">
+                    <BaseSelect.ItemText className="grow">{o.label}</BaseSelect.ItemText>
+                    <BaseSelect.ItemIndicator render={<span className="tick" />}>
+                      <Icon name="check" />
+                    </BaseSelect.ItemIndicator>
+                  </BaseSelect.Item>
+                ))}
+              </BaseSelect.List>
+            </BaseSelect.Popup>
+          </BaseSelect.Positioner>
+        </BaseSelect.Portal>
+      )}
     </BaseSelect.Root>
   );
 }

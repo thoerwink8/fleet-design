@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Toast as BaseToast } from '@base-ui/react/toast';
 import { Icon } from './internal.js';
-const MARK = { success: 'check', info: 'alert', danger: 'alert', warning: 'alert' };
+const MARK = { success: 'check', info: 'info', danger: 'alert', warning: 'warn' };
 function ToastList({ closeLabel }) {
     const { toasts } = BaseToast.useToastManager();
     return toasts.map((t) => (_jsxs(BaseToast.Root, { toast: t, className: "fa-toast", children: [_jsx("span", { className: `m-${t.data?.kind ?? 'info'}`, children: t.data?.icon ?? _jsx(Icon, { name: MARK[t.data?.kind ?? 'info'] }) }), _jsx(BaseToast.Title, { className: "grow", render: _jsx("span", {}) }), _jsx(BaseToast.Action, { className: "fa-btn fa-btn--sm" }), _jsx(BaseToast.Close, { className: "fa-icon-btn", "aria-label": closeLabel, children: _jsx(Icon, { name: "x" }) })] }, t.id)));

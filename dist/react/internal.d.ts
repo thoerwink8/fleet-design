@@ -14,6 +14,8 @@ declare const PATHS: {
     chevD: React.JSX.Element;
     chevR: React.JSX.Element;
     alert: React.JSX.Element;
+    info: React.JSX.Element;
+    warn: React.JSX.Element;
     search: React.JSX.Element;
     x: React.JSX.Element;
 };

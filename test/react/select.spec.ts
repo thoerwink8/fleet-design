@@ -47,3 +47,41 @@ test('ghost variant: uncontrolled value and disabled option', async ({ page }) =
 test('placeholder shows until a value is chosen', async ({ page }) => {
   await expect(page.getByRole('combobox', { name: '分组' })).toHaveText(/选择分组/);
 });
+
+async function accessibleListboxes(page: import('@playwright/test').Page) {
+  return page.evaluate(
+    () =>
+      [...document.querySelectorAll('[role=listbox]')].filter((el) => {
+        const hidden = (el as HTMLElement).hidden || el.getAttribute('aria-hidden') === 'true';
+        const display = getComputedStyle(el).display;
+        return !(hidden && display === 'none');
+      }).length,
+  );
+}
+
+test('closing leaves no screen-reader-accessible listbox node', async ({ page }) => {
+  const trigger = page.getByRole('combobox', { name: '字号' });
+  await trigger.click();
+  await expect(page.getByRole('listbox')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('listbox')).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await expect.poll(() => accessibleListboxes(page)).toBe(0);
+
+  await page.keyboard.press('ArrowDown');
+  await expect(page.getByRole('listbox')).toBeVisible();
+  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('Enter');
+  await expect(trigger).toHaveText(/标准/);
+  await expect(trigger).toBeFocused();
+  await expect.poll(() => accessibleListboxes(page)).toBe(0);
+
+  await page.keyboard.press('ArrowDown');
+  const list = page.getByRole('listbox');
+  await expect(list).toBeVisible();
+  await expect(list.getByRole('option', { name: '标准' })).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('Escape');
+  await expect(list).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await expect.poll(() => accessibleListboxes(page)).toBe(0);
+});

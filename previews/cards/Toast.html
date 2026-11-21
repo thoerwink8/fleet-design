@@ -1,15 +1,29 @@
 <div class="fa-stage" style="min-height:240px;position:relative">
-  <div class="fa-cap">演示态：右下已经有一条。点按钮再触发；带撤销的停 8 秒，其余 4 秒，悬停暂停。Toast 在右下，输入框区域之外</div>
-  <div class="fa-row">
-    <button class="fa-btn fa-btn--secondary" data-t="copy">复制 Session ID</button>
-    <button class="fa-btn fa-btn--secondary" data-t="archive">归档会话</button>
-    <button class="fa-btn fa-btn--secondary" data-t="fork">回退到这条</button>
+  <div class="fa-col">
+    <div class="fa-cap">演示态：右下已经有一条。点按钮再触发；带撤销的停 8 秒，其余 4 秒，悬停暂停。Toast 在右下，输入框区域之外</div>
+    <div class="fa-row">
+      <button class="fa-btn fa-btn--secondary" data-t="copy">复制 Session ID</button>
+      <button class="fa-btn fa-btn--secondary" data-t="archive">归档会话</button>
+      <button class="fa-btn fa-btn--secondary" data-t="fork">回退到这条</button>
+    </div>
+    <div class="fa-hint">失败不用 Toast：错误进输入框上方的状态条（见 StatusStrip）。</div>
   </div>
-  <div class="fa-hint">失败不用 Toast：错误进输入框上方的状态条（见 StatusStrip）。</div>
+  <div class="fa-col">
+    <div class="fa-cap">四种类型：info / 成功 / 警告 / 危险（图形两两可分）</div>
+    <div class="fa-row" id="kinds"></div>
+  </div>
+  <div style="height:72px" aria-hidden="true"></div>
   <div id="stack" class="fa-col" style="position:absolute;right:16px;bottom:16px;gap:8px;align-items:flex-end" role="region" aria-label="通知"></div>
 </div>
 <script>
 /*PRELUDE*/
+const KINDS = [
+  ['info', 'info', '已同步工作区设置'],
+  ['success', 'check', '已复制 Session ID'],
+  ['warning', 'warn', '继续将消耗按量额度'],
+  ['danger', 'alert', '已永久删除 4 个会话'],
+];
+$('#kinds').innerHTML = KINDS.map(([k, i, t]) => '<div class="fa-toast"><span class="m-' + k + '">' + ic(i) + '</span><span class="grow">' + t + '</span><button class="fa-icon-btn" type="button" aria-label="关闭">' + ic('x') + '</button></div>').join('');
 const stack = $('#stack');
 function toast(kind, icon, text, undo) {
   while (stack.children.length >= 3) stack.firstChild.remove();
@@ -25,7 +39,7 @@ function toast(kind, icon, text, undo) {
   el.addEventListener('keydown', e => { if (e.key === 'Escape') { clearTimeout(id); el.remove(); } });
 }
 // Demo state: one toast with 撤销 sits in the stack on load and stays until closed (the real one leaves after 8 s).
-function demo() { const el = document.createElement('div'); el.className = 'fa-toast'; el.setAttribute('role', 'status'); el.innerHTML = '<span class="m-info">' + ic('archive') + '</span><span class="grow">已归档「排查登录超时」</span><button class="fa-btn fa-btn--sm" data-u>撤销</button><button class="fa-icon-btn" aria-label="关闭" data-x>' + ic('x') + '</button>'; el.querySelector('[data-x]').onclick = () => el.remove(); el.querySelector('[data-u]').onclick = () => { el.remove(); toast('success', 'check', '已恢复'); }; stack.appendChild(el); }
+function demo() { const el = document.createElement('div'); el.className = 'fa-toast'; el.setAttribute('role', 'status'); el.innerHTML = '<span class="m-info">' + ic('info') + '</span><span class="grow">已归档「排查登录超时」</span><button class="fa-btn fa-btn--sm" data-u>撤销</button><button class="fa-icon-btn" aria-label="关闭" data-x>' + ic('x') + '</button>'; el.querySelector('[data-x]').onclick = () => el.remove(); el.querySelector('[data-u]').onclick = () => { el.remove(); toast('success', 'check', '已恢复'); }; stack.appendChild(el); }
 demo();
 $$('[data-t]').forEach(b => b.onclick = () => {
   const k = b.dataset.t;

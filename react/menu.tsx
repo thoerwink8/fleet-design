@@ -100,7 +100,42 @@ function CheckboxEntry({ entry }: { entry: MenuCheckboxItem }) {
   );
 }
 
-function Entries({ entries, width }: { entries: readonly MenuEntry[]; width: number }) {
+function useNarrowSubmenu(width: number): boolean {
+  const query = `(max-width: ${width * 2 + 23}px)`;
+  const [narrow, setNarrow] = React.useState(() => (typeof window === 'undefined' ? false : window.matchMedia(query).matches));
+  React.useEffect(() => {
+    const mq = window.matchMedia(query);
+    setNarrow(mq.matches);
+    const onChange = (event: MediaQueryListEvent) => setNarrow(event.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, [query]);
+  return narrow;
+}
+
+function SubmenuEntry({ entry, width, narrow }: { entry: MenuSubmenu; width: number; narrow: boolean }) {
+  const [slot, setSlot] = React.useState<HTMLDivElement | null>(null);
+  return (
+    <BaseMenu.SubmenuRoot>
+      <BaseMenu.SubmenuTrigger nativeButton render={<button type="button" />} className="fa-item" disabled={entry.disabled}>
+        <span className="grow">{entry.label}</span>
+        <span className="end">
+          <Icon name="chevR" />
+        </span>
+      </BaseMenu.SubmenuTrigger>
+      {narrow ? (
+        <>
+          <div ref={setSlot} />
+          <Popup entries={entry.items} width={width} side="bottom" align="start" offset={4} narrow={narrow} inlineContainer={slot} />
+        </>
+      ) : (
+        <Popup entries={entry.items} width={width} side="right" align="start" offset={4} narrow={false} />
+      )}
+    </BaseMenu.SubmenuRoot>
+  );
+}
+
+function Entries({ entries, width, narrow }: { entries: readonly MenuEntry[]; width: number; narrow: boolean }) {
   return entries.map((e, i) => {
     const key = e.id ?? String(i);
     switch (e.type) {
@@ -110,23 +145,13 @@ function Entries({ entries, width }: { entries: readonly MenuEntry[]; width: num
         return (
           <BaseMenu.Group key={key}>
             <BaseMenu.GroupLabel className="fa-glabel">{e.label}</BaseMenu.GroupLabel>
-            <Entries entries={e.items} width={width} />
+            <Entries entries={e.items} width={width} narrow={narrow} />
           </BaseMenu.Group>
         );
       case 'checkbox':
         return <CheckboxEntry key={key} entry={e} />;
       case 'submenu':
-        return (
-          <BaseMenu.SubmenuRoot key={key}>
-            <BaseMenu.SubmenuTrigger nativeButton render={<button type="button" />} className="fa-item" disabled={e.disabled}>
-              <span className="grow">{e.label}</span>
-              <span className="end">
-                <Icon name="chevR" />
-              </span>
-            </BaseMenu.SubmenuTrigger>
-            <Popup entries={e.items} width={width} side="right" align="start" offset={4} />
-          </BaseMenu.SubmenuRoot>
-        );
+        return <SubmenuEntry key={key} entry={e} width={width} narrow={narrow} />;
       default:
         return (
           <BaseMenu.Item
@@ -154,6 +179,8 @@ function Popup({
   align,
   offset,
   label,
+  narrow,
+  inlineContainer,
 }: {
   entries: readonly MenuEntry[];
   width: number;
@@ -161,12 +188,21 @@ function Popup({
   align: 'start' | 'center' | 'end';
   offset: number;
   label?: string;
+  narrow: boolean;
+  inlineContainer?: HTMLDivElement | null;
 }) {
+  const inline = inlineContainer !== undefined;
   return (
-    <BaseMenu.Portal>
-      <BaseMenu.Positioner side={side} align={align} sideOffset={offset} collisionPadding={8}>
-        <BaseMenu.Popup className="fa-pop" style={{ width }} aria-label={label}>
-          <Entries entries={entries} width={width} />
+    <BaseMenu.Portal container={inline ? inlineContainer : undefined}>
+      <BaseMenu.Positioner
+        side={side}
+        align={align}
+        sideOffset={offset}
+        collisionPadding={8}
+        style={inline ? { position: 'static', transform: 'none', marginTop: 4, marginBottom: 4 } : undefined}
+      >
+        <BaseMenu.Popup className="fa-pop" style={{ width: inline ? '100%' : width }} aria-label={label}>
+          <Entries entries={entries} width={width} narrow={narrow} />
         </BaseMenu.Popup>
       </BaseMenu.Positioner>
     </BaseMenu.Portal>
@@ -217,10 +253,11 @@ export function Menu({
     document.addEventListener('keydown', onKey, true);
     return () => document.removeEventListener('keydown', onKey, true);
   }, [isOpen]);
+  const narrow = useNarrowSubmenu(width);
   return (
     <BaseMenu.Root open={isOpen} onOpenChange={(next) => setOpen(next)}>
       <BaseMenu.Trigger render={trigger} />
-      <Popup entries={items} width={width} side={side} align={align} offset={4} label={label} />
+      <Popup entries={items} width={width} side={side} align={align} offset={4} label={label} narrow={narrow} />
     </BaseMenu.Root>
   );
 }
