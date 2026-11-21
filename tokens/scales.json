@@ -1,0 +1,257 @@
+{
+  "spacing": {
+    "tokens": [
+      {
+        "name": "space-1",
+        "value": "4px",
+        "usage": "Icon-to-text gap inside tags, gap between stacked strips."
+      },
+      {
+        "name": "space-2",
+        "value": "8px",
+        "usage": "Gap between buttons and chips; padding inside compact controls."
+      },
+      {
+        "name": "space-3",
+        "value": "12px",
+        "usage": "Input and button horizontal padding; row padding."
+      },
+      {
+        "name": "space-4",
+        "value": "16px",
+        "usage": "Panel padding; gap between sections in a column."
+      },
+      {
+        "name": "space-5",
+        "value": "20px",
+        "usage": "Dialog padding."
+      },
+      {
+        "name": "space-6",
+        "value": "24px",
+        "usage": "Gap between blocks on a page."
+      },
+      {
+        "name": "space-8",
+        "value": "32px",
+        "usage": "Empty-state vertical padding."
+      },
+      {
+        "name": "space-10",
+        "value": "40px",
+        "usage": "Page gutters on desktop."
+      },
+      {
+        "name": "space-12",
+        "value": "48px",
+        "usage": "Largest gap; page top padding."
+      },
+      {
+        "name": "space-row-x",
+        "value": "12px",
+        "usage": "Density: left/right padding of a list row inside a panel."
+      },
+      {
+        "name": "space-row-x-menu",
+        "value": "8px",
+        "usage": "Density: left/right padding of an item inside a floating layer (menu, palette, select)."
+      },
+      {
+        "name": "space-row-y",
+        "value": "8px",
+        "usage": "Density: top/bottom padding of a two-line row (= 2px transparent seam + 6px padding)."
+      },
+      {
+        "name": "space-row-seam",
+        "value": "2px",
+        "usage": "Density: transparent band at the top and bottom of every clickable row, so adjacent hover/selected fills never touch (4px gap between two fills)."
+      },
+      {
+        "name": "space-icon-gap",
+        "value": "12px",
+        "usage": "Density: 16px icon or agent slot to the row text."
+      },
+      {
+        "name": "space-trail-gap",
+        "value": "12px",
+        "usage": "Density: minimum gap from row text to the value, time or buttons on the right."
+      },
+      {
+        "name": "space-list-inset",
+        "value": "8px",
+        "usage": "Density: outer margin between a panel edge and its list rows, so a hover fill never touches the container edge."
+      },
+      {
+        "name": "space-sec-y",
+        "value": "12px",
+        "usage": "Density: space above a section head and below its last row; the hairline sits between two sections (text-to-line about 18px, as measured)."
+      },
+      {
+        "name": "space-demo",
+        "value": "24px",
+        "usage": "Density: gap between stacked demo blocks and page blocks; caption to its demo is at least 12."
+      }
+    ]
+  },
+  "radius": {
+    "tokens": [
+      {
+        "name": "radius-sm",
+        "value": "4px",
+        "usage": "Chips, tags, kbd, menu items, small icon buttons."
+      },
+      {
+        "name": "radius-md",
+        "value": "8px",
+        "usage": "Buttons, inputs, selects, thread rows, strips."
+      },
+      {
+        "name": "radius-lg",
+        "value": "12px",
+        "usage": "Popovers, dialogs, composer, panels."
+      },
+      {
+        "name": "radius-full",
+        "value": "999px",
+        "usage": "Status dots and the thin meter only. Not a fourth step for controls."
+      }
+    ]
+  },
+  "shadow": {
+    "note": "One tier, for floating layers only. Panels, rows and buttons carry no shadow; they use a 1px border.",
+    "tokens": [
+      {
+        "name": "shadow-overlay",
+        "value": {
+          "light": "0 8px 24px #1b1b1f26",
+          "solarized": "0 8px 24px #07364226",
+          "dark": "0 8px 24px #00000080",
+          "darcula": "0 8px 24px #00000080",
+          "one-dark": "0 8px 24px #00000080",
+          "dracula": "0 8px 24px #00000080",
+          "nord": "0 8px 24px #00000080",
+          "tokyo-night": "0 8px 24px #00000080"
+        },
+        "usage": "Menu, popover, command palette, hover card, tooltip, toast, dialog, drawer."
+      }
+    ]
+  },
+  "size": {
+    "note": "Control and row heights, all multiples of 4. Density follows the measured rhythm of mainstream desktop developer tools: clickable one-line rows 32, data-only rows 24, two-line rows 52, section heads 32.",
+    "tokens": [
+      {
+        "name": "ctrl-2xs",
+        "value": "20px",
+        "usage": "Category tags, count badges, kbd keycaps. Never a click target on its own."
+      },
+      {
+        "name": "ctrl-xs",
+        "value": "24px",
+        "usage": "Removable chips, segmented-control items, icon buttons inside rows."
+      },
+      {
+        "name": "ctrl-sm",
+        "value": "28px",
+        "usage": "Small buttons, icon buttons in rows, detail rows in panels."
+      },
+      {
+        "name": "ctrl",
+        "value": "32px",
+        "usage": "Default button, input, select, menu item, panel section head."
+      },
+      {
+        "name": "ctrl-lg",
+        "value": "40px",
+        "usage": "Large button, status strip, toast, table row, touch targets on phones."
+      },
+      {
+        "name": "row-1",
+        "value": "32px",
+        "usage": "One-line list row, the default for long lists (最近, 工作区): agent slot + title + time. Also the details-panel row: icon + 14px label + value."
+      },
+      {
+        "name": "row-2",
+        "value": "52px",
+        "usage": "Two-line row (ChangeRow, 等你处理 thread rows, expanded TaskRow, menu items with a description): 8 + 14/20 title + 12/16 second line + 8. Measured pitch in mainstream desktop developer tools is 50."
+      },
+      {
+        "name": "bp-composer-foot",
+        "value": "520px",
+        "usage": "Breakpoint (container width): below it the composer footer variant keeps only the agent slot of the model picker and folds effort + permission mode into a ⋯ menu."
+      },
+      {
+        "name": "bp-composer-account",
+        "value": "400px",
+        "usage": "Breakpoint (container width): below it the standard composer drops \"· 本机账号\" from the model picker."
+      },
+      {
+        "name": "bp-composer-icon",
+        "value": "300px",
+        "usage": "Breakpoint (container width): below it the standard composer model picker shows only the agent slot and chevron."
+      },
+      {
+        "name": "bp-batch",
+        "value": "320px",
+        "usage": "Breakpoint (container width): below it the thread batch bar keeps 已选 N 项 + 归档 and folds 移到分组 / 删除 into ⋯."
+      },
+      {
+        "name": "row-data",
+        "value": "24px",
+        "usage": "Data-only row that is not clickable: context breakdown lines, items inside an expanded group. Anything clickable is at least row-1 (32)."
+      },
+      {
+        "name": "row-3",
+        "value": "72px",
+        "usage": "Three-line result row (command palette): 2 seam + 8 + 20 title + 16 summary + 16 meta + 8 + 2 seam."
+      }
+    ]
+  },
+  "border": {
+    "tokens": [
+      {
+        "name": "bw-1",
+        "value": "1px",
+        "usage": "Every border and divider."
+      },
+      {
+        "name": "bw-focus",
+        "value": "2px",
+        "usage": "Focus ring thickness."
+      }
+    ]
+  },
+  "duration": {
+    "note": "prefers-reduced-motion: reduce collapses all of these to 0.",
+    "tokens": [
+      {
+        "name": "dur-fast",
+        "value": "100ms",
+        "usage": "Hover, press, border colour."
+      },
+      {
+        "name": "dur-base",
+        "value": "160ms",
+        "usage": "Popover, toast, drawer, strip enter."
+      },
+      {
+        "name": "dur-slow",
+        "value": "240ms",
+        "usage": "Panel collapse. Nothing is slower."
+      }
+    ]
+  },
+  "easing": {
+    "tokens": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.2, 0, 0, 1)",
+        "usage": "Things entering or responding to a pointer."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "usage": "Things moving between two resting places."
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "fleet-ade 组件库",
+  "version": 1,
+  "themes": [
+    {
+      "id": "light",
+      "name": "Light",
+      "kind": "light"
+    },
+    {
+      "id": "solarized",
+      "name": "Solarized",
+      "kind": "light"
+    },
+    {
+      "id": "dark",
+      "name": "Dark",
+      "kind": "dark"
+    },
+    {
+      "id": "darcula",
+      "name": "Darcula",
+      "kind": "dark"
+    },
+    {
+      "id": "one-dark",
+      "name": "One Dark",
+      "kind": "dark"
+    },
+    {
+      "id": "dracula",
+      "name": "Dracula",
+      "kind": "dark"
+    },
+    {
+      "id": "nord",
+      "name": "Nord",
+      "kind": "dark"
+    },
+    {
+      "id": "tokyo-night",
+      "name": "Tokyo Night",
+      "kind": "dark"
+    }
+  ]
+}

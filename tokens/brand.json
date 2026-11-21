@@ -1,0 +1,46 @@
+{
+  "tokens": [
+    {
+      "name": "brand-fleet",
+      "usage": "Project layer, fleet-ade: the accent of the product. Default project.",
+      "value": {
+        "light": "{palette-blue}",
+        "solarized": "{palette-blue}",
+        "dark": "{palette-blue}",
+        "darcula": "{palette-blue}",
+        "one-dark": "{palette-blue}",
+        "dracula": "{palette-blue}",
+        "nord": "{palette-blue}",
+        "tokyo-night": "{palette-blue}"
+      }
+    },
+    {
+      "name": "brand-ashare",
+      "usage": "Project layer, trading review app (`data-project=\"ashare\"`): indigo accent. Not red or green, which belong to market direction.",
+      "value": {
+        "light": "#5a5df0",
+        "solarized": "#4d51ef",
+        "dark": "#7f82f4",
+        "darcula": "#a0a2f6",
+        "one-dark": "#8c8ef5",
+        "dracula": "#9597f5",
+        "nord": "#a5a6f7",
+        "tokyo-night": "#8285f4"
+      }
+    },
+    {
+      "name": "brand-jiqun",
+      "usage": "Project layer, fleet dashboard (static page): teal accent.",
+      "value": {
+        "light": "#0e7d71",
+        "solarized": "#0d7469",
+        "dark": "#14b8a6",
+        "darcula": "#15beab",
+        "one-dark": "#14b8a6",
+        "dracula": "#14b8a6",
+        "nord": "#15c3b0",
+        "tokyo-night": "#14b8a6"
+      }
+    }
+  ]
+}

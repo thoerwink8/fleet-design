@@ -1,0 +1,286 @@
+{
+  "roles": [
+    {
+      "name": "bg",
+      "usage": "Main canvas: chat area, dialogs' inner fields, inputs. Text on it: `fg`, `fg-muted`, `accent`, `danger`.",
+      "value": {
+        "light": "{palette-n0}",
+        "solarized": "{palette-n0}",
+        "dark": "{palette-n0}",
+        "darcula": "{palette-n0}",
+        "one-dark": "{palette-n0}",
+        "dracula": "{palette-n0}",
+        "nord": "{palette-n0}",
+        "tokyo-night": "{palette-n0}"
+      }
+    },
+    {
+      "name": "panel",
+      "usage": "Sidebar, detail panel, table header, chip and tag fill, status strip. Text on it: `fg`, `fg-muted`, `accent`, `danger`.",
+      "value": {
+        "light": "{palette-n1}",
+        "solarized": "{palette-n1}",
+        "dark": "{palette-n1}",
+        "darcula": "{palette-n1}",
+        "one-dark": "{palette-n1}",
+        "dracula": "{palette-n1}",
+        "nord": "{palette-n1}",
+        "tokyo-night": "{palette-n1}"
+      }
+    },
+    {
+      "name": "overlay",
+      "usage": "Floating layers only: menu, select popover, command palette, hover card, tooltip, toast, dialog. Always with `border` and `shadow-overlay`. Text on it: `fg`, `fg-muted`.",
+      "value": {
+        "light": "{palette-n2}",
+        "solarized": "{palette-n2}",
+        "dark": "{palette-n2}",
+        "darcula": "{palette-n2}",
+        "one-dark": "{palette-n2}",
+        "dracula": "{palette-n2}",
+        "nord": "{palette-n2}",
+        "tokyo-night": "{palette-n2}"
+      }
+    },
+    {
+      "name": "fg",
+      "usage": "Body and control text on `bg`, `panel`, `overlay`, `selected`, `hover`.",
+      "value": {
+        "light": "{palette-n9}",
+        "solarized": "{palette-n9}",
+        "dark": "{palette-n9}",
+        "darcula": "{palette-n9}",
+        "one-dark": "{palette-n9}",
+        "dracula": "{palette-n9}",
+        "nord": "{palette-n9}",
+        "tokyo-night": "{palette-n9}"
+      }
+    },
+    {
+      "name": "fg-muted",
+      "usage": "Secondary text, placeholders, timestamps, icons that are not the point. Holds 4.5:1 on `bg`, `panel`, `overlay`, `selected`, `hover`.",
+      "value": {
+        "light": "{palette-n7}",
+        "solarized": "{palette-n7}",
+        "dark": "{palette-n7}",
+        "darcula": "{palette-n7}",
+        "one-dark": "{palette-n7}",
+        "dracula": "{palette-n7}",
+        "nord": "{palette-n7}",
+        "tokyo-night": "{palette-n7}"
+      }
+    },
+    {
+      "name": "border",
+      "usage": "Dividers and 1px outlines of inputs, cards, tables, popovers. Decorative; never the only signal of state.",
+      "value": {
+        "light": "{palette-n3}",
+        "solarized": "{palette-n3}",
+        "dark": "{palette-n3}",
+        "darcula": "{palette-n3}",
+        "one-dark": "{palette-n3}",
+        "dracula": "{palette-n3}",
+        "nord": "{palette-n3}",
+        "tokyo-night": "{palette-n3}"
+      }
+    },
+    {
+      "name": "accent",
+      "usage": "The one accent: primary button fill, links, active mark, focus ring, selected tint source. Also usable as text on `bg`/`panel`/`overlay` (4.5:1). Never for status.",
+      "value": {
+        "light": "{brand-fleet}",
+        "solarized": "{brand-fleet}",
+        "dark": "{brand-fleet}",
+        "darcula": "{brand-fleet}",
+        "one-dark": "{brand-fleet}",
+        "dracula": "{brand-fleet}",
+        "nord": "{brand-fleet}",
+        "tokyo-night": "{brand-fleet}"
+      }
+    },
+    {
+      "name": "on-accent",
+      "usage": "Text and icons on an `accent` fill. Equal to `bg` of the same theme.",
+      "value": {
+        "light": "{bg}",
+        "solarized": "{bg}",
+        "dark": "{bg}",
+        "darcula": "{bg}",
+        "one-dark": "{bg}",
+        "dracula": "{bg}",
+        "nord": "{bg}",
+        "tokyo-night": "{bg}"
+      }
+    },
+    {
+      "name": "success",
+      "usage": "Mark only (dot, icon, thin bar): running, connected, succeeded. 3:1 on `bg`/`panel`/`overlay`. The label next to it is `fg`.",
+      "value": {
+        "light": "{palette-green}",
+        "solarized": "{palette-green}",
+        "dark": "{palette-green}",
+        "darcula": "{palette-green}",
+        "one-dark": "{palette-green}",
+        "dracula": "{palette-green}",
+        "nord": "{palette-green}",
+        "tokyo-night": "{palette-green}"
+      }
+    },
+    {
+      "name": "warning",
+      "usage": "Amber. Reserved for two things: spending money and deleting something that cannot be recovered. Never for \"not logged in\", \"paused\", \"interrupted\" or \"attention\". Mark only, 3:1.",
+      "value": {
+        "light": "{palette-amber}",
+        "solarized": "{palette-amber}",
+        "dark": "{palette-amber}",
+        "darcula": "{palette-amber}",
+        "one-dark": "{palette-amber}",
+        "dracula": "{palette-amber}",
+        "nord": "{palette-amber}",
+        "tokyo-night": "{palette-amber}"
+      }
+    },
+    {
+      "name": "danger",
+      "usage": "Errors, interrupted or failed runs, destructive buttons. Usable as text (4.5:1) and as a fill under `on-danger`.",
+      "value": {
+        "light": "{palette-red}",
+        "solarized": "{palette-red}",
+        "dark": "{palette-red}",
+        "darcula": "{palette-red}",
+        "one-dark": "{palette-red}",
+        "dracula": "{palette-red}",
+        "nord": "{palette-red}",
+        "tokyo-night": "{palette-red}"
+      }
+    },
+    {
+      "name": "on-danger",
+      "usage": "Text and icons on a `danger` fill. Equal to `bg` of the same theme.",
+      "value": {
+        "light": "{bg}",
+        "solarized": "{bg}",
+        "dark": "{bg}",
+        "darcula": "{bg}",
+        "one-dark": "{bg}",
+        "dracula": "{bg}",
+        "nord": "{bg}",
+        "tokyo-night": "{bg}"
+      }
+    },
+    {
+      "name": "info",
+      "usage": "Neutral notices and \"needs you\" marks, including not logged in. Mark only, 3:1.",
+      "value": {
+        "light": "{palette-cyan}",
+        "solarized": "{palette-cyan}",
+        "dark": "{palette-cyan}",
+        "darcula": "{palette-cyan}",
+        "one-dark": "{palette-cyan}",
+        "dracula": "{palette-cyan}",
+        "nord": "{palette-cyan}",
+        "tokyo-night": "{palette-cyan}"
+      }
+    },
+    {
+      "name": "selected",
+      "usage": "Neutral wash (fg at about 9-12%) behind the selected row, active menu item, current thread, active command-palette row. Never tinted by the brand, so all three projects share it. `fg` and `fg-muted` hold 4.5:1 on it over `bg`, `panel` and `overlay`.",
+      "value": {
+        "light": "#1b1b1f17",
+        "solarized": "#07364217",
+        "dark": "#ececee1f",
+        "darcula": "#0000004d",
+        "one-dark": "#3e4451",
+        "dracula": "#44475a",
+        "nord": "#434c5e",
+        "tokyo-night": "#c0caf51f"
+      }
+    },
+    {
+      "name": "scrim",
+      "usage": "Dimming layer behind a drawer or modal on phones. Never carries text.",
+      "value": {
+        "light": "#1b1b1f3d",
+        "solarized": "#0736423d",
+        "dark": "#0000008f",
+        "darcula": "#0000008f",
+        "one-dark": "#0000008f",
+        "dracula": "#0000008f",
+        "nord": "#0000008f",
+        "tokyo-night": "#0000008f"
+      }
+    },
+    {
+      "name": "hover",
+      "usage": "Translucent fg wash laid over any surface on hover; two layers on press. Never replaces `selected`.",
+      "value": {
+        "light": "#1b1b1f0d",
+        "solarized": "#07364210",
+        "dark": "#ececee0f",
+        "darcula": "#a9b7c614",
+        "one-dark": "#abb2bf14",
+        "dracula": "#f8f8f214",
+        "nord": "#d8dee914",
+        "tokyo-night": "#c0caf514"
+      }
+    },
+    {
+      "name": "focus-ring",
+      "usage": "Keyboard focus outline, 2px, offset 2px. Same hue as `accent`; 3:1 on `bg`/`panel`.",
+      "value": {
+        "light": "{accent}",
+        "solarized": "{accent}",
+        "dark": "{accent}",
+        "darcula": "{accent}",
+        "one-dark": "{accent}",
+        "dracula": "{accent}",
+        "nord": "{accent}",
+        "tokyo-night": "{accent}"
+      }
+    }
+  ],
+  "market": [
+    {
+      "name": "up",
+      "usage": "Market direction: price or value rose. Default = `palette-green`; `data-project=\"ashare\"` switches it to `palette-red` (A-share convention). Always paired with ▲ and a plus sign. Not `success`.",
+      "value": {
+        "light": "{palette-green}",
+        "solarized": "{palette-green}",
+        "dark": "{palette-green}",
+        "darcula": "{palette-green}",
+        "one-dark": "{palette-green}",
+        "dracula": "{palette-green}",
+        "nord": "{palette-green}",
+        "tokyo-night": "{palette-green}"
+      }
+    },
+    {
+      "name": "down",
+      "usage": "Market direction: price or value fell. Default = `palette-red`; `data-project=\"ashare\"` switches it to `palette-green`. Always paired with ▼ and a minus sign. Not `danger`.",
+      "value": {
+        "light": "{palette-red}",
+        "solarized": "{palette-red}",
+        "dark": "{palette-red}",
+        "darcula": "{palette-red}",
+        "one-dark": "{palette-red}",
+        "dracula": "{palette-red}",
+        "nord": "{palette-red}",
+        "tokyo-night": "{palette-red}"
+      }
+    },
+    {
+      "name": "flat",
+      "usage": "Market direction: unchanged, or no data. Same as `fg-muted`, shown as an en dash.",
+      "value": {
+        "light": "{fg-muted}",
+        "solarized": "{fg-muted}",
+        "dark": "{fg-muted}",
+        "darcula": "{fg-muted}",
+        "one-dark": "{fg-muted}",
+        "dracula": "{fg-muted}",
+        "nord": "{fg-muted}",
+        "tokyo-night": "{fg-muted}"
+      }
+    }
+  ]
+}

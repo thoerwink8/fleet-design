@@ -1,0 +1,158 @@
+{
+  "tokens": [
+    {
+      "name": "palette-n0",
+      "usage": "Neutral 0, the lowest surface of the theme. Only `bg` should point here.",
+      "value": {
+        "light": "#ffffff",
+        "solarized": "#fdf6e3",
+        "dark": "#18181b",
+        "darcula": "#2b2b2b",
+        "one-dark": "#282c34",
+        "dracula": "#282a36",
+        "nord": "#2e3440",
+        "tokyo-night": "#1a1b26"
+      }
+    },
+    {
+      "name": "palette-n1",
+      "usage": "Neutral 1, one step above the canvas. Only `panel` points here.",
+      "value": {
+        "light": "#f5f5f6",
+        "solarized": "#eee8d5",
+        "dark": "#1f1f23",
+        "darcula": "#313335",
+        "one-dark": "#21252b",
+        "dracula": "#21222c",
+        "nord": "#3b4252",
+        "tokyo-night": "#16161e"
+      }
+    },
+    {
+      "name": "palette-n2",
+      "usage": "Neutral 2, floating-layer surface. Only `overlay` points here.",
+      "value": {
+        "light": "#ffffff",
+        "solarized": "#fdf6e3",
+        "dark": "#27272b",
+        "darcula": "#3c3f41",
+        "one-dark": "#2c313a",
+        "dracula": "#343746",
+        "nord": "#3b4252",
+        "tokyo-night": "#24283b"
+      }
+    },
+    {
+      "name": "palette-n3",
+      "usage": "Neutral 3, hairline strength. Only `border` points here.",
+      "value": {
+        "light": "#e2e2e6",
+        "solarized": "#93a1a155",
+        "dark": "#303036",
+        "darcula": "#323232",
+        "one-dark": "#3e4451",
+        "dracula": "#44475a",
+        "nord": "#4c566a",
+        "tokyo-night": "#3b4261"
+      }
+    },
+    {
+      "name": "palette-n7",
+      "usage": "Neutral 7, secondary text. Only `fg-muted` points here.",
+      "value": {
+        "light": "#5d5d66",
+        "solarized": "#4c5f65",
+        "dark": "#acacb3",
+        "darcula": "#b8b8b8",
+        "one-dark": "#afb3bc",
+        "dracula": "#b1b9d2",
+        "nord": "#b0c4d8",
+        "tokyo-night": "#a4a9c3"
+      }
+    },
+    {
+      "name": "palette-n9",
+      "usage": "Neutral 9, primary text. Only `fg` points here.",
+      "value": {
+        "light": "#1b1b1f",
+        "solarized": "#073642",
+        "dark": "#ececee",
+        "darcula": "#d9d9d9",
+        "one-dark": "#d0d4db",
+        "dracula": "#f8f8f2",
+        "nord": "#dfe4ed",
+        "tokyo-night": "#c0caf5"
+      }
+    },
+    {
+      "name": "palette-red",
+      "usage": "Red hue anchor of the theme, text-safe (4.5:1). Source of `danger` and, in A-share projects, of `up`.",
+      "value": {
+        "light": "#be2a2a",
+        "solarized": "#b5211e",
+        "dark": "#f38f8a",
+        "darcula": "#ff9a98",
+        "one-dark": "#ea9ba1",
+        "dracula": "#ff9b9b",
+        "nord": "#e1b5b9",
+        "tokyo-night": "#f88499"
+      }
+    },
+    {
+      "name": "palette-green",
+      "usage": "Green hue anchor of the theme, text-safe (4.5:1). Source of `success` and, by default, of `up`.",
+      "value": {
+        "light": "#1a7246",
+        "solarized": "#566300",
+        "dark": "#4cc38a",
+        "darcula": "#a6bc99",
+        "one-dark": "#98c379",
+        "dracula": "#50fa7b",
+        "nord": "#aec69a",
+        "tokyo-night": "#9ece6a"
+      }
+    },
+    {
+      "name": "palette-amber",
+      "usage": "Amber hue anchor. Source of `warning` only.",
+      "value": {
+        "light": "#a96100",
+        "solarized": "#9a7400",
+        "dark": "#e5a53d",
+        "darcula": "#ffc66d",
+        "one-dark": "#e5c07b",
+        "dracula": "#ffb86c",
+        "nord": "#ebcb8b",
+        "tokyo-night": "#e0af68"
+      }
+    },
+    {
+      "name": "palette-blue",
+      "usage": "Blue hue anchor. Source of fleet-ade's brand accent.",
+      "value": {
+        "light": "#2c5bd8",
+        "solarized": "#1e6ca4",
+        "dark": "#7c9cf5",
+        "darcula": "#89aeca",
+        "one-dark": "#61afef",
+        "dracula": "#bd93f9",
+        "nord": "#88c0d0",
+        "tokyo-night": "#7aa2f7"
+      }
+    },
+    {
+      "name": "palette-cyan",
+      "usage": "Cyan hue anchor. Source of `info`.",
+      "value": {
+        "light": "#0a739c",
+        "solarized": "#238780",
+        "dark": "#5bb4e0",
+        "darcula": "#6d9abd",
+        "one-dark": "#56b6c2",
+        "dracula": "#8be9fd",
+        "nord": "#81a1c1",
+        "tokyo-night": "#7dcfff"
+      }
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "tokens": [
+    {
+      "name": "data-1",
+      "usage": "Categorical series 1 (blue family). Only for legend dots, segmented bars and chart marks; never for text, controls or state, never the only carrier of meaning. 3:1 on `bg`/`panel`/`overlay`. Adjacent segments keep a 1px gap; the brand accent is not a series colour.",
+      "value": {
+        "light": "#0655f4",
+        "solarized": "#1d84cd",
+        "dark": "#4c7dfa",
+        "darcula": "#97aefc",
+        "one-dark": "#4c7dfa",
+        "dracula": "#1f89f9",
+        "nord": "#3d98fa",
+        "tokyo-night": "#4c7dfa"
+      }
+    },
+    {
+      "name": "data-2",
+      "usage": "Categorical series 2 (orange family). Only for legend dots, segmented bars and chart marks; never for text, controls or state, never the only carrier of meaning. 3:1 on `bg`/`panel`/`overlay`. Adjacent segments keep a 1px gap; the brand accent is not a series colour.",
+      "value": {
+        "light": "#82461c",
+        "solarized": "#9a3b04",
+        "dark": "#d96f12",
+        "darcula": "#f9901f",
+        "one-dark": "#d96f12",
+        "dracula": "#f97d10",
+        "nord": "#e27536",
+        "tokyo-night": "#d96f12"
+      }
+    },
+    {
+      "name": "data-3",
+      "usage": "Categorical series 3 (green family). Only for legend dots, segmented bars and chart marks; never for text, controls or state, never the only carrier of meaning. 3:1 on `bg`/`panel`/`overlay`. Adjacent segments keep a 1px gap; the brand accent is not a series colour.",
+      "value": {
+        "light": "#38946e",
+        "solarized": "#19764f",
+        "dark": "#4edaa0",
+        "darcula": "#3c9f76",
+        "one-dark": "#4edaa0",
+        "dracula": "#38c288",
+        "nord": "#35b680",
+        "tokyo-night": "#4edaa0"
+      }
+    },
+    {
+      "name": "data-4",
+      "usage": "Categorical series 4 (purple family). Only for legend dots, segmented bars and chart marks; never for text, controls or state, never the only carrier of meaning. 3:1 on `bg`/`panel`/`overlay`. Adjacent segments keep a 1px gap; the brand accent is not a series colour.",
+      "value": {
+        "light": "#6741aa",
+        "solarized": "#6b38c2",
+        "dark": "#c0a7ec",
+        "darcula": "#b56afb",
+        "one-dark": "#c0a7ec",
+        "dracula": "#c0a7ec",
+        "nord": "#a185d1",
+        "tokyo-night": "#c0a7ec"
+      }
+    },
+    {
+      "name": "data-5",
+      "usage": "Categorical series 5 (yellow family). Only for legend dots, segmented bars and chart marks; never for text, controls or state, never the only carrier of meaning. 3:1 on `bg`/`panel`/`overlay`. Adjacent segments keep a 1px gap; the brand accent is not a series colour.",
+      "value": {
+        "light": "#a58618",
+        "solarized": "#947b38",
+        "dark": "#eac86c",
+        "darcula": "#aa8e41",
+        "one-dark": "#eac86c",
+        "dracula": "#dfbf68",
+        "nord": "#d6bb71",
+        "tokyo-night": "#eac86c"
+      }
+    },
+    {
+      "name": "data-6",
+      "usage": "Categorical series 6 (pink family). Only for legend dots, segmented bars and chart marks; never for text, controls or state, never the only carrier of meaning. 3:1 on `bg`/`panel`/`overlay`. Adjacent segments keep a 1px gap; the brand accent is not a series colour.",
+      "value": {
+        "light": "#bc4e93",
+        "solarized": "#943872",
+        "dark": "#f910a4",
+        "darcula": "#dd88be",
+        "one-dark": "#f910a4",
+        "dracula": "#f91fa9",
+        "nord": "#f094ce",
+        "tokyo-night": "#f910a4"
+      }
+    }
+  ]
+}
