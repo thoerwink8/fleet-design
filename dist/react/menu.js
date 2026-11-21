@@ -53,7 +53,7 @@ export function Menu({ trigger, items, variant = 'plain', side = 'bottom', align
     // Single-letter shortcuts, live while the menu is open wherever focus is (the popup or its trigger).
     const latest = React.useRef({ items, setOpen });
     latest.current = { items, setOpen };
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         if (!isOpen)
             return;
         const onKey = (event) => {

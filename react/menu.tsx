@@ -203,7 +203,7 @@ export function Menu({
   // Single-letter shortcuts, live while the menu is open wherever focus is (the popup or its trigger).
   const latest = React.useRef({ items, setOpen });
   latest.current = { items, setOpen };
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (!isOpen) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey || event.key.length !== 1) return;

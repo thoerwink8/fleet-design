@@ -36,6 +36,7 @@ test('keyboard: open with Enter, arrows move, Enter runs and closes', async ({ p
 
 test('single-letter shortcuts work while the menu is open', async ({ page }) => {
   await trigger(page).click();
+  await expect(page.getByRole('menu', { name: '会话操作' })).toBeVisible();
   await page.keyboard.press('a');
   await expect(page.getByTestId('say')).toHaveText('已归档');
   await expect(page.getByRole('menu', { name: '会话操作' })).toBeHidden();
