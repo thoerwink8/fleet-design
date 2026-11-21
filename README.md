@@ -2,7 +2,7 @@
 
 Shared design tokens and component styles for three products that use one interface language: a coding-agent client ([fleet-ade](https://github.com/thoerwink8/fleet-ade)), a trading review app and a fleet dashboard. Behaviour comes from [Base UI](https://base-ui.com); this package owns the look: CSS variables and the `.fa-*` component classes. Each product writes its own business components on top.
 
-Version 0.2 ships tokens, component CSS, a Tailwind v4 theme, React components built on Base UI, and a preview site. What changed from 0.1 is under [Changes in 0.2.0](#changes-in-020).
+Version 0.2 ships tokens, component CSS, a Tailwind v4 theme, React components built on Base UI, and a preview site. What changed is under [Changes in 0.2.1](#changes-in-021) and [Changes in 0.2.0](#changes-in-020).
 
 ## Three layers
 
@@ -24,7 +24,7 @@ The source of every value is `tokens/*.json`. `pnpm build` generates `dist/token
 ## Install
 
 ```sh
-pnpm add github:thoerwink8/fleet-design#v0.2.0
+pnpm add github:thoerwink8/fleet-design#v0.2.1
 ```
 
 The package is not published to npm. `dist/` is committed, so installing from git needs no build step and no extra tools, on Windows and Linux alike (see [Why dist/ is committed](#why-dist-is-committed)).
@@ -74,7 +74,7 @@ Then `bg-panel`, `text-fg-muted`, `border-border`, `text-up`, `px-row-x`, `h-ctr
 `@fleet/design/react` wraps [Base UI](https://base-ui.com) parts for behaviour (keyboard, focus, ARIA) and maps a few `variant` / `size` props onto the same `.fa-*` classes. It adds no styles of its own and imports no CSS.
 
 ```sh
-pnpm add github:thoerwink8/fleet-design#v0.2.0 @base-ui/react react react-dom
+pnpm add github:thoerwink8/fleet-design#v0.2.1 @base-ui/react react react-dom
 ```
 
 Peer dependencies: `react` and `react-dom` 18.2+ or 19, `@base-ui/react` 1.9+ (built and tested with 1.9.0 and React 19.3). They are optional, so CSS-only projects get no warnings.
@@ -198,8 +198,12 @@ The 31 cards in `previews/cards/` load the built `dist/tokens.css` and `dist/sty
 
 1. Change `tokens/` or `styles/`, run `pnpm build` and `pnpm check`. If a value changed on purpose, run `pnpm baseline` and explain the change in the commit.
 2. Bump `version` in `package.json`, commit `dist/` with the change.
-3. Tag and push: `git tag v0.2.0 && git push origin main v0.2.0`.
-4. Consumers move to the tag: `pnpm add github:thoerwink8/fleet-design#v0.2.0`.
+3. Tag and push: `git tag v0.2.1 && git push origin main v0.2.1`.
+4. Consumers move to the tag: `pnpm add github:thoerwink8/fleet-design#v0.2.1`.
+
+## Changes in 0.2.1
+
+Fixed: narrow-width `Menu` submenus open inline below their trigger instead of overlapping parent rows; `Select` unmounts its portal after closing so no stale `role="listbox"` remains; `Dialog` and `ConfirmDialog` trap `Tab` and `Shift+Tab` synchronously inside the dialog; `Toast` uses a circle-with-`i` icon for `info` and a triangle `!` icon for `warning` so all four kinds are distinct in shape.
 
 ## Changes in 0.2.0
 
