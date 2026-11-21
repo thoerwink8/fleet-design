@@ -1,33 +1,33 @@
 /* fleet-ade 组件库 — component styles. Every colour is a role token (tokens.css); every length is a token or a multiple of 4. */
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--fg);font:400 15px/24px var(--font-sans);-webkit-font-smoothing:antialiased}
+body{background:var(--fa-bg);color:var(--fa-fg);font:400 15px/24px var(--fa-font-sans);-webkit-font-smoothing:antialiased}
 /* Reset native controls once: every component then states its own padding. Without this a bare <button> keeps the UA's 1px 6px and an <input> keeps 1px 2px. */
 button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;letter-spacing:inherit}
 /* [hidden] always wins over a component's display (a popover with display:grid must still hide) */
 [hidden]{display:none!important}
-.fa-stage{padding:var(--space-4);display:flex;flex-direction:column;gap:var(--space-4)}
-.fa-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2)}
-.fa-col{display:flex;flex-direction:column;gap:var(--space-2)}
-.fa-cap{font:400 12px/16px var(--font-sans);color:var(--fg-muted)}
-.fa-mono{font-family:var(--font-mono)}
+.fa-stage{padding:var(--fa-space-4);display:flex;flex-direction:column;gap:var(--fa-space-4)}
+.fa-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--fa-space-2)}
+.fa-col{display:flex;flex-direction:column;gap:var(--fa-space-2)}
+.fa-cap{font:400 12px/16px var(--fa-font-sans);color:var(--fa-fg-muted)}
+.fa-mono{font-family:var(--fa-font-mono)}
 /* numbers (counts, sizes, money, %, times) are sans with tabular figures and right-aligned in columns; mono is only for code, commands, paths, branches, IDs */
-.fa-num{font-family:var(--font-sans);font-variant-numeric:tabular-nums}
-.fa-muted{color:var(--fg-muted)}
-.fa-panel{background:var(--panel);border:var(--bw-1) solid var(--border);border-radius:var(--radius-lg)}
+.fa-num{font-family:var(--fa-font-sans);font-variant-numeric:tabular-nums}
+.fa-muted{color:var(--fa-fg-muted)}
+.fa-panel{background:var(--fa-panel);border:var(--fa-bw-1) solid var(--fa-border);border-radius:var(--fa-radius-lg)}
 .fa-ic{width:16px;height:16px;flex:none;display:inline-block;vertical-align:middle}
 .fa-ic--lg{width:20px;height:20px}
-:focus-visible{outline:var(--bw-focus) solid var(--focus-ring);outline-offset:2px}
+:focus-visible{outline:var(--fa-bw-focus) solid var(--fa-focus-ring);outline-offset:2px}
 /* Two layers of the hover wash: the quiet fill for tags, chips, kbd and quiet counts. Defined wherever a theme is set so it follows that theme. */
-:root,[data-theme]{--wash2:linear-gradient(var(--hover),var(--hover)),linear-gradient(var(--hover),var(--hover))}
-.fa-hv{--hv:linear-gradient(var(--hover),var(--hover))}
-.fa-btn,.fa-seg button,.fa-item,.fa-icon-btn,.fa-trow{--hv:linear-gradient(var(--hover),var(--hover))}
-.fa-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:var(--ctrl-2xs);padding:0 var(--space-1);border-radius:var(--radius-sm);background-image:var(--wash2);font:400 12px/16px var(--font-sans);font-variant-numeric:tabular-nums;color:var(--fg-muted);white-space:nowrap}
+:root,[data-theme]{--fa-wash2:linear-gradient(var(--fa-hover),var(--fa-hover)),linear-gradient(var(--fa-hover),var(--fa-hover))}
+.fa-hv{--fa-hv:linear-gradient(var(--fa-hover),var(--fa-hover))}
+.fa-btn,.fa-seg button,.fa-item,.fa-icon-btn,.fa-trow{--fa-hv:linear-gradient(var(--fa-hover),var(--fa-hover))}
+.fa-kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:var(--fa-ctrl-2xs);padding:0 var(--fa-space-1);border-radius:var(--fa-radius-sm);background-image:var(--fa-wash2);font:400 12px/16px var(--fa-font-sans);font-variant-numeric:tabular-nums;color:var(--fa-fg-muted);white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
-.fa-panel,.fa-dp,.fa-app__side,.fa-drawer{--ring:var(--panel)}
+.fa-panel,.fa-dp,.fa-app__side,.fa-drawer{--fa-ring:var(--fa-panel)}
 /* native scrollbars and form controls follow the theme */
 [data-theme=light],[data-theme=solarized]{color-scheme:light}
 [data-theme=dark],[data-theme=darcula],[data-theme=one-dark],[data-theme=dracula],[data-theme=nord],[data-theme=tokyo-night]{color-scheme:dark}
-.fa-stage{gap:var(--space-demo)}
+.fa-stage{gap:var(--fa-space-demo)}
 /* caption or label directly above its demo: 12 (column gap 8 + 4) */
-.fa-col>.fa-cap:not(:last-child),.fa-col>.fa-lbl:not(:last-child){margin-bottom:var(--space-1)}
+.fa-col>.fa-cap:not(:last-child),.fa-col>.fa-lbl:not(:last-child){margin-bottom:var(--fa-space-1)}

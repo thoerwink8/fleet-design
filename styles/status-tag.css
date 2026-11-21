@@ -1,15 +1,15 @@
 /* Session status: dot + 12px word, no fill, no outline. The dot carries the colour; the word is always fg-muted. */
-.fa-status{display:inline-flex;align-items:center;gap:var(--space-1);font:400 12px/16px var(--font-sans);color:var(--fg-muted);white-space:nowrap;flex:none}
+.fa-status{display:inline-flex;align-items:center;gap:var(--fa-space-1);font:400 12px/16px var(--fa-font-sans);color:var(--fa-fg-muted);white-space:nowrap;flex:none}
 /* Category tag (文件, PR, 工作区): 20 high, quiet wash, no outline. Not for session status: that is .fa-status. */
-.fa-tag{display:inline-flex;align-items:center;gap:var(--space-1);height:var(--ctrl-2xs);padding:0 var(--space-2);border-radius:var(--radius-sm);font:400 12px/16px var(--font-sans);color:var(--fg);background-color:transparent;background-image:var(--wash2);white-space:nowrap;flex:none}
+.fa-tag{display:inline-flex;align-items:center;gap:var(--fa-space-1);height:var(--fa-ctrl-2xs);padding:0 var(--fa-space-2);border-radius:var(--fa-radius-sm);font:400 12px/16px var(--fa-font-sans);color:var(--fa-fg);background-color:transparent;background-image:var(--fa-wash2);white-space:nowrap;flex:none}
 .fa-tag .fa-ic{width:12px;height:12px}
-.fa-dot{width:8px;height:8px;border-radius:var(--radius-full);flex:none;background:var(--fg-muted)}
-.fa-dot--running{background:var(--success)}
-.fa-dot--needs{background:var(--info)}
-.fa-dot--error{background:var(--danger)}
-.fa-dot--new{background:var(--accent)}
-.fa-dot--ring{background:transparent;box-shadow:inset 0 0 0 var(--bw-1) var(--fg-muted)}
-.fa-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 var(--space-1);border-radius:var(--radius-sm);background:var(--accent);color:var(--on-accent);font:400 12px/16px var(--font-sans);font-variant-numeric:tabular-nums}
-.fa-count--quiet{background-color:transparent;background-image:var(--wash2);color:var(--fg-muted)}
-.fa-sig{display:inline-flex;gap:var(--space-1);align-items:center}
-.fa-sig i{width:8px;height:8px;border-radius:var(--radius-sm);background:var(--fg-muted)}
+.fa-dot{width:8px;height:8px;border-radius:var(--fa-radius-full);flex:none;background:var(--fa-fg-muted)}
+.fa-dot--running{background:var(--fa-success)}
+.fa-dot--needs{background:var(--fa-info)}
+.fa-dot--error{background:var(--fa-danger)}
+.fa-dot--new{background:var(--fa-accent)}
+.fa-dot--ring{background:transparent;box-shadow:inset 0 0 0 var(--fa-bw-1) var(--fa-fg-muted)}
+.fa-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 var(--fa-space-1);border-radius:var(--fa-radius-sm);background:var(--fa-accent);color:var(--fa-on-accent);font:400 12px/16px var(--fa-font-sans);font-variant-numeric:tabular-nums}
+.fa-count--quiet{background-color:transparent;background-image:var(--fa-wash2);color:var(--fa-fg-muted)}
+.fa-sig{display:inline-flex;gap:var(--fa-space-1);align-items:center}
+.fa-sig i{width:8px;height:8px;border-radius:var(--fa-radius-sm);background:var(--fa-fg-muted)}

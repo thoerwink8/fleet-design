@@ -1,64 +1,67 @@
-/* Tailwind v4 theme for fleet-design. Import after tailwindcss and dist/tokens.css:
+/* Tailwind v4 theme for a project that takes its whole scale from fleet-design. It clears Tailwind's default
+   colours, radii, fonts, weights, text sizes and shadows, so only on-scale utilities exist (bg-panel, text-sm, rounded-md).
+   Import after tailwindcss and the tokens:
    @import "tailwindcss"; @import "@fleet/design/tokens.css"; @import "@fleet/design/tailwind";
-   Utilities resolve to the role variables, so data-theme and data-project keep working. */
+   A project that already has its own Tailwind theme imports "@fleet/design/tailwind/extend" instead.
+   Utilities resolve to the --fa-* variables, so data-theme and data-project keep working. */
 @theme inline {
   --color-*: initial;
-  --color-bg: var(--bg);
-  --color-panel: var(--panel);
-  --color-overlay: var(--overlay);
-  --color-fg: var(--fg);
-  --color-fg-muted: var(--fg-muted);
-  --color-border: var(--border);
-  --color-accent: var(--accent);
-  --color-on-accent: var(--on-accent);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-danger: var(--danger);
-  --color-on-danger: var(--on-danger);
-  --color-info: var(--info);
-  --color-selected: var(--selected);
-  --color-hover: var(--hover);
-  --color-scrim: var(--scrim);
-  --color-ring: var(--focus-ring);
-  --color-up: var(--up);
-  --color-down: var(--down);
-  --color-flat: var(--flat);
-  --color-data-1: var(--data-1);
-  --color-data-2: var(--data-2);
-  --color-data-3: var(--data-3);
-  --color-data-4: var(--data-4);
-  --color-data-5: var(--data-5);
-  --color-data-6: var(--data-6);
+  --color-bg: var(--fa-bg);
+  --color-panel: var(--fa-panel);
+  --color-overlay: var(--fa-overlay);
+  --color-fg: var(--fa-fg);
+  --color-fg-muted: var(--fa-fg-muted);
+  --color-border: var(--fa-border);
+  --color-accent: var(--fa-accent);
+  --color-on-accent: var(--fa-on-accent);
+  --color-success: var(--fa-success);
+  --color-warning: var(--fa-warning);
+  --color-danger: var(--fa-danger);
+  --color-on-danger: var(--fa-on-danger);
+  --color-info: var(--fa-info);
+  --color-selected: var(--fa-selected);
+  --color-hover: var(--fa-hover);
+  --color-scrim: var(--fa-scrim);
+  --color-ring: var(--fa-focus-ring);
+  --color-up: var(--fa-up);
+  --color-down: var(--fa-down);
+  --color-flat: var(--fa-flat);
+  --color-data-1: var(--fa-data-1);
+  --color-data-2: var(--fa-data-2);
+  --color-data-3: var(--fa-data-3);
+  --color-data-4: var(--fa-data-4);
+  --color-data-5: var(--fa-data-5);
+  --color-data-6: var(--fa-data-6);
 
   --spacing: 4px;
-  --spacing-row-x: var(--space-row-x);
-  --spacing-row-x-menu: var(--space-row-x-menu);
-  --spacing-row-y: var(--space-row-y);
-  --spacing-icon-gap: var(--space-icon-gap);
-  --spacing-trail-gap: var(--space-trail-gap);
-  --spacing-list-inset: var(--space-list-inset);
-  --spacing-sec-y: var(--space-sec-y);
-  --spacing-demo: var(--space-demo);
-  --spacing-ctrl-2xs: var(--ctrl-2xs);
-  --spacing-ctrl-xs: var(--ctrl-xs);
-  --spacing-ctrl-sm: var(--ctrl-sm);
-  --spacing-ctrl: var(--ctrl);
-  --spacing-ctrl-lg: var(--ctrl-lg);
-  --spacing-row-1: var(--row-1);
-  --spacing-row-2: var(--row-2);
-  --spacing-row-3: var(--row-3);
-  --spacing-row-data: var(--row-data);
-  --spacing-row-table: var(--row-table);
+  --spacing-row-x: var(--fa-space-row-x);
+  --spacing-row-x-menu: var(--fa-space-row-x-menu);
+  --spacing-row-y: var(--fa-space-row-y);
+  --spacing-icon-gap: var(--fa-space-icon-gap);
+  --spacing-trail-gap: var(--fa-space-trail-gap);
+  --spacing-list-inset: var(--fa-space-list-inset);
+  --spacing-sec-y: var(--fa-space-sec-y);
+  --spacing-demo: var(--fa-space-demo);
+  --spacing-ctrl-2xs: var(--fa-ctrl-2xs);
+  --spacing-ctrl-xs: var(--fa-ctrl-xs);
+  --spacing-ctrl-sm: var(--fa-ctrl-sm);
+  --spacing-ctrl: var(--fa-ctrl);
+  --spacing-ctrl-lg: var(--fa-ctrl-lg);
+  --spacing-row-1: var(--fa-row-1);
+  --spacing-row-2: var(--fa-row-2);
+  --spacing-row-3: var(--fa-row-3);
+  --spacing-row-data: var(--fa-row-data);
+  --spacing-row-table: var(--fa-row-table);
 
   --radius-*: initial;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-full: 999px;
+  --radius-sm: var(--fa-radius-sm);
+  --radius-md: var(--fa-radius-md);
+  --radius-lg: var(--fa-radius-lg);
+  --radius-full: var(--fa-radius-full);
 
   --font-*: initial;
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --font-sans: var(--fa-font-sans);
+  --font-mono: var(--fa-font-mono);
   --font-weight-*: initial;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -76,5 +79,5 @@
   --text-xl--line-height: 28px;
 
   --shadow-*: initial;
-  --shadow-overlay: var(--shadow-overlay);
+  --shadow-overlay: var(--fa-shadow-overlay);
 }

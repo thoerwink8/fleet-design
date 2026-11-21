@@ -4,7 +4,7 @@
     <div class="fa-seg" role="radiogroup" aria-label="演示状态" id="mode"><button role="radio" aria-checked="true" data-m="ok">正常</button><button role="radio" aria-checked="false" data-m="empty">空</button><button role="radio" aria-checked="false" data-m="err">出错</button></div>
     <div class="fa-seg" role="radiogroup" aria-label="上下文数据深度" id="depth"><button role="radio" aria-checked="true" data-d="full">完整明细</button><button role="radio" aria-checked="false" data-d="gen">通用四段</button></div>
   </div>
-  <div style="width:360px;max-width:100%;border-left:var(--bw-1) solid var(--border)"><div class="fa-side" id="side"></div></div>
+  <div style="width:360px;max-width:100%;border-left:var(--fa-bw-1) solid var(--fa-border)"><div class="fa-side" id="side"></div></div>
   <div class="fa-hint" id="say" role="status">Tab 走到每一行；Enter 打开；分区头的箭头可收起</div>
 </div>
 <script>
@@ -18,7 +18,7 @@ const moreBtn = (k, n, total) => total > n ? '<button class="fa-more" data-more=
 const err = (what) => '<div class="fa-sec__err">' + ic('alert') + '<span style="flex:1;min-width:0">' + what + '没取到</span><button class="fa-btn fa-btn--sm" data-retry>重试</button></div>';
 function draw() {
   const E = mode === 'empty', X = mode === 'err';
-  const env = '<div class="fa-kv"><span>' + ic('laptop') + '本电脑</span><button class="fa-link" style="font:400 14px/20px var(--font-sans)">切换</button></div>'
+  const env = '<div class="fa-kv"><span>' + ic('laptop') + '本电脑</span><button class="fa-link" style="font:400 14px/20px var(--fa-font-sans)">切换</button></div>'
     + '<div class="fa-kv"><span>' + ic('folder') + 'fleet-ade</span><span class="v v--mono" title="C:\\src\\acme-app">C:\\src\\acme-app</span></div>'
     + '<div class="fa-kv"><span>' + ic('branch') + '<span class="fa-mono" style="font-size:14px">local/42-login-fix</span></span><span class="v">领先 2</span></div>';
   const who = E ? '<div class="fa-sec__note">只有你和主会话。派出子任务后，参与的智能体会列在这里</div>' : WHO.slice(0, more.who ? 9 : 2).map(w => '<div class="fa-kv"><span><span class="fa-agent">' + w[0] + (w[2] ? '<span class="fa-dot fa-dot--' + w[2] + '"></span>' : '') + '</span>' + w[1] + '</span><span class="v">' + w[3] + '</span></div>').join('') + moreBtn('who', 2, WHO.length);

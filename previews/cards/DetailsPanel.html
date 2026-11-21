@@ -2,21 +2,21 @@
   <div class="fa-cap">做会话页右侧栏时用 fa-dp--side：没有外框，分区之间只用细线。全库密度基线：分区头 32（14 号、权重 500），每行 32 =「16 图标 + 14 号标签 + 右侧数值」。分区可收起（Enter / 空格），收起状态记在本机</div>
   <div class="fa-row" style="gap:24px;align-items:flex-start">
   <div class="fa-col" style="gap:8px;width:340px;max-width:100%"><span class="fa-lbl">A 完整明细：只有能报出分类明细的智能体（如 Claude Code）才显示这一版</span>
-  <div style="border-left:1px solid var(--border)"><div class="fa-dp fa-dp--side" id="dpA">
-    <details open><summary><span class="chev" data-ic="chevR"></span>环境</summary><div class="body">
-      <div class="fa-kv"><span><span data-ic="laptop"></span>本电脑</span><button class="fa-link" style="font:400 14px/20px var(--font-sans)">切换</button></div>
+  <div style="border-left:1px solid var(--fa-border)"><div class="fa-dp fa-dp--side" id="dpA">
+    <details open><summary><span class="chev" data-ic="chevR"></span>环境</summary><div class="fa-dp__body">
+      <div class="fa-kv"><span><span data-ic="laptop"></span>本电脑</span><button class="fa-link" style="font:400 14px/20px var(--fa-font-sans)">切换</button></div>
       <div class="fa-kv"><span><span data-ic="folder"></span>fleet-ade</span><span class="v v--mono" title="C:\src\acme-app">C:\src\acme-app</span></div>
       <div class="fa-kv"><span><span data-ic="branch"></span>local/42-login-fix</span><span class="v">领先 2</span></div></div></details>
-    <details open><summary><span class="chev" data-ic="chevR"></span>上下文</summary><div class="body" id="ctxA"></div></details>
-    <div id="conn" style="border-bottom:1px solid var(--border)"></div>
-    <details open><summary><span class="chev" data-ic="chevR"></span>输出内容</summary><div class="body">
+    <details open><summary><span class="chev" data-ic="chevR"></span>上下文</summary><div class="fa-dp__body" id="ctxA"></div></details>
+    <div id="conn" style="border-bottom:1px solid var(--fa-border)"></div>
+    <details open><summary><span class="chev" data-ic="chevR"></span>输出内容</summary><div class="fa-dp__body">
       <div class="fa-kv"><span><span data-ic="file"></span>session.ts</span><span class="v">文件</span></div>
       <div class="fa-kv"><span><span data-ic="link"></span>#42 修复登录超时</span><span class="v">PR</span></div>
       <div class="fa-kv"><span><span data-ic="file"></span>login-timeout.md</span><span class="v">文档</span></div>
       <button class="fa-more" style="margin-left:-8px">显示更多</button></div></details>
   </div></div></div>
   <div class="fa-col" style="gap:8px;width:340px;max-width:100%"><span class="fa-lbl">B 通用四段：其他智能体只报得出缓存前缀 / 本轮新增 / 最新输出 / 剩余可用，没有可展开的组</span>
-  <div style="border-left:1px solid var(--border)"><div class="fa-dp fa-dp--side"><details open><summary><span class="chev" data-ic="chevR"></span>上下文<span class="aside">Codex</span></summary><div class="body" id="ctxB"></div></details></div></div></div>
+  <div style="border-left:1px solid var(--fa-border)"><div class="fa-dp fa-dp--side"><details open><summary><span class="chev" data-ic="chevR"></span>上下文<span class="aside">Codex</span></summary><div class="fa-dp__body" id="ctxB"></div></details></div></div></div>
   </div>
 </div>
 <script>

@@ -38,14 +38,14 @@ const MEM_FILES = [['C:\\Users\\dev\\.claude\\CLAUDE.md', 6482], ['C:\\src\\acme
 const AGENTS6 = [['general-purpose', 168], ['Explore', 87], ['Plan', 87], ['code-reviewer', 142], ['docs-writer', 56], ['statusline-setup', 31]];
 
 function swatch(cls, kind) {
-  if (kind === 'free' || kind === 'lazy') return '<span class="sw fa-dot--ring" style="box-shadow:inset 0 0 0 1px var(--fg-muted)"></span>';
-  if (kind === 'buf') return '<span class="sw" style="background:var(--border);box-shadow:inset 0 0 0 1px var(--fg-muted)"></span>';
+  if (kind === 'free' || kind === 'lazy') return '<span class="sw fa-dot--ring" style="box-shadow:inset 0 0 0 1px var(--fa-fg-muted)"></span>';
+  if (kind === 'buf') return '<span class="sw" style="background:var(--fa-border);box-shadow:inset 0 0 0 1px var(--fa-fg-muted)"></span>';
   return '<span class="sw ' + cls + '"></span>';
 }
 function ctxBar(rows, cap, opts = {}) {
   const segs = rows.filter((r) => r[3] !== 'free' && r[3] !== 'lazy');
   return '<div class="fa-meter fa-meter--seg" role="img" aria-label="' + esc(opts.label || '上下文占用') + '" style="margin:4px 8px 8px">'
-    + segs.map((r) => '<i class="' + (r[3] === 'buf' ? '' : r[2]) + '" style="width:' + (r[1] / cap * 100).toFixed(2) + '%;' + (r[3] === 'buf' ? 'background:var(--border)' : '') + '"></i>').join('') + '<i></i></div>';
+    + segs.map((r) => '<i class="' + (r[3] === 'buf' ? '' : r[2]) + '" style="width:' + (r[1] / cap * 100).toFixed(2) + '%;' + (r[3] === 'buf' ? 'background:var(--fa-border)' : '') + '"></i>').join('') + '<i></i></div>';
 }
 function grp(id, name, items, maxChars) {
   return '<div class="fa-grp"><button class="fa-grp__h" aria-expanded="false" aria-controls="' + id + '"><span class="chev">' + ic('chevR') + '</span><span class="x">' + name + '</span><span class="n">' + items.length + '</span></button>'

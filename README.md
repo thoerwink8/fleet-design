@@ -6,18 +6,18 @@ Version 0.2 ships tokens, component CSS, a Tailwind v4 theme, React components b
 
 ## Three layers
 
-| Layer             | Variables                                                                                                                                                                                                      | Who uses it                                                                                                                            |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| 1. Base palette   | `--palette-n0` … `--palette-n9`, `--palette-red`, `-green`, `-amber`, `-blue`, `-cyan`                                                                                                                         | Only the semantic layer. Changing theme swaps this layer.                                                                              |
-| 2. Semantic roles | `--bg`, `--panel`, `--overlay`, `--fg`, `--fg-muted`, `--border`, `--accent`, `--on-accent`, `--success`, `--warning`, `--danger`, `--on-danger`, `--info`, `--selected`, `--hover`, `--scrim`, `--focus-ring` | Components and pages. Never use `--palette-*` directly.                                                                                |
-| 3. Brand          | `--brand-fleet`, `--brand-trade`, `--brand-board`                                                                                                                                                              | Re-points `--accent` per product; `--focus-ring` follows it. `--on-accent`, `--selected` and `--hover` stay the same in every product. |
+| Layer             | Variables                                                                                                                                                                                                                                                         | Who uses it                                                                                                                                           |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Base palette   | `--fa-palette-n0` … `--fa-palette-n9`, `--fa-palette-red`, `-green`, `-amber`, `-blue`, `-cyan`                                                                                                                                                                   | Only the semantic layer. Changing theme swaps this layer.                                                                                             |
+| 2. Semantic roles | `--fa-bg`, `--fa-panel`, `--fa-overlay`, `--fa-fg`, `--fa-fg-muted`, `--fa-border`, `--fa-accent`, `--fa-on-accent`, `--fa-success`, `--fa-warning`, `--fa-danger`, `--fa-on-danger`, `--fa-info`, `--fa-selected`, `--fa-hover`, `--fa-scrim`, `--fa-focus-ring` | Components and pages. Never use `--fa-palette-*` directly.                                                                                            |
+| 3. Brand          | `--fa-brand-fleet`, `--fa-brand-trade`, `--fa-brand-board`                                                                                                                                                                                                        | Re-points `--fa-accent` per product; `--fa-focus-ring` follows it. `--fa-on-accent`, `--fa-selected` and `--fa-hover` stay the same in every product. |
 
 Two more colour groups sit beside the roles:
 
-- **Market direction** `--up`, `--down`, `--flat`: which way a number moved. Not the same as `--success` / `--danger` (the state of an operation). The trading brand flips them to red-up / green-down.
-- **Data categories** `--data-1` … `--data-6`: legend dots, segment bars and chart marks only. They say "which category", never good or bad.
+- **Market direction** `--fa-up`, `--fa-down`, `--fa-flat`: which way a number moved. Not the same as `--fa-success` / `--fa-danger` (the state of an operation). The trading brand flips them to red-up / green-down.
+- **Data categories** `--fa-data-1` … `--fa-data-6`: legend dots, segment bars and chart marks only. They say "which category", never good or bad.
 
-Scales: spacing `--space-1` … `--space-12` plus the density tokens (`--space-row-x`, `--space-icon-gap`, …), radius `--radius-sm|md|lg|full`, control and row heights `--ctrl-*`, `--row-*`, breakpoints `--bp-*`, durations `--dur-*`, easings `--ease-*`, one shadow `--shadow-overlay`, and type classes `.caption`, `.control`, `.control-strong`, `.body`, `.title`, `.heading`, `.code`, `.code-sm`.
+Scales: spacing `--fa-space-1` … `--fa-space-12` plus the density tokens (`--fa-space-row-x`, `--fa-space-icon-gap`, …), radius `--fa-radius-sm|md|lg|full`, control and row heights `--fa-ctrl-*`, `--fa-row-*`, breakpoints `--fa-bp-*`, durations `--fa-dur-*`, easings `--fa-ease-*`, one shadow `--fa-shadow-overlay`, and type classes `.fa-caption`, `.fa-control`, `.fa-control-strong`, `.fa-body`, `.fa-title`, `.fa-heading`, `.fa-code`, `.fa-code-sm`.
 
 The source of every value is `tokens/*.json`. `pnpm build` generates `dist/tokens.css` and `dist/tokens.json` from it.
 
@@ -56,7 +56,7 @@ The package is not published to npm. `dist/` is committed, so installing from gi
 </html>
 ```
 
-With a bundler: `import '@fleet/design/tokens.css'; import '@fleet/design/styles.css';` once at the app entry. Your own CSS uses roles only: `background: var(--panel); color: var(--fg-muted); padding: var(--space-4);`.
+With a bundler: `import '@fleet/design/tokens.css'; import '@fleet/design/styles.css';` once at the app entry. Your own CSS uses roles only: `background: var(--fa-panel); color: var(--fa-fg-muted); padding: var(--fa-space-4);`.
 
 ### Tailwind v4
 
@@ -67,7 +67,7 @@ With a bundler: `import '@fleet/design/tokens.css'; import '@fleet/design/styles
 @import "@fleet/design/tailwind";
 ```
 
-Then `bg-panel`, `text-fg-muted`, `border-border`, `text-up`, `px-row-x`, `h-ctrl`, `text-sm`, `rounded-md`, `font-medium` resolve to the variables. Tailwind's default palette, the 13/16/24px sizes and weights 600+ are removed, so off-scale classes do not exist. `tokens.css` alone is enough for the variables, the eight themes and the brand switch. Import `tokens.css` unlayered as shown: the theme refers to `--font-sans`, `--font-mono` and `--shadow-overlay` by the same names. Tailwind is optional; projects without it use the plain CSS above.
+Then `bg-panel`, `text-fg-muted`, `border-border`, `text-up`, `px-row-x`, `h-ctrl`, `text-sm`, `rounded-md`, `font-medium` resolve to the variables. Tailwind's default palette, the 13/16/24px sizes and weights 600+ are removed, so off-scale classes do not exist. `tokens.css` alone is enough for the variables, the eight themes and the brand switch. Import `tokens.css` unlayered as shown: the theme refers to `--fa-font-sans`, `--fa-font-mono` and `--fa-shadow-overlay` by the same names. Tailwind is optional; projects without it use the plain CSS above.
 
 ### React
 
@@ -132,15 +132,15 @@ Set two attributes on the root element:
 
 Each theme is either light or dark; to follow the system, pick one light and one dark theme and switch `data-theme` on `prefers-color-scheme`. Native scrollbars and form controls follow through `color-scheme`.
 
-| `data-project` | product             | accent                   | market colours     |
-| -------------- | ------------------- | ------------------------ | ------------------ |
-| none           | coding-agent client | `--brand-fleet` (blue)   | up green, down red |
-| `trade`        | trading review app  | `--brand-trade` (indigo) | up red, down green |
-| `board`        | fleet dashboard     | `--brand-board` (teal)   | up green, down red |
+| `data-project` | product             | accent                      | market colours     |
+| -------------- | ------------------- | --------------------------- | ------------------ |
+| none           | coding-agent client | `--fa-brand-fleet` (blue)   | up green, down red |
+| `trade`        | trading review app  | `--fa-brand-trade` (indigo) | up red, down green |
+| `board`        | fleet dashboard     | `--fa-brand-board` (teal)   | up green, down red |
 
-The brand rules are part of `tokens.css` (generated from `projects` in `tokens/brand.json`), so a project that imports only the tokens switches brand too. A brand re-points `--accent`; `--focus-ring` follows it, `--on-accent` stays equal to `--bg`, and the trading brand also flips `--up` / `--down`. Nothing else changes. The accent appears in five places only: primary button, links, progress and meters, focus ring, unread dot. Selected and hovered rows use the neutral `--selected` / `--hover` in every brand.
+The brand rules are part of `tokens.css` (generated from `projects` in `tokens/brand.json`), so a project that imports only the tokens switches brand too. A brand re-points `--fa-accent`; `--fa-focus-ring` follows it, `--fa-on-accent` stays equal to `--fa-bg`, and the trading brand also flips `--fa-up` / `--fa-down`. Nothing else changes. The accent appears in five places only: primary button, links, progress and meters, focus ring, unread dot. Selected and hovered rows use the neutral `--fa-selected` / `--fa-hover` in every brand.
 
-No decorative gradients. Two gradients are intentional and are not colours of their own: the hover wash, layered as `linear-gradient(var(--hover), var(--hover))` so it works on any surface, and the scroll hint at the right edge of a wide table (`styles/table.css`).
+No decorative gradients. Two gradients are intentional and are not colours of their own: the hover wash, layered as `linear-gradient(var(--fa-hover), var(--fa-hover))` so it works on any surface, and the scroll hint at the right edge of a wide table (`styles/table.css`).
 
 ## Density
 

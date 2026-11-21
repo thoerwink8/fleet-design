@@ -29,7 +29,7 @@ function Page() {
             }
           >
             <div className="fa-row" style={{ justifyContent: 'space-between', height: 40, padding: '0 8px' }}>
-              <b style={{ font: '500 14px/20px var(--font-sans)' }}>会话</b>
+              <b style={{ font: '500 14px/20px var(--fa-font-sans)' }}>会话</b>
               <DialogClose render={<IconButton label="关闭">×</IconButton>} />
             </div>
             <div className="fa-col" style={{ gap: 0, padding: '0 8px' }}>
@@ -49,7 +49,7 @@ function Page() {
               ))}
             </div>
           </Drawer>
-          <b style={{ font: '500 14px/20px var(--font-sans)' }}>{current}</b>
+          <b style={{ font: '500 14px/20px var(--fa-font-sans)' }}>{current}</b>
         </div>
       </Demo>
       <Say>{open ? '抽屉开着' : `当前会话：${current}`}</Say>

@@ -1,7 +1,7 @@
 <div class="fa-stage">
   <div class="fa-cap">用量详情：只用行和细线，不做带框卡片墙。分段条用数据分类色；四个计数；缓存命中率和失效次数；生成速度；每次调用一根柱的小趋势图（静态数据），压缩点和缓存失效点用圆点标出；「复制报告」</div>
   <div class="fa-seg" role="radiogroup" aria-label="演示状态" id="mode"><button role="radio" aria-checked="true" data-m="ok">正常</button><button role="radio" aria-checked="false" data-m="empty">空</button><button role="radio" aria-checked="false" data-m="err">出错</button></div>
-  <div style="width:360px;max-width:100%;border-left:var(--bw-1) solid var(--border)"><section class="fa-sec"><div class="fa-sec__h">用量<span class="aside" id="badge"></span></div><div class="fa-sec__b" id="u"></div></section></div>
+  <div style="width:360px;max-width:100%;border-left:var(--fa-bw-1) solid var(--fa-border)"><section class="fa-sec"><div class="fa-sec__h">用量<span class="aside" id="badge"></span></div><div class="fa-sec__b" id="u"></div></section></div>
   <div class="fa-hint" id="say" role="status">趋势图可 Tab 聚焦，←→ 逐根查看</div>
 </div>
 <script>
@@ -21,13 +21,13 @@ function draw() {
   u.innerHTML = ctx + '<div class="fa-hair"></div>'
     + '<div class="fa-stats fa-pad" style="padding:0 8px">' + stats.map(s => '<div><span class="k">' + s[0] + '</span><span class="v">' + s[1] + '</span></div>').join('') + '</div>'
     + '<div class="fa-hair"></div>'
-    + '<div class="fa-kv"><span>缓存命中率</span><span class="v"><span style="color:var(--fg)">98.9%</span> · 失效 3 次</span></div>'
-    + '<div class="fa-kv"><span>生成速度</span><span class="v"><span style="color:var(--fg)">59.1</span> tok/s 实时</span></div>'
+    + '<div class="fa-kv"><span>缓存命中率</span><span class="v"><span style="color:var(--fa-fg)">98.9%</span> · 失效 3 次</span></div>'
+    + '<div class="fa-kv"><span>生成速度</span><span class="v"><span style="color:var(--fa-fg)">59.1</span> tok/s 实时</span></div>'
     + '<div class="fa-kv"><span class="fa-muted" style="padding-left:0">平均 / 峰值</span><span class="v">47.3 / 88.0 tok/s</span></div>'
     + '<div class="fa-hair"></div>'
-    + '<div class="fa-pad fa-col" style="gap:8px;padding:0 8px"><div class="fa-row" style="justify-content:space-between"><span style="font:400 14px/20px var(--font-sans)">每次调用的输入</span><span class="fa-num fa-muted" style="font-size:12px;line-height:16px" id="cur"></span></div>'
+    + '<div class="fa-pad fa-col" style="gap:8px;padding:0 8px"><div class="fa-row" style="justify-content:space-between"><span style="font:400 14px/20px var(--fa-font-sans)">每次调用的输入</span><span class="fa-num fa-muted" style="font-size:12px;line-height:16px" id="cur"></span></div>'
     + '<div class="fa-trend" id="tr" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="40" aria-label="每次调用的输入 token，' + CALLS.length + ' 次调用">' + CALLS.map((c, i) => '<i style="height:' + (c.v / 140 * 100).toFixed(1) + '%"' + (c.ev ? ' data-ev="' + c.ev + '"' : '') + ' data-i="' + i + '"></i>').join('') + '</div>'
-    + '<div class="fa-legend"><span><b class="fa-s1"></b>输入 token</span><span><b class="dot" style="background:var(--data-4)"></b>压缩</span><span><b class="dot" style="background:var(--data-2)"></b>缓存失效</span></div></div>'
+    + '<div class="fa-legend"><span><b class="fa-s1"></b>输入 token</span><span><b class="dot" style="background:var(--fa-data-4)"></b>压缩</span><span><b class="dot" style="background:var(--fa-data-2)"></b>缓存失效</span></div></div>'
     + '<div class="fa-hair"></div><div class="fa-pad" style="padding:0 8px"><button class="fa-btn fa-btn--sm fa-btn--secondary" id="copy">' + ic('copy') + '复制报告</button></div>';
   ctxGeneric($('#gen'));
   const tr = $('#tr');

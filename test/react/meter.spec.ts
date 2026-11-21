@@ -18,7 +18,7 @@ test('controlled value moves the fill and turns danger at 95%', async ({ page })
   await page.getByRole('button', { name: '加 25%' }).click();
   await expect(m).toHaveAttribute('aria-valuenow', '95');
   await expect(fill).toHaveClass(/fa-meter__fill--full/);
-  const danger = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--danger').trim());
+  const danger = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--fa-danger').trim());
   expect(danger).not.toBe('');
 });
 

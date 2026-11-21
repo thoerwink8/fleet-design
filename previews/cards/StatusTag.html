@@ -29,16 +29,16 @@
     </div></div>
   <div class="fa-col"><div class="fa-cap">数字徽标 20×20：强调色只统计「等你处理」，其余用淡底</div>
     <div class="fa-row" style="gap:16px">
-      <span class="fa-row" style="gap:8px;font:400 14px/20px var(--font-sans)">会话 <span class="fa-count">3</span></span>
-      <span class="fa-row" style="gap:8px;font:400 14px/20px var(--font-sans)">已归档 <span class="fa-count fa-count--quiet">12</span></span>
-      <span class="fa-row" style="gap:8px;font:400 14px/20px var(--font-sans)">Git <span class="fa-count fa-count--quiet">5</span></span>
+      <span class="fa-row" style="gap:8px;font:400 14px/20px var(--fa-font-sans)">会话 <span class="fa-count">3</span></span>
+      <span class="fa-row" style="gap:8px;font:400 14px/20px var(--fa-font-sans)">已归档 <span class="fa-count fa-count--quiet">12</span></span>
+      <span class="fa-row" style="gap:8px;font:400 14px/20px var(--fa-font-sans)">Git <span class="fa-count fa-count--quiet">5</span></span>
     </div></div>
   <div class="fa-col"><div class="fa-cap">近 10 次运行（旁边写成败数）</div>
-    <div class="fa-row"><span class="fa-bar5" role="img" aria-label="近 10 次成功 8 次，失败 1 次，1 次未运行"><i></i><i></i><i></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i class="n"></i></span><span class="fa-muted" style="font:400 12px/16px var(--font-sans);font-variant-numeric:tabular-nums">近 10 次 · 成功 8 · 失败 1</span></div></div>
+    <div class="fa-row"><span class="fa-bar5" role="img" aria-label="近 10 次成功 8 次，失败 1 次，1 次未运行"><i></i><i></i><i></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i class="n"></i></span><span class="fa-muted" style="font:400 12px/16px var(--fa-font-sans);font-variant-numeric:tabular-nums">近 10 次 · 成功 8 · 失败 1</span></div></div>
 </div>
 <script>
 /*PRELUDE*/
 $$('[data-ic-l]').forEach(e => { e.innerHTML = ic(e.dataset.icL) + e.textContent; });
-$$('[data-w]').forEach(e => { e.innerHTML = '<span style="color:var(--warning);display:inline-flex">' + ic(e.dataset.w) + '</span>' + e.textContent; });
-$$('[data-i]').forEach(e => { e.innerHTML = '<span style="color:var(--' + e.dataset.c + ');display:inline-flex">' + ic(e.dataset.i) + '</span>' + e.textContent; });
+$$('[data-w]').forEach(e => { e.innerHTML = '<span style="color:var(--fa-warning);display:inline-flex">' + ic(e.dataset.w) + '</span>' + e.textContent; });
+$$('[data-i]').forEach(e => { e.innerHTML = '<span style="color:var(--fa-' + e.dataset.c + ');display:inline-flex">' + ic(e.dataset.i) + '</span>' + e.textContent; });
 </script>

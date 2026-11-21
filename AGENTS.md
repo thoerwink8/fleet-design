@@ -20,46 +20,47 @@ Rules for anyone changing this repository. Each rule says what we do and why. `p
 ## Tokens are the single source of truth / 变量是唯一真相
 
 - Change values only in `tokens/*.json`, then `pnpm build`. `dist/tokens.css` and `dist/tokens.json` are generated; editing them is overwritten and fails `dist is current`.
-- Components and pages use role variables (`--bg`, `--fg-muted`, `--space-4`, `--radius-md`), never `--palette-*` and never a literal. 不许写死值：no hex, `rgb()`, named colours, `color-mix()` or new gradients in `styles/`. Need a translucent fill? Use `--hover` / `--selected`, or add a role. No decorative gradients. Two gradients are intentional: `linear-gradient(var(--hover), var(--hover))`, which is how a wash is layered on any surface (it is not a colour), and the scroll hint at the right edge of a wide table in `styles/table.css`.
+- Components and pages use role variables (`--fa-bg`, `--fa-fg-muted`, `--fa-space-4`, `--fa-radius-md`), never `--fa-palette-*` and never a literal. 不许写死值：no hex, `rgb()`, named colours, `color-mix()` or new gradients in `styles/`. Need a translucent fill? Use `--fa-hover` / `--fa-selected`, or add a role. No decorative gradients. Two gradients are intentional: `linear-gradient(var(--fa-hover), var(--fa-hover))`, which is how a wash is layered on any surface (it is not a colour), and the scroll hint at the right edge of a wide table in `styles/table.css`.
 - A new value means a new token with a `usage` line that says where it goes.
+- Everything the library puts into a page is prefixed: custom properties start with `--fa-`, classes with `.fa-`. 名字都带 `fa-` 前缀. A host project keeps its own `--accent`, `--border`, `--ring` and `--radius-md`, which often mean something else there. Token names in `tokens/*.json` carry no prefix; the build adds it (`cssVar` in `scripts/lib/tokens.mjs`). A variable a component sets for itself (`--fa-hv`, `--fa-ring`) is prefixed too. The rules check rejects an unprefixed custom property in `styles/`.
 
 ## Type / 字阶字重
 
 - Five sizes only: 12 / 14 / 15 / 18 / 20 (`caption`, `control`, `body`, `title`, `heading`). No 13 or 16. 字号只许 12/14/15/18/20.
-- Weight 400 by default. 500 only for: unread or new-reply row titles, the selected nav item, button text, block titles (panel section heads, menu group labels, dialog titles). Nothing at 600 or above: hierarchy comes from colour (`--fg` vs `--fg-muted`), not weight. 字重不许 600 及以上.
+- Weight 400 by default. 500 only for: unread or new-reply row titles, the selected nav item, button text, block titles (panel section heads, menu group labels, dialog titles). Nothing at 600 or above: hierarchy comes from colour (`--fa-fg` vs `--fa-fg-muted`), not weight. 字重不许 600 及以上.
 - Clickable text is at least 14. 12 is for text you cannot click: times, counts, hints, shortcut hints, meta lines.
-- Numbers (counts, sizes, money, percentages, times) are sans with `font-variant-numeric: tabular-nums` (`.fa-num`), right-aligned in columns. Monospace (`--font-mono`) is only for code, commands, branch names, paths and IDs, because CJK text in a monospace face spreads out. The rules check keeps a list of the classes allowed to use it.
+- Numbers (counts, sizes, money, percentages, times) are sans with `font-variant-numeric: tabular-nums` (`.fa-num`), right-aligned in columns. Monospace (`--fa-font-mono`) is only for code, commands, branch names, paths and IDs, because CJK text in a monospace face spreads out. The rules check keeps a list of the classes allowed to use it.
 
 ## Spacing, radius, shadow / 间距
 
-- Spacing is a multiple of 4 (`--space-1` 4 … `--space-12` 48). The one exception is `--space-row-seam` (2) and values derived from it: every clickable row has a 2px transparent seam top and bottom so two adjacent fills stay 4 apart. 间距是 4 的倍数（`space-row-seam` 的 2 和它派生的值除外）.
+- Spacing is a multiple of 4 (`--fa-space-1` 4 … `--fa-space-12` 48). The one exception is `--fa-space-row-seam` (2) and values derived from it: every clickable row has a 2px transparent seam top and bottom so two adjacent fills stay 4 apart. 间距是 4 的倍数（`space-row-seam` 的 2 和它派生的值除外）.
 - Four literal values predate the check and are listed in `SPACING_EXCEPTIONS` (`scripts/checks/rules.mjs`): the 1px gaps of segmented meters and the trend chart, and the 3px dots of the in-turn indicator. Do not add to that list without a decision recorded in the commit.
-- Radius has three steps: 4 (chips, tags, menu items), 8 (buttons, inputs, rows), 12 (floating layers, dialogs, composer). `--radius-full` is for status dots and thin meters only.
-- Surfaces are separated by a 1px `--border`, not shadows. `--shadow-overlay` is the only shadow and only floating layers use it, always with `--overlay` and a border.
+- Radius has three steps: 4 (chips, tags, menu items), 8 (buttons, inputs, rows), 12 (floating layers, dialogs, composer). `--fa-radius-full` is for status dots and thin meters only.
+- Surfaces are separated by a 1px `--fa-border`, not shadows. `--fa-shadow-overlay` is the only shadow and only floating layers use it, always with `--fa-overlay` and a border.
 
 ## Colour use / 颜色
 
-- Pick the role first. `--bg` page; `--panel` sidebars, detail panels, table heads, chips; `--overlay` menus, selects, palette, hover cards, tooltips, toasts, dialogs.
-- The brand layer (`projects` in `tokens/brand.json`, emitted into `tokens.css`) re-points `--accent` only; `--focus-ring` follows it and `--on-accent` stays `--bg`. The trading brand also flips `--up` / `--down`. Selected and hovered rows use the neutral `--selected` / `--hover` in every brand. 选中和悬停用中性灰. The brand accent appears in five places only: primary button, links, progress and meters, focus ring, unread dot. 品牌色只用在这五处. It never marks status and never fills a selected row, so all three products share one set of rows.
-- Status colours (`--success`, `--info`, `--danger`, `--warning`) are marks: dots, icons, thin bars, edges. The words next to them are `--fg`. `--danger` alone may be text or a solid fill (with `--on-danger`).
-- `--warning` (amber) means two things only: spending money, and deleting something that cannot be recovered. Signed out uses `--info`, errors use `--danger`, paused is grey.
-- Market direction `--up` / `--down` / `--flat` says which way a number moved; `--success` / `--danger` say how an operation went. Both may appear side by side. In the trading brand red means both "up" and danger, so numbers always carry ▲ ▼ and a sign, flat is "—", and `--danger` always comes with an icon and words.
-- Data colours `--data-1` … `--data-6` (blue, orange, green, purple, yellow, pink, in that order) are for legend dots, segment bars and chart marks only: never text, controls or state. 数据分类色只用于图例和图表. Every segment also has a name and number, adjacent segments keep a 1px gap, the 7th category onward folds into a grey "other" (`.fa-s7` = `--fg-muted`), and the brand accent is never a series colour, so charts look the same in every brand. To flag a failed call in a chart, put a `--danger` dot or icon on top; do not use a data colour as red.
+- Pick the role first. `--fa-bg` page; `--fa-panel` sidebars, detail panels, table heads, chips; `--fa-overlay` menus, selects, palette, hover cards, tooltips, toasts, dialogs.
+- The brand layer (`projects` in `tokens/brand.json`, emitted into `tokens.css`) re-points `--fa-accent` only; `--fa-focus-ring` follows it and `--fa-on-accent` stays `--fa-bg`. The trading brand also flips `--fa-up` / `--fa-down`. Selected and hovered rows use the neutral `--fa-selected` / `--fa-hover` in every brand. 选中和悬停用中性灰. The brand accent appears in five places only: primary button, links, progress and meters, focus ring, unread dot. 品牌色只用在这五处. It never marks status and never fills a selected row, so all three products share one set of rows.
+- Status colours (`--fa-success`, `--fa-info`, `--fa-danger`, `--fa-warning`) are marks: dots, icons, thin bars, edges. The words next to them are `--fa-fg`. `--fa-danger` alone may be text or a solid fill (with `--fa-on-danger`).
+- `--fa-warning` (amber) means two things only: spending money, and deleting something that cannot be recovered. Signed out uses `--fa-info`, errors use `--fa-danger`, paused is grey.
+- Market direction `--fa-up` / `--fa-down` / `--fa-flat` says which way a number moved; `--fa-success` / `--fa-danger` say how an operation went. Both may appear side by side. In the trading brand red means both "up" and danger, so numbers always carry ▲ ▼ and a sign, flat is "—", and `--fa-danger` always comes with an icon and words.
+- Data colours `--fa-data-1` … `--fa-data-6` (blue, orange, green, purple, yellow, pink, in that order) are for legend dots, segment bars and chart marks only: never text, controls or state. 数据分类色只用于图例和图表. Every segment also has a name and number, adjacent segments keep a 1px gap, the 7th category onward folds into a grey "other" (`.fa-s7` = `--fa-fg-muted`), and the brand accent is never a series colour, so charts look the same in every brand. To flag a failed call in a chart, put a `--fa-danger` dot or icon on top; do not use a data colour as red.
 - Contrast targets: text and links 4.5:1 on `bg`, `panel`, `overlay` and on `selected` / `hover` over each of them; marks and data colours 3:1. `pnpm check` computes all of them for 8 themes × 3 brands.
 
 ## Rows, density and narrow widths / 可点高度
 
-- Rows and standalone controls you can click are at least 32 high (`--row-1`, `--ctrl`). 24 (`--row-data`) is only for rows you cannot click. Two-line rows are 52, three-line palette rows 72, table body rows 40 (`--row-table`, a spec of its own for tables only; the rules check requires `.fa-table td` to use it and rejects it anywhere else). The full table is in the README; `pnpm check` measures every preview page against it.
+- Rows and standalone controls you can click are at least 32 high (`--fa-row-1`, `--fa-ctrl`). 24 (`--fa-row-data`) is only for rows you cannot click. Two-line rows are 52, three-line palette rows 72, table body rows 40 (`--fa-row-table`, a spec of its own for tables only; the rules check requires `.fa-table td` to use it and rejects it anywhere else). The full table is in the README; `pnpm check` measures every preview page against it.
 - Smaller controls sit only inside a bar or row that is at least 32 high: small buttons (28, `.fa-btn--sm`) are secondary actions grouped in a toolbar, status strip, composer bar or batch bar; icon buttons (28) sit inside rows; segmented-control items (24) sit inside their 32 group. A standalone action is a 32 button.
 - At 360 wide no preview page scrolls sideways and no button, select, segmented control or composer strip cuts its text with an ellipsis (the density check renders every page at 360). Titles and summaries of variable length may truncate.
-- When a container gets narrow, controls collapse into a "⋯" menu with container queries; text is not truncated into "S…". 窄宽度用容器查询收起，不截断. Container queries respond to the container, so a second session in a split pane collapses too. Breakpoints are tokens (`--bp-*`), but container queries cannot read `var()`, so the numbers are repeated in `styles/composer.css` and `styles/thread-row.css`; change both together.
+- When a container gets narrow, controls collapse into a "⋯" menu with container queries; text is not truncated into "S…". 窄宽度用容器查询收起，不截断. Container queries respond to the container, so a second session in a split pane collapses too. Breakpoints are tokens (`--fa-bp-*`), but container queries cannot read `var()`, so the numbers are repeated in `styles/composer.css` and `styles/thread-row.css`; change both together.
 
 ## Motion and interaction
 
-- Durations 100 / 160 / 240 ms with `--ease-out`. Hover and press add `--hover` layers instead of changing colour. Reduced motion removes transitions.
+- Durations 100 / 160 / 240 ms with `--fa-ease-out`. Hover and press add `--fa-hover` layers instead of changing colour. Reduced motion removes transitions.
 - No looping animation: no spinners, no skeleton shimmer. The in-turn indicator steps between states with `steps()` and stops under reduced motion; the rules check rejects `infinite` on any other selector. The ring next to the composer send button is a static context-usage gauge, not a spinner.
-- Focus ring only on keyboard focus: 2px `--focus-ring`, offset 2px.
-- Disabled is not faded with opacity: neutral fill, `--fg-muted` text (still 4.5:1), and a reason nearby.
+- Focus ring only on keyboard focus: 2px `--fa-focus-ring`, offset 2px.
+- Disabled is not faded with opacity: neutral fill, `--fa-fg-muted` text (still 4.5:1), and a reason nearby.
 - Prefer undo over confirmation: reversible actions finish with a toast that offers undo; only irreversible ones open a confirm dialog.
 - Errors and notices go into the status strip above the composer, not over the conversation.
 
