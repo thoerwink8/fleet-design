@@ -239,6 +239,9 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 .fa-toast .m-warning{color:var(--warning)}
 @keyframes fa-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .fa-enter{animation:fa-in var(--dur-base) var(--ease-out)}
+/* the stack: bottom right, newest last, 8 apart; toasts over the limit wait outside the stack */
+.fa-toasts{position:fixed;right:var(--space-4);bottom:var(--space-4);z-index:50;display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-2);max-width:calc(100% - 2 * var(--space-4))}
+.fa-toast[data-limited]{display:none}
 .fa-strips{display:flex;flex-direction:column;gap:var(--space-1)}
 .fa-strip{display:flex;align-items:center;gap:var(--space-3);min-height:var(--ctrl-lg);padding:var(--space-1) var(--space-3);border-radius:var(--radius-md);background:var(--panel);box-shadow:inset 0 0 0 var(--bw-1) var(--border);font:400 14px/20px var(--font-sans)}
 .fa-strip .grow{flex:1;min-width:0}
@@ -377,12 +380,21 @@ button,input,textarea,select{margin:0;padding:0;font:inherit;color:inherit;lette
 .fa-check input{width:16px;height:16px;margin:var(--space-1) 0 0;accent-color:var(--accent)}
 /* dialogs and batch bars: buttons at least 8 apart */
 .fa-dialog__foot{gap:var(--space-2)}
+/* modal layer (React Dialog / ConfirmDialog / Drawer): the scrim, and the dialog centred over it */
+.fa-backdrop{position:fixed;inset:0;z-index:40;background:var(--scrim)}
+.fa-dialog--modal{position:fixed;top:50%;left:50%;z-index:41;transform:translate(-50%,-50%);max-width:calc(100% - 2 * var(--space-4));max-height:calc(100% - 2 * var(--space-4));overflow:auto}
+.fa-dialog:focus-visible{outline:none;outline-offset:0}
+.fa-dialog{--ring:var(--overlay)}
 .fa-phone{position:relative;width:320px;height:480px;overflow:hidden;border:var(--bw-1) solid var(--border);border-radius:var(--radius-lg);background:var(--bg)}
 .fa-scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;pointer-events:none;transition:opacity var(--dur-base) var(--ease-out)}
 /* Closed drawer: hidden and shadowless, so no shadow bleeds in from the left edge. visibility waits for the slide to finish. */
 .fa-drawer{position:absolute;top:0;bottom:0;left:0;width:272px;background:var(--panel);border-right:var(--bw-1) solid var(--border);box-shadow:none;visibility:hidden;transform:translateX(-100%);transition:transform var(--dur-base) var(--ease-out),visibility 0s linear var(--dur-base),box-shadow 0s linear var(--dur-base);display:flex;flex-direction:column;padding:var(--space-2);gap:var(--space-1)}
 .fa-phone[data-open=true] .fa-drawer{transform:none;visibility:visible;box-shadow:var(--shadow-overlay);transition:transform var(--dur-base) var(--ease-out)}
 .fa-phone[data-open=true] .fa-scrim{opacity:1;pointer-events:auto}
+/* the drawer as a modal layer of its own (React Drawer): fixed to the viewport edge, open while data-open is set; it slides in from the starting style and out again before it unmounts */
+.fa-drawer--fixed{position:fixed;z-index:41;max-width:calc(100% - var(--space-12))}
+.fa-drawer--fixed[data-open]:not([data-starting-style]){transform:none;visibility:visible;box-shadow:var(--shadow-overlay);transition:transform var(--dur-base) var(--ease-out)}
+.fa-drawer:focus-visible{outline:none;outline-offset:0}
 .fa-dp{width:320px;max-width:100%;background:var(--panel);border:var(--bw-1) solid var(--border);border-radius:var(--radius-lg)}
 .fa-dp details{border-bottom:var(--bw-1) solid var(--border)}
 /* as a sidebar (session page right column): no outer card, sections split by hairlines only */

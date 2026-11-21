@@ -117,5 +117,123 @@
         }
       ]
     ]
+  },
+  {
+    "name": "Toast",
+    "card": "Toast",
+    "subtitle": "React：ToastProvider + useToast（Base UI Toast）。队列、自动消失、悬停暂停、撤销",
+    "compare": [
+      [".fa-toast", ".fa-toast"],
+      [".fa-toast .fa-btn", ".fa-toast .fa-btn"],
+      [".fa-toast .fa-icon-btn", ".fa-toast .fa-icon-btn"],
+      [".fa-toast .grow", ".fa-toast .grow"]
+    ]
+  },
+  {
+    "name": "Dialog",
+    "card": "ConfirmDialog",
+    "subtitle": "React：Dialog、ConfirmDialog（Base UI Dialog / AlertDialog）。焦点去向、Esc、焦点归还",
+    "compare": [
+      [
+        ".fa-dialog",
+        ".fa-dialog",
+        {
+          "ignore": [
+            "position",
+            "top",
+            "left",
+            "bottom",
+            "right",
+            "inset-block-start",
+            "inset-block-end",
+            "inset-inline-start",
+            "inset-inline-end",
+            "z-index",
+            "transform",
+            "max-height",
+            "max-width",
+            "overflow",
+            "overflow-x",
+            "overflow-y",
+            "block-size",
+            "height",
+            "max-block-size",
+            "max-inline-size",
+            "min-block-size",
+            "min-height",
+            "min-inline-size",
+            "min-width",
+            "overflow-block",
+            "overflow-inline"
+          ],
+          "why": "the card shows the dialog inline; the component centres it over a fixed scrim, and its height follows its content"
+        }
+      ],
+      [".fa-dialog h2", ".fa-dialog h2"],
+      [".fa-dialog p", ".fa-dialog p"],
+      [
+        ".fa-dialog .fa-names",
+        ".fa-dialog .fa-names",
+        {
+          "ignore": ["block-size", "height"],
+          "why": "different number of names"
+        }
+      ],
+      [".fa-dialog__foot", ".fa-dialog__foot"],
+      [".fa-dialog .fa-btn--danger", ".fa-dialog .fa-btn--danger"]
+    ]
+  },
+  {
+    "name": "Drawer",
+    "card": "Drawer",
+    "subtitle": "React：Drawer（Base UI Dialog）。滑入、遮罩、Esc、焦点归还",
+    "compare": [
+      [
+        ".fa-drawer",
+        "#dr",
+        {
+          "ignore": [
+            "position",
+            "z-index",
+            "max-width",
+            "block-size",
+            "height",
+            "bottom",
+            "inset-block-end",
+            "tag",
+            "right",
+            "inset-inline-end",
+            "max-inline-size"
+          ],
+          "why": "the card frames the drawer inside a phone mock-up; the component fixes it to the viewport edge (the card uses a nav element; the component renders the Base UI popup, a div with role dialog)"
+        }
+      ],
+      [
+        ".fa-backdrop",
+        "#sc",
+        {
+          "ignore": [
+            "position",
+            "z-index",
+            "opacity",
+            "pointer-events",
+            "transition-duration",
+            "transition-property",
+            "transition-timing-function",
+            "transition-behavior",
+            "transition-delay",
+            "width",
+            "height",
+            "block-size",
+            "bottom",
+            "right",
+            "inset-block-end",
+            "inset-inline-end",
+            "user-select"
+          ],
+          "why": "the card fades its scrim in with opacity; the component mounts the scrim only while open"
+        }
+      ]
+    ]
   }
 ]

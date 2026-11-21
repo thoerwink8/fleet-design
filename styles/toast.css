@@ -7,3 +7,6 @@
 .fa-toast .m-warning{color:var(--warning)}
 @keyframes fa-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .fa-enter{animation:fa-in var(--dur-base) var(--ease-out)}
+/* the stack: bottom right, newest last, 8 apart; toasts over the limit wait outside the stack */
+.fa-toasts{position:fixed;right:var(--space-4);bottom:var(--space-4);z-index:50;display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-2);max-width:calc(100% - 2 * var(--space-4))}
+.fa-toast[data-limited]{display:none}
