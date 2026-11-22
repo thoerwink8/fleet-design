@@ -1,5 +1,5 @@
 {
-  "note": "Layer 3. A project re-points --accent (and with it --focus-ring, which follows accent). --on-accent stays bg and --selected / --hover stay neutral in every project. The trading project also flips market direction. Rules are emitted into tokens.css as [data-project=\"<id>\"] after the theme blocks.",
+  "note": "Layer 3. A project re-points --fa-accent (and with it --fa-focus-ring, which follows accent). --fa-on-accent stays bg and --fa-selected / --fa-hover stay neutral in every project. The trading project also flips market direction. Rules are emitted into tokens.css as [data-project=\"<id>\"] after the theme blocks.",
   "tokens": [
     {
       "name": "brand-fleet",

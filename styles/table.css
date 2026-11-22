@@ -1,18 +1,18 @@
-.fa-table-wrap{overflow-x:auto;border:var(--bw-1) solid var(--border);border-radius:var(--radius-lg);
+.fa-table-wrap{overflow-x:auto;border:var(--fa-bw-1) solid var(--fa-border);border-radius:var(--fa-radius-lg);
   /* scroll hint on narrow screens: a soft edge appears on the side that has more columns, and disappears at the end */
-  background:linear-gradient(to right,transparent,var(--bg) 70%) right/24px 100% no-repeat local,linear-gradient(to left,var(--border),transparent) right/12px 100% no-repeat scroll}
-.fa-table{width:100%;border-collapse:collapse;font:400 14px/20px var(--font-sans)}
-.fa-table th{height:var(--ctrl);padding:0 var(--space-3);text-align:left;font:400 14px/20px var(--font-sans);color:var(--fg-muted);background:var(--panel);border-bottom:var(--bw-1) solid var(--border);white-space:nowrap}
-.fa-table td{height:var(--row-table);padding:0 var(--space-3);border-bottom:var(--bw-1) solid var(--border);white-space:nowrap}
+  background:linear-gradient(to right,transparent,var(--fa-bg) 70%) right/24px 100% no-repeat local,linear-gradient(to left,var(--fa-border),transparent) right/12px 100% no-repeat scroll}
+.fa-table{width:100%;border-collapse:collapse;font:400 14px/20px var(--fa-font-sans)}
+.fa-table th{height:var(--fa-ctrl);padding:0 var(--fa-space-3);text-align:left;font:400 14px/20px var(--fa-font-sans);color:var(--fa-fg-muted);background:var(--fa-panel);border-bottom:var(--fa-bw-1) solid var(--fa-border);white-space:nowrap}
+.fa-table td{height:var(--fa-row-table);padding:0 var(--fa-space-3);border-bottom:var(--fa-bw-1) solid var(--fa-border);white-space:nowrap}
 .fa-table tr:last-child td{border-bottom:0}
-.fa-table tbody tr:hover{background-image:linear-gradient(var(--hover),var(--hover))}
-.fa-table tbody tr[aria-selected=true]{background-color:var(--selected)}
-.fa-table .num{text-align:right;font-family:var(--font-sans);font-variant-numeric:tabular-nums}
-.fa-table th button{all:unset;cursor:pointer;display:inline-flex;gap:var(--space-1);align-items:center}
+.fa-table tbody tr:hover{background-image:linear-gradient(var(--fa-hover),var(--fa-hover))}
+.fa-table tbody tr[aria-selected=true]{background-color:var(--fa-selected)}
+.fa-table .num{text-align:right;font-family:var(--fa-font-sans);font-variant-numeric:tabular-nums}
+.fa-table th button{all:unset;cursor:pointer;display:inline-flex;gap:var(--fa-space-1);align-items:center}
 /* an empty sort-arrow slot takes no room, so a right-aligned number header ends on the same line as its numbers */
 .fa-table th button>:empty{display:none}
-.fa-table th button:focus-visible{outline:var(--bw-focus) solid var(--focus-ring);outline-offset:2px}
-.fa-bar5{display:inline-flex;gap:var(--space-1);vertical-align:middle}
-.fa-bar5 i{width:8px;height:16px;border-radius:var(--radius-sm);background:var(--success)}
-.fa-bar5 i.f{background:var(--danger)}
-.fa-bar5 i.n{background:var(--panel);box-shadow:inset 0 0 0 var(--bw-1) var(--border)}
+.fa-table th button:focus-visible{outline:var(--fa-bw-focus) solid var(--fa-focus-ring);outline-offset:2px}
+.fa-bar5{display:inline-flex;gap:var(--fa-space-1);vertical-align:middle}
+.fa-bar5 i{width:8px;height:16px;border-radius:var(--fa-radius-sm);background:var(--fa-success)}
+.fa-bar5 i.f{background:var(--fa-danger)}
+.fa-bar5 i.n{background:var(--fa-panel);box-shadow:inset 0 0 0 var(--fa-bw-1) var(--fa-border)}

@@ -14,3 +14,4 @@ const write = (name, text) => {
 write('tokens.json', out['dist/tokens.json']);
 write('tokens.css', out['dist/tokens.css']);
 write('bundle.css', out['dist/styles.css']);
+write('reset.css', out['dist/reset.css']);

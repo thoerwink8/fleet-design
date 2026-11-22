@@ -7,7 +7,7 @@
     <button class="fa-btn fa-btn--sm fa-btn--secondary" data-a="ok">已重连</button>
   </div>
   <div class="fa-panel" style="padding:16px;display:flex;flex-direction:column;gap:12px">
-    <div class="fa-muted" style="font:400 15px/24px var(--font-sans)">对话内容在这里，状态条不会压在它上面。</div>
+    <div class="fa-muted" style="font:400 15px/24px var(--fa-font-sans)">对话内容在这里，状态条不会压在它上面。</div>
     <div class="fa-strips" id="strips" aria-label="状态"></div>
     <div class="fa-composer"><textarea rows="1" placeholder="输入消息…" aria-label="消息"></textarea><div class="fa-composer__bar"><span class="fa-composer__grow"></span><button class="fa-btn fa-btn--icon fa-btn--primary" disabled id="snd" aria-label="发送"></button></div></div>
   </div>
@@ -40,7 +40,7 @@ function render() {
   if (expanded || sorted.length === 1) sorted.forEach(i => box.appendChild(strip(i))); else box.appendChild(strip(sorted[0]));
   if (sorted.length > 1) {
     const s = document.createElement('button'); s.className = 'fa-strip__sum'; s.setAttribute('aria-expanded', expanded);
-    s.innerHTML = '<span class="fa-dots">' + sorted.slice(1).map(i => '<span class="fa-dot" style="background:var(--' + i.sev + ')"></span>').join('') + '</span><span style="flex:1">' + (expanded ? '收起其余 ' + (sorted.length - 1) + ' 条' : '还有 ' + (sorted.length - 1) + ' 条') + '</span>' + ic(expanded ? 'chevD' : 'chevR');
+    s.innerHTML = '<span class="fa-dots">' + sorted.slice(1).map(i => '<span class="fa-dot" style="background:var(--fa-' + i.sev + ')"></span>').join('') + '</span><span style="flex:1">' + (expanded ? '收起其余 ' + (sorted.length - 1) + ' 条' : '还有 ' + (sorted.length - 1) + ' 条') + '</span>' + ic(expanded ? 'chevD' : 'chevR');
     s.onclick = () => { expanded = !expanded; render(); }; box.appendChild(s);
   }
 }

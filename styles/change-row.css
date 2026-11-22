@@ -1,20 +1,20 @@
 /* ChangeRow: PR state icon | title / repo#n +adds -dels | more */
-.fa-chg{display:grid;grid-template-columns:16px minmax(0,1fr) auto;column-gap:var(--space-2);align-items:start;min-height:var(--row-2);padding:var(--space-1) var(--space-1) var(--space-1) var(--space-2);border-radius:var(--radius-md);cursor:pointer;outline:0}
+.fa-chg{display:grid;grid-template-columns:16px minmax(0,1fr) auto;column-gap:var(--fa-space-2);align-items:start;min-height:var(--fa-row-2);padding:var(--fa-space-1) var(--fa-space-1) var(--fa-space-1) var(--fa-space-2);border-radius:var(--fa-radius-md);cursor:pointer;outline:0}
 .fa-chg>.ty{display:inline-flex;height:20px;align-items:center}
-.fa-chg .t{font:400 14px/20px var(--font-sans);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fa-chg .s{display:flex;gap:var(--space-2);font:400 12px/16px var(--font-sans);font-variant-numeric:tabular-nums;color:var(--fg-muted);white-space:nowrap;min-width:0}
-.fa-chg .s .id{font-family:var(--font-mono);overflow:hidden;text-overflow:ellipsis}
-.fa-chg .s .add{color:var(--success)}
-.fa-chg .s .del{color:var(--danger)}
+.fa-chg .t{font:400 14px/20px var(--fa-font-sans);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fa-chg .s{display:flex;gap:var(--fa-space-2);font:400 12px/16px var(--fa-font-sans);font-variant-numeric:tabular-nums;color:var(--fa-fg-muted);white-space:nowrap;min-width:0}
+.fa-chg .s .id{font-family:var(--fa-font-mono);overflow:hidden;text-overflow:ellipsis}
+.fa-chg .s .add{color:var(--fa-success)}
+.fa-chg .s .del{color:var(--fa-danger)}
 .fa-chg .acts{visibility:hidden}
 .fa-chg:hover .acts,.fa-chg:focus-within .acts,.fa-chg.is-hover .acts,.fa-chg.is-focus .acts{visibility:visible}
 @media (hover:none){.fa-chg .acts{visibility:visible}}
-.fa-chg .fa-icon-btn{width:var(--ctrl-xs);height:var(--ctrl-xs)}
-.pr-open{color:var(--success)}
-.pr-merged{color:var(--fg-muted)}
-.pr-closed{color:var(--danger)}
-.pr-draft{color:var(--fg-muted)}
+.fa-chg .fa-icon-btn{width:var(--fa-ctrl-xs);height:var(--fa-ctrl-xs)}
+.fa-pr-open{color:var(--fa-success)}
+.fa-pr-merged{color:var(--fa-fg-muted)}
+.fa-pr-closed{color:var(--fa-danger)}
+.fa-pr-draft{color:var(--fa-fg-muted)}
 /* ChangeRow: two lines, 52 = 2 + 6 + 20 + 16 + 6 + 2; repo #n is plain sans 12 grey with tabular figures, 8 before +adds */
-.fa-chg{column-gap:var(--space-icon-gap);padding:calc(var(--space-row-y) - var(--space-row-seam)) var(--space-2) calc(var(--space-row-y) - var(--space-row-seam)) var(--space-row-x)}
-.fa-chg .s{gap:var(--space-2)}
-.fa-chg .s .id{font-family:var(--font-sans);font-variant-numeric:tabular-nums}
+.fa-chg{column-gap:var(--fa-space-icon-gap);padding:calc(var(--fa-space-row-y) - var(--fa-space-row-seam)) var(--fa-space-2) calc(var(--fa-space-row-y) - var(--fa-space-row-seam)) var(--fa-space-row-x)}
+.fa-chg .s{gap:var(--fa-space-2)}
+.fa-chg .s .id{font-family:var(--fa-font-sans);font-variant-numeric:tabular-nums}

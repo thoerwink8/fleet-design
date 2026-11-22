@@ -45,7 +45,7 @@ function render() {
   // Line 2: summary only. Line 3: model · turns on the left; [workspace ·] branch on the right, branch keeps its tail.
   function S(x, k) {
     return '<div class="fa-cmd__row has-lead' + (x.unread ? ' is-unread' : '') + '" role="option" data-k="' + k + '" aria-label="' + esc(x.agn + '：' + x.t + '，' + x.st[1] + '，' + x.tm) + '">'
-      + '<span class="lead"><span class="fa-agent" title="' + x.agn + '">' + x.ag + '<span class="fa-dot' + (x.st[0] ? ' fa-dot--' + x.st[0] : '') + '"></span></span></span><div class="body">'
+      + '<span class="lead"><span class="fa-agent" title="' + x.agn + '">' + x.ag + '<span class="fa-dot' + (x.st[0] ? ' fa-dot--' + x.st[0] : '') + '"></span></span></span><div class="fa-cmd__body">'
       + '<div class="l l1"><span class="x grow" title="' + esc(x.t) + '">' + hl(x.t, ts) + '</span><span class="st">' + x.st[1] + '</span><span class="tm">' + x.tm + '</span></div>'
       + '<div class="l l2"><span class="x">' + hl(x.sum, ts) + '</span></div>'
       + '<div class="l l3"><span class="lt"><span class="x">' + hl(x.m, ts) + '</span><span class="fix">' + x.n + ' 轮</span></span><span class="rt">' + (x.ws ? '<span class="x mono">' + hl(x.ws, ts) + '</span><span class="fix">·</span>' : '') + '<span class="x mono tail" title="' + esc(x.br) + '"><bdi>' + hl(x.br, ts) + '</bdi></span></span></div>'

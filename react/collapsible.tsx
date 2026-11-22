@@ -47,7 +47,7 @@ export function Collapsible({
         {title}
         {!fold && aside !== undefined && <span className="aside">{aside}</span>}
       </BaseCollapsible.Trigger>
-      <BaseCollapsible.Panel className={fold ? 'fa-fold__list' : 'body'}>{children}</BaseCollapsible.Panel>
+      <BaseCollapsible.Panel className={fold ? 'fa-fold__list' : 'fa-dp__body'}>{children}</BaseCollapsible.Panel>
     </BaseCollapsible.Root>
   );
 }

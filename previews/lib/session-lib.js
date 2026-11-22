@@ -38,14 +38,14 @@ const MEM_FILES = [['C:\\Users\\dev\\.claude\\CLAUDE.md', 6482], ['C:\\src\\acme
 const AGENTS6 = [['general-purpose', 168], ['Explore', 87], ['Plan', 87], ['code-reviewer', 142], ['docs-writer', 56], ['statusline-setup', 31]];
 
 function swatch(cls, kind) {
-  if (kind === 'free' || kind === 'lazy') return '<span class="sw fa-dot--ring" style="box-shadow:inset 0 0 0 1px var(--fg-muted)"></span>';
-  if (kind === 'buf') return '<span class="sw" style="background:var(--border);box-shadow:inset 0 0 0 1px var(--fg-muted)"></span>';
+  if (kind === 'free' || kind === 'lazy') return '<span class="sw fa-dot--ring" style="box-shadow:inset 0 0 0 1px var(--fa-fg-muted)"></span>';
+  if (kind === 'buf') return '<span class="sw" style="background:var(--fa-border);box-shadow:inset 0 0 0 1px var(--fa-fg-muted)"></span>';
   return '<span class="sw ' + cls + '"></span>';
 }
 function ctxBar(rows, cap, opts = {}) {
   const segs = rows.filter((r) => r[3] !== 'free' && r[3] !== 'lazy');
   return '<div class="fa-meter fa-meter--seg" role="img" aria-label="' + esc(opts.label || '上下文占用') + '" style="margin:4px 8px 8px">'
-    + segs.map((r) => '<i class="' + (r[3] === 'buf' ? '' : r[2]) + '" style="width:' + (r[1] / cap * 100).toFixed(2) + '%;' + (r[3] === 'buf' ? 'background:var(--border)' : '') + '"></i>').join('') + '<i></i></div>';
+    + segs.map((r) => '<i class="' + (r[3] === 'buf' ? '' : r[2]) + '" style="width:' + (r[1] / cap * 100).toFixed(2) + '%;' + (r[3] === 'buf' ? 'background:var(--fa-border)' : '') + '"></i>').join('') + '<i></i></div>';
 }
 function grp(id, name, items, maxChars) {
   return '<div class="fa-grp"><button class="fa-grp__h" aria-expanded="false" aria-controls="' + id + '"><span class="chev">' + ic('chevR') + '</span><span class="x">' + name + '</span><span class="n">' + items.length + '</span></button>'
@@ -113,7 +113,7 @@ const CHG = [
   { st: 'closed', t: 'fix(close): 残留空会话目录不再挡住新建', repo: 'acme-web', n: 17, a: 9, d: 3 },
   { st: 'open', t: 'fix(sweep): 按分支过滤后再清理已合并的工作树', repo: 'acme-web', n: 18, a: 27, d: 12 },
 ];
-const PR_IC = { open: ['prOpen', 'pr-open', '开着'], merged: ['prMerged', 'pr-merged', '已合并'], closed: ['prClosed', 'pr-closed', '已关闭'] };
+const PR_IC = { open: ['prOpen', 'fa-pr-open', '开着'], merged: ['prMerged', 'fa-pr-merged', '已合并'], closed: ['prClosed', 'fa-pr-closed', '已关闭'] };
 function chgRow(c, i) {
   const p = PR_IC[c.st];
   return '<div class="fa-chg" tabindex="0" role="link" data-i="' + i + '" aria-label="' + esc(c.t) + '，' + p[2] + '，' + c.repo + ' #' + c.n + '，增加 ' + c.a + ' 行，删除 ' + c.d + ' 行"><span class="ty ' + p[1] + '" title="' + p[2] + '">' + ic(p[0]) + '</span>'

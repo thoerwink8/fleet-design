@@ -41,24 +41,37 @@ export function tokensJson(src = loadSource()) {
 
 export const renderJson = (T) => JSON.stringify(T, null, 1);
 
-const ref = (v) => (/^\{/.test(v) ? `var(--${v.slice(1, -1)})` : v);
+// Every custom property and type class this library emits carries this prefix, so it can sit beside another design
+// system's variables (--accent, --border, --radius-md) without colliding. Token names in tokens.json carry none.
+export const PREFIX = 'fa-';
+export const cssVar = (name) => `--${PREFIX}${name}`;
+
+const ref = (v) => (/^\{/.test(v) ? `var(${cssVar(v.slice(1, -1))})` : v);
 
 export function renderCss(T) {
   const ids = T.color.themes.map((t) => t.id);
   const block = (id) =>
-    T.color.tokens.map((t) => `--${t.name}:${ref(t.value[id])};`).join('') +
-    T.shadow.tokens.map((t) => `--${t.name}:${t.value[id]};`).join('');
+    T.color.tokens.map((t) => `${cssVar(t.name)}:${ref(t.value[id])};`).join('') +
+    T.shadow.tokens.map((t) => `${cssVar(t.name)}:${t.value[id]};`).join('');
   let css = `:root,[data-theme="${ids[0]}"]{${block(ids[0])}}\n`;
   for (const id of ids.slice(1)) css += `[data-theme="${id}"]{${block(id)}}\n`;
   // Project (brand) layer after the theme blocks: same specificity, so it wins when both attributes sit on one element.
   for (const p of T.color.projects) {
     const set = Object.entries(p.set);
-    if (set.length) css += `[data-project="${p.id}"]{${set.map(([k, v]) => `--${k}:${ref(v)};`).join('')}}\n`;
+    if (set.length) css += `[data-project="${p.id}"]{${set.map(([k, v]) => `${cssVar(k)}:${ref(v)};`).join('')}}\n`;
   }
   const scales = ['spacing', 'radius', 'size', 'border', 'duration', 'easing'];
-  css += `:root{${scales.flatMap((k) => T[k].tokens.map((t) => `--${t.name}:${t.value};`)).join('')}--font-sans:${T.type.families.sans};--font-mono:${T.type.families.mono};}\n`;
+  const families = ['sans', 'mono'].map((k) => `${cssVar(`font-${k}`)}:${T.type.families[k]};`);
+  css += `:root{${scales.flatMap((k) => T[k].tokens.map((t) => `${cssVar(t.name)}:${t.value};`)).join('')}${families.join('')}}\n`;
+  // Reduced motion lives with the duration tokens, so it holds for any page that loads them, with or without a reset.
+  const still = T.duration.tokens.map((t) => `${cssVar(t.name)}:${T.duration.reducedMotion};`).join('');
+  css += `@media (prefers-reduced-motion:reduce){:root{${still}}}\n`;
   css += `${T.type.groups
-    .flatMap((g) => g.styles.map((s) => `.${s.name}{font:${s.fontWeight || 400} ${s.fontSize}/${s.lineHeight} var(--font-${g.family});}`))
+    .flatMap((g) =>
+      g.styles.map(
+        (s) => `.${PREFIX}${s.name}{font:${s.fontWeight || 400} ${s.fontSize}/${s.lineHeight} var(${cssVar(`font-${g.family}`)});}`,
+      ),
+    )
     .join('\n')}\n`;
   return `/* ${T.name} — generated from tokens.json */\n${css}`;
 }

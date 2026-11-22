@@ -1,0 +1,77 @@
+/* Tailwind v4 theme for a project that keeps its own Tailwind theme. It only adds keys, each under an fa- name, and
+   removes nothing: the project's own colours, radii, fonts, text sizes, shadows and easings stay exactly as they are.
+   @import "tailwindcss"; @import "@fleet/design/tokens.css" layer(fleet-tokens); @import "@fleet/design/tailwind/extend";
+   Utilities: bg-fa-panel, text-fa-fg-muted, border-fa-border, outline-fa-ring, px-fa-row-x, h-fa-ctrl, rounded-fa-md,
+   font-fa-sans, text-fa-body, shadow-fa-overlay, ease-fa-out. They resolve to the --fa-* variables, so data-theme and
+   data-project keep working. A project that takes its whole scale from fleet-design imports "@fleet/design/tailwind". */
+@theme inline {
+  --color-fa-bg: var(--fa-bg);
+  --color-fa-panel: var(--fa-panel);
+  --color-fa-overlay: var(--fa-overlay);
+  --color-fa-fg: var(--fa-fg);
+  --color-fa-fg-muted: var(--fa-fg-muted);
+  --color-fa-border: var(--fa-border);
+  --color-fa-accent: var(--fa-accent);
+  --color-fa-on-accent: var(--fa-on-accent);
+  --color-fa-success: var(--fa-success);
+  --color-fa-warning: var(--fa-warning);
+  --color-fa-danger: var(--fa-danger);
+  --color-fa-on-danger: var(--fa-on-danger);
+  --color-fa-info: var(--fa-info);
+  --color-fa-selected: var(--fa-selected);
+  --color-fa-hover: var(--fa-hover);
+  --color-fa-scrim: var(--fa-scrim);
+  --color-fa-ring: var(--fa-focus-ring);
+  --color-fa-up: var(--fa-up);
+  --color-fa-down: var(--fa-down);
+  --color-fa-flat: var(--fa-flat);
+  --color-fa-data-1: var(--fa-data-1);
+  --color-fa-data-2: var(--fa-data-2);
+  --color-fa-data-3: var(--fa-data-3);
+  --color-fa-data-4: var(--fa-data-4);
+  --color-fa-data-5: var(--fa-data-5);
+  --color-fa-data-6: var(--fa-data-6);
+
+  --spacing-fa-row-x: var(--fa-space-row-x);
+  --spacing-fa-row-x-menu: var(--fa-space-row-x-menu);
+  --spacing-fa-row-y: var(--fa-space-row-y);
+  --spacing-fa-icon-gap: var(--fa-space-icon-gap);
+  --spacing-fa-trail-gap: var(--fa-space-trail-gap);
+  --spacing-fa-list-inset: var(--fa-space-list-inset);
+  --spacing-fa-sec-y: var(--fa-space-sec-y);
+  --spacing-fa-demo: var(--fa-space-demo);
+  --spacing-fa-ctrl-2xs: var(--fa-ctrl-2xs);
+  --spacing-fa-ctrl-xs: var(--fa-ctrl-xs);
+  --spacing-fa-ctrl-sm: var(--fa-ctrl-sm);
+  --spacing-fa-ctrl: var(--fa-ctrl);
+  --spacing-fa-ctrl-lg: var(--fa-ctrl-lg);
+  --spacing-fa-row-1: var(--fa-row-1);
+  --spacing-fa-row-2: var(--fa-row-2);
+  --spacing-fa-row-3: var(--fa-row-3);
+  --spacing-fa-row-data: var(--fa-row-data);
+  --spacing-fa-row-table: var(--fa-row-table);
+
+  --radius-fa-sm: var(--fa-radius-sm);
+  --radius-fa-md: var(--fa-radius-md);
+  --radius-fa-lg: var(--fa-radius-lg);
+  --radius-fa-full: var(--fa-radius-full);
+
+  --font-fa-sans: var(--fa-font-sans);
+  --font-fa-mono: var(--fa-font-mono);
+
+  --text-fa-caption: 12px;
+  --text-fa-caption--line-height: 16px;
+  --text-fa-control: 14px;
+  --text-fa-control--line-height: 20px;
+  --text-fa-body: 15px;
+  --text-fa-body--line-height: 24px;
+  --text-fa-title: 18px;
+  --text-fa-title--line-height: 28px;
+  --text-fa-heading: 20px;
+  --text-fa-heading--line-height: 28px;
+
+  --shadow-fa-overlay: var(--fa-shadow-overlay);
+
+  --ease-fa-out: var(--fa-ease-out);
+  --ease-fa-in-out: var(--fa-ease-in-out);
+}

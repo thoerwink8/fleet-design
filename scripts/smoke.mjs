@@ -2,6 +2,7 @@
 // and reports what ended up in the bundle. Run after pnpm build. The temporary directory is removed at the end.
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -95,6 +96,11 @@ createRoot(document.getElementById('root')!).render(<App />);
   );
 
   run('pnpm install --prefer-offline --reporter=silent', app);
+  // Every CSS entry point the README names resolves from the installed package, through its exports map.
+  const fromApp = createRequire(path.join(app, 'package.json'));
+  const entries = ['tokens.css', 'reset.css', 'styles.css', 'styles/button.css', 'tailwind', 'tailwind/extend'];
+  const sizes = entries.map((e) => `${e} ${kb(fs.statSync(fromApp.resolve(`@fleet/design/${e}`)).size)}`);
+  console.log(`css exports: ${sizes.join(', ')}`);
   run(`node "${path.join(app, 'node_modules', 'typescript', 'bin', 'tsc')}" -p tsconfig.json`, app);
   console.log('types: tsc passes (subpath and entry imports; an unknown variant is a type error)');
 

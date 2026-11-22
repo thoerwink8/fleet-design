@@ -2,8 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import postcss from 'postcss';
 import { splitList } from '../lib/css.mjs';
-import { styleFiles, stylesDir } from '../lib/styles.mjs';
-import { tokensJson } from '../lib/tokens.mjs';
+import { RESET, styleFiles, stylesDir } from '../lib/styles.mjs';
+import { cssVar, PREFIX, tokensJson } from '../lib/tokens.mjs';
 
 export const FONT_SIZES = [12, 14, 15, 18, 20];
 export const MAX_WEIGHT = 500;
@@ -22,10 +22,15 @@ export const SPACING_EXCEPTIONS = [
 
 // Row heights with a spec of their own. The table row (40) is the only one that is neither row-1 nor row-2/3;
 // it must come from its token, and the token is not used outside tables.
-export const ROW_SPECS = [['.fa-table td', 'height', 'var(--row-table)']];
+export const ROW_SPECS = [['.fa-table td', 'height', 'var(--fa-row-table)']];
 
 // The only looping animation: the in-turn indicator, which steps and stops under reduced motion. No spinners.
 export const LOOP_ALLOWED = ['.fa-dots3 i'];
+
+// styles.css must not style the page it is loaded into. A selector names a .fa- class (or the [class] scope that stands
+// for "any .fa- element"), or it is a theme hook that sets nothing but --fa-* variables and color-scheme.
+const OWN = /\.fa-|\[class[\^*]=" ?fa-"\]/;
+const THEME_HOOK = /^(:root|\[data-(theme|project)(=[\w-]+)?\])$/;
 
 const SPACING_PROPS = /^(padding|margin)(-(top|right|bottom|left|block|inline)(-(start|end))?)?$|^(gap|row-gap|column-gap)$/;
 const NAMED =
@@ -36,7 +41,7 @@ const COLOR_FN = /\b(rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\(/i;
 
 function lengths(T) {
   const out = {};
-  for (const k of ['spacing', 'radius', 'size', 'border']) for (const t of T[k].tokens) out[t.name] = parseFloat(t.value);
+  for (const k of ['spacing', 'radius', 'size', 'border']) for (const t of T[k].tokens) out[cssVar(t.name)] = parseFloat(t.value);
   return out;
 }
 
@@ -57,10 +62,10 @@ function evaluate(value, vars) {
     if (p === '0' || p === 'auto') return { text: p, value: 0 };
     const expr = p
       .replace(/^calc\(/, '(')
-      .replace(/var\(--([\w-]+)\)/g, (_, n) => (n in vars ? String(vars[n]) : 'NaN'))
+      .replace(/var\((--[\w-]+)\)/g, (_, n) => (n in vars ? String(vars[n]) : 'NaN'))
       .replace(/(-?\d*\.?\d+)px/g, '$1');
     if (!/^[\d\s.+\-*/()NaN]+$/.test(expr)) return { text: p, value: NaN };
-    return { text: p, value: Function(`return (${expr})`)(), seam: p.includes('--space-row-seam') };
+    return { text: p, value: Function(`return (${expr})`)(), seam: p.includes('--fa-space-row-seam') };
   });
 }
 
@@ -68,7 +73,7 @@ export default async function rules() {
   const T = tokensJson();
   const vars = lengths(T);
   const problems = [];
-  const seen = { sizes: new Set(), weights: new Set(), spacing: 0, mono: [], rowSpecs: 0 };
+  const seen = { sizes: new Set(), weights: new Set(), spacing: 0, mono: [], rowSpecs: 0, vars: new Set(), selectors: 0 };
   const exceptionsHit = new Set();
 
   for (const t of T.spacing.tokens) {
@@ -83,14 +88,32 @@ export default async function rules() {
     }
   }
 
-  for (const file of styleFiles()) {
+  for (const file of [...styleFiles(), RESET]) {
     const root = postcss.parse(fs.readFileSync(path.join(stylesDir, file), 'utf8'), { from: file });
+    root.walkRules((rule) => {
+      if (file === RESET || (rule.parent.type === 'atrule' && rule.parent.name.endsWith('keyframes'))) return;
+      const hookOnly = rule.nodes.every((n) => n.type !== 'decl' || n.prop.startsWith(`--${PREFIX}`) || n.prop === 'color-scheme');
+      for (const sel of splitList(rule.selector)) {
+        seen.selectors++;
+        if (OWN.test(sel) || (THEME_HOOK.test(sel) && hookOnly)) continue;
+        problems.push(`selector reaches outside the library (page-wide rules belong in ${RESET}): ${file}: ${sel}`);
+      }
+    });
     root.walkDecls((d) => {
       if (d.parent.type !== 'rule') return;
       const where = `${file}: ${d.parent.selector} { ${d.prop}: ${d.value} }`;
       const value = d.value.trim();
       const prop = d.prop.toLowerCase();
 
+      // Declared or referenced, a custom property carries the library prefix, so it cannot meet a host's --accent or --ring.
+      for (const name of [d.prop, ...[...value.matchAll(/var\(\s*(--[\w-]+)/g)].map((m) => m[1])]) {
+        if (!name.startsWith('--')) continue;
+        seen.vars.add(name);
+        if (!name.startsWith(`--${PREFIX}`)) problems.push(`custom property ${name} lacks the --${PREFIX} prefix: ${where}`);
+      }
+      // tokens.css collapses the duration tokens under reduced motion; a literal duration would keep moving.
+      if (file !== RESET && /^transition(-duration)?$/.test(prop) && value !== 'none' && !value.includes(`--${PREFIX}dur-`))
+        problems.push(`transition without a duration token (reduced motion would not reach it): ${where}`);
       if (prop === 'font' || prop === 'font-size') {
         const m = prop === 'font' ? value.match(/(\d+)px\/\d+px/) : value.match(/^(\d+)px$/);
         if (m) {
@@ -123,8 +146,8 @@ export default async function rules() {
           if (value !== v) problems.push(`row height must be ${v}: ${where}`);
         }
       }
-      if (value.includes('--row-table') && !splitList(d.parent.selector).every((x) => x.startsWith('.fa-table')))
-        problems.push(`--row-table outside a table: ${where}`);
+      if (value.includes('--fa-row-table') && !splitList(d.parent.selector).every((x) => x.startsWith('.fa-table')))
+        problems.push(`--fa-row-table outside a table: ${where}`);
       if (/^animation(-iteration-count)?$/.test(prop) && /\binfinite\b/.test(value) && !LOOP_ALLOWED.includes(d.parent.selector))
         problems.push(`looping animation (only ${LOOP_ALLOWED.join(', ')} may loop): ${where}`);
       if (prop !== 'white-space') {
@@ -132,7 +155,7 @@ export default async function rules() {
         if (/#[0-9a-f]{3,8}\b/i.test(value) || COLOR_FN.test(value) || words.some((w) => NAMED.includes(w)))
           problems.push(`literal colour (use a role variable): ${where}`);
       }
-      if ((prop === 'font' || prop === 'font-family') && value.includes('--font-mono')) {
+      if ((prop === 'font' || prop === 'font-family') && value.includes('--fa-font-mono')) {
         for (const sel of splitList(d.parent.selector)) {
           seen.mono.push(sel);
           if (!MONO_ALLOWED.includes(sel)) problems.push(`monospace outside a code class: ${where}`);
@@ -147,8 +170,10 @@ export default async function rules() {
     `${seen.spacing} spacing values checked; known exceptions still present: ${exceptionsHit.size}/${SPACING_EXCEPTIONS.length}`,
     `monospace on: ${seen.mono.join(', ')}`,
     'colours: every colour in styles/ is a var() reference',
+    `names: ${seen.vars.size} custom properties declared or referenced in styles/, all --${PREFIX}*`,
+    `scope: ${seen.selectors} selectors in styles.css, each names a .${PREFIX} class or is a theme hook; page-wide rules are only in ${RESET}`,
     `looping animations only on: ${LOOP_ALLOWED.join(', ')}`,
-    `row specs: ${seen.rowSpecs}/${ROW_SPECS.length} found (table row = var(--row-table), 40)`,
+    `row specs: ${seen.rowSpecs}/${ROW_SPECS.length} found (table row = var(--fa-row-table), 40)`,
   ];
   if (problems.length) lines.push(`${problems.length} problem(s):`, ...problems.map((p) => `  ${p}`));
   return { ok: problems.length === 0, lines };

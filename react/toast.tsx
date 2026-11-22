@@ -7,7 +7,7 @@ export type ToastKind = 'success' | 'info' | 'danger' | 'warning';
 export interface ToastOptions {
   /** One short sentence: what just happened ("已归档「排查登录超时」"). */
   text: React.ReactNode;
-  /** Colour of the leading mark only; the text stays `--fg`. */
+  /** Colour of the leading mark only; the text stays `--fa-fg`. */
   kind?: ToastKind;
   /** Replaces the default mark icon. */
   icon?: React.ReactNode;

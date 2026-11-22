@@ -10,8 +10,8 @@
 /*PRELUDE*/
 $$('[data-card="git"]').forEach(b => { b.innerHTML = ic('branch'); });
 const CARDS = {
-  err: ['<div class="fa-row" style="gap:8px"><span class="fa-dot fa-dot--error"></span><b style="font:500 14px/20px var(--font-sans)">出错了</b></div><div style="font:400 14px/20px var(--font-sans);margin-top:4px">上一轮中断了：引擎进程退出（代码 1）。打开会话，点「继续」。</div><div class="fa-cap" style="margin-top:8px">第 4 轮 · 14:02</div>', 48],
-  git: ['<div style="font:500 14px/20px var(--font-sans)">已提交，未推送</div><div class="fa-cap" style="margin-top:4px">领先 origin 2 个提交，工作区干净</div>', 96],
+  err: ['<div class="fa-row" style="gap:8px"><span class="fa-dot fa-dot--error"></span><b style="font:500 14px/20px var(--fa-font-sans)">出错了</b></div><div style="font:400 14px/20px var(--fa-font-sans);margin-top:4px">上一轮中断了：引擎进程退出（代码 1）。打开会话，点「继续」。</div><div class="fa-cap" style="margin-top:8px">第 4 轮 · 14:02</div>', 48],
+  git: ['<div style="font:500 14px/20px var(--fa-font-sans)">已提交，未推送</div><div class="fa-cap" style="margin-top:4px">领先 origin 2 个提交，工作区干净</div>', 96],
 };
 const card = $('#card'); let timer;
 function show(b) { clearTimeout(timer); const c = CARDS[b.dataset.card]; timer = setTimeout(() => { card.innerHTML = c[0]; card.style.top = c[1] + 'px'; card.hidden = false; }, 300); }

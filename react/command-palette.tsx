@@ -211,7 +211,7 @@ export function CommandPalette({
                         onClick={() => run(item)}
                       >
                         {item.lead !== undefined && <span className="lead">{item.lead}</span>}
-                        <div className="body">
+                        <div className="fa-cmd__body">
                           <div className="l l1">
                             <span className="x grow">{highlight(item.title, query.trim())}</span>
                             {item.end !== undefined && <span className="tm">{item.end}</span>}
