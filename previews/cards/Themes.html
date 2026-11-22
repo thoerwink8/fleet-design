@@ -79,5 +79,5 @@ function table() {
   $('#sum').textContent = (PAIRS.length + PPAIRS.length) * THEMES.length + ' 个格子，' + bad + ' 个未达标；文字类最低 ' + minText.toFixed(2) + '（' + minTextAt + '）。';
 }
 table(); sw(); mark(); markP();
-fetch('/dist/styles.css').then(r => r.text()).then(t => { const m = t.match(/#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/g) || []; $('#hc').textContent = m.length ? '发现 ' + m.length + ' 处写死色值：' + [...new Set(m)].join(' ') : '0 处。styles.css 里没有十六进制、rgb() 或 hsl()，所有颜色来自角色变量。'; }).catch(() => { $('#hc').textContent = '读不到 styles.css，没法检查（在设计系统页面里打开这张卡可以）。'; });
+fetch('../dist/styles.css').then(r => r.text()).then(t => { const m = t.match(/#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/g) || []; $('#hc').textContent = m.length ? '发现 ' + m.length + ' 处写死色值：' + [...new Set(m)].join(' ') : '0 处。styles.css 里没有十六进制、rgb() 或 hsl()，所有颜色来自角色变量。'; }).catch(() => { $('#hc').textContent = '读不到 styles.css，没法检查（在设计系统页面里打开这张卡可以）。'; });
 </script>

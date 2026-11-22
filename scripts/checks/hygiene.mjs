@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { root } from '../lib/tokens.mjs';
 
-const SKIP_DIRS = new Set(['.git', 'node_modules', 'test-results']);
+const SKIP_DIRS = new Set(['.git', 'node_modules', 'test-results', 'site', '_tmp']);
 const IMAGE = /\.(png|jpe?g|gif|webp|bmp|avif|ico|psd|fig|sketch)$/i;
 const self = path.join('scripts', 'checks', 'hygiene.mjs');
 
