@@ -3,19 +3,19 @@ const frame = $('#frame');
 const query = new URLSearchParams(location.search);
 
 const [staticCards, reactPages, meta] = await Promise.all([
-  fetch('/previews/cards.json').then((r) => r.json()),
-  fetch('/previews/react/pages.json').then((r) => r.json()),
-  fetch('/tokens/themes.json').then((r) => r.json()),
+  fetch('previews/cards.json').then((r) => r.json()),
+  fetch('previews/react/pages.json').then((r) => r.json()),
+  fetch('tokens/themes.json').then((r) => r.json()),
 ]);
 // Static cards, then one React page per component under the React group.
 const cards = [
-  ...staticCards.map((c) => ({ ...c, url: `/cards/${c.name}.html` })),
+  ...staticCards.map((c) => ({ ...c, url: `cards/${c.name}.html` })),
   ...reactPages.map((r) => ({
     name: `react/${r.name}`,
     label: r.name,
     group: 'React',
     subtitle: r.subtitle,
-    url: `/react/${r.name}.html`,
+    url: `react/${r.name}.html`,
   })),
 ];
 const kind = Object.fromEntries(meta.themes.map((t) => [t.id, t.kind]));

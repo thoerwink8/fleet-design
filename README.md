@@ -208,6 +208,8 @@ The full rules (type scale, weights, colour use, motion, interaction) are in [AG
 
 ## Preview site
 
+Live preview: <https://thoerwink8.github.io/fleet-design/>
+
 ```sh
 pnpm install
 pnpm dev     # http://127.0.0.1:5178, rebuilds dist/ when tokens/ or styles/ change
@@ -223,6 +225,7 @@ The 31 cards in `previews/cards/` load the built `dist/tokens.css`, `dist/reset.
 | `pnpm build`             | generate `dist/tokens.css`, `dist/tokens.json`, `dist/styles.css`, `dist/reset.css` |
 | `pnpm check`             | everything CI runs (below)                                                          |
 | `pnpm dev` / `pnpm stop` | preview site                                                                        |
+| `pnpm site`              | build the static preview site into `site/`                                          |
 | `pnpm baseline`          | accept the current build as the new baseline after an intentional change            |
 | `pnpm format`            | format with Biome                                                                   |
 | `pnpm test:react`        | Playwright interaction tests of the React components (`test/react/`)                |

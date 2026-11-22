@@ -30,7 +30,7 @@ ${HEAD}
 </head>
 <body>
 <div id="root"></div>
-<script type="module" src="/react/${name}.js"></script>
+<script type="module" src="${name}.js"></script>
 </body>
 </html>
 `;
@@ -38,11 +38,12 @@ ${HEAD}
 
 // Bundles one React page with esbuild in memory. The components come from react/ (the source of dist/react,
 // which the dist check keeps equal to a fresh build).
-async function bundleReactPage(name) {
+export async function bundleReactPage(name) {
   const { build } = await import('esbuild');
   const out = await build({
     entryPoints: [path.join(previews, 'react', `${name}.tsx`)],
     bundle: true,
+    minify: true,
     write: false,
     format: 'esm',
     jsx: 'automatic',
@@ -56,9 +57,9 @@ async function bundleReactPage(name) {
 const lib = (f) => fs.readFileSync(path.join(previews, 'lib', f), 'utf8');
 
 const HEAD = `<script>(()=>{const q=new URLSearchParams(location.search),r=document.documentElement;const t=q.get('theme');if(t)r.dataset.theme=t;const p=q.get('project');if(p&&p!=='fleet')r.dataset.project=p;})()</script>
-<link rel="stylesheet" href="/dist/tokens.css">
-<link rel="stylesheet" href="/dist/reset.css">
-<link rel="stylesheet" href="/dist/styles.css">`;
+<link rel="stylesheet" href="../dist/tokens.css">
+<link rel="stylesheet" href="../dist/reset.css">
+<link rel="stylesheet" href="../dist/styles.css">`;
 
 // A card is an HTML fragment; the page around it loads the built dist/ styles, never a copy.
 export function cardPage(name) {
