@@ -65,7 +65,7 @@ function Page() {
   ];
   return (
     <>
-      <Demo caption="受控（演示态先打开）。输入过滤，↑↓ 选，Enter 执行，Esc 关闭；Ctrl+K 再打开。含一行两行的命令和一条禁用命令">
+      <Demo caption="受控（演示态先打开）。面板自己居中、距顶 15%、不超过视口。↑↓ 跳过禁用行。Ctrl+K 再打开">
         <div className="fa-row">
           <Button variant="secondary" onClick={() => setOpen(true)}>
             打开命令面板

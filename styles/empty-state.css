@@ -1,4 +1,7 @@
 .fa-empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--fa-space-2);padding:var(--fa-space-8) var(--fa-space-4)}
+/* Media above the title: a neutral icon, or a warning-coloured icon with no filled block. The words stay fg / fg-muted. */
+.fa-empty__media{color:var(--fa-fg-muted)}
+.fa-empty__media--warning{color:var(--fa-warning)}
 .fa-empty h3{margin:0;font:500 18px/28px var(--fa-font-sans)}
 .fa-empty p{margin:0;max-width:360px;font:400 14px/20px var(--fa-font-sans);color:var(--fa-fg-muted)}
 .fa-empty__cards{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--fa-space-3);margin-top:var(--fa-space-4)}

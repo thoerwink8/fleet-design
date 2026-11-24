@@ -34,6 +34,15 @@ test('keyboard: arrows move, Enter picks, Esc closes and returns focus', async (
   await expect(trigger).toHaveText(/标准/);
 });
 
+test('sm trigger is a bordered 28px toolbar control', async ({ page }) => {
+  const trigger = page.getByRole('combobox', { name: '账号' });
+  await expect(trigger).toHaveClass(/fa-select--sm/);
+  await expect(trigger).not.toHaveClass(/fa-select--ghost/);
+  expect(Math.round((await trigger.boundingBox())?.height ?? 0)).toBe(28);
+  await expect(trigger).toHaveCSS('border-top-width', '1px');
+  await expect(trigger).toHaveCSS('border-top-style', 'solid');
+});
+
 test('ghost variant: uncontrolled value and disabled option', async ({ page }) => {
   const trigger = page.getByRole('combobox', { name: '强度' });
   await expect(trigger).toHaveClass(/fa-select--ghost/);

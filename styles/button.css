@@ -1,26 +1,33 @@
-.fa-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--fa-space-2);height:var(--fa-ctrl);padding:0 var(--fa-space-3);border:var(--fa-bw-1) solid transparent;border-radius:var(--fa-radius-md);background-color:transparent;color:var(--fa-fg);font:500 14px/20px var(--fa-font-sans);cursor:pointer;white-space:nowrap;transition:background-color var(--fa-dur-fast) var(--fa-ease-out),border-color var(--fa-dur-fast) var(--fa-ease-out)}
-.fa-btn:hover:not([disabled]){background-image:var(--fa-hv)}
+/* Colour transitions exist only while hovering or pressing, so a theme or density switch does not animate. An icon glyph is the 16px icon at every step; an icon-only button is the square of its step (24 / 28 / 32 / 40). */
+.fa-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--fa-space-2);position:relative;height:var(--fa-ctrl);padding:0 var(--fa-space-3);border:var(--fa-bw-1) solid transparent;border-radius:var(--fa-radius-md);background-color:transparent;color:var(--fa-fg);font:500 14px/20px var(--fa-font-sans);cursor:pointer;white-space:nowrap;transition:none}
+.fa-btn svg{flex:none}
+.fa-btn svg:not(.fa-ic){width:var(--fa-space-4);height:var(--fa-space-4)}
+.fa-btn:is(:hover,:active):not(:is([disabled],[aria-disabled=true],[data-disabled])){transition:background-color var(--fa-dur-fast) var(--fa-ease-out),border-color var(--fa-dur-fast) var(--fa-ease-out)}
+.fa-btn:hover:not(:is([disabled],[aria-disabled=true],[data-disabled])){background-image:var(--fa-hv)}
 /* A trigger whose popup is open, or a toggle that is on, keeps the hover fill for as long as that state lasts. */
-.fa-btn[aria-expanded=true]:not([disabled]),.fa-btn[aria-pressed=true]:not([disabled]){background-image:var(--fa-hv)}
-.fa-btn:active:not([disabled]){background-image:var(--fa-hv),var(--fa-hv)}
+.fa-btn[aria-expanded=true]:not(:is([disabled],[aria-disabled=true],[data-disabled])),.fa-btn[aria-pressed=true]:not(:is([disabled],[aria-disabled=true],[data-disabled])){background-image:var(--fa-hv)}
+.fa-btn:active:not(:is([disabled],[aria-disabled=true],[data-disabled])){background-image:var(--fa-hv),var(--fa-hv)}
 /* Disabled: no opacity fade (that drops text under 2:1). No fill, 1px border outline, muted text (holds 4.5:1 on every surface), and a reason next to it.
-   Filled variants turn into an outline, so disabled never looks like a live secondary button. */
-.fa-btn[disabled]{cursor:not-allowed;background-color:transparent;background-image:none;border-color:var(--fa-border);color:var(--fa-fg-muted)}
-.fa-btn:not(.fa-btn--primary):not(.fa-btn--danger):not(.fa-btn--secondary):not(.fa-btn--danger-secondary)[disabled]{border-color:transparent}
+   The same look covers [disabled], aria-disabled and data-disabled (a non-button render target). Filled variants turn into an outline.
+   aria-busy is the loading state: it stays focusable and keeps its fill, so it is not painted as disabled. */
+.fa-btn:is([disabled],[aria-disabled=true],[data-disabled]):not([aria-busy=true]){cursor:not-allowed;background-color:transparent;background-image:none;border-color:var(--fa-border);color:var(--fa-fg-muted)}
+.fa-btn:not(.fa-btn--primary):not(.fa-btn--danger):not(.fa-btn--secondary):not(.fa-btn--danger-secondary):is([disabled],[aria-disabled=true],[data-disabled]):not([aria-busy=true]){border-color:transparent}
+/* Coarse pointers get a 44px hit area from a centred ::after. The button's own box stays its step. */
+@media (pointer:coarse){.fa-btn::after{content:"";position:absolute;left:50%;top:50%;width:100%;height:100%;min-width:44px;min-height:44px;transform:translate(-50%,-50%)}}
 .fa-btn--primary{background-color:var(--fa-accent);color:var(--fa-on-accent)}
 /* Secondary: neutral filled pill, no outline. The wash follows whatever surface it sits on. */
 .fa-btn--secondary,.fa-btn--danger-secondary{border-color:transparent;background-color:transparent;background-image:var(--fa-wash2)}
-.fa-btn--secondary:hover:not([disabled]),.fa-btn--danger-secondary:hover:not([disabled]),.fa-btn--secondary[aria-expanded=true]:not([disabled]),.fa-btn--secondary[aria-pressed=true]:not([disabled]){background-image:var(--fa-wash2),var(--fa-hv)}
-.fa-btn--secondary:active:not([disabled]),.fa-btn--danger-secondary:active:not([disabled]){background-image:var(--fa-wash2),var(--fa-hv),var(--fa-hv)}
+.fa-btn--secondary:hover:not(:is([disabled],[aria-disabled=true],[data-disabled])),.fa-btn--danger-secondary:hover:not(:is([disabled],[aria-disabled=true],[data-disabled])),.fa-btn--secondary[aria-expanded=true]:not(:is([disabled],[aria-disabled=true],[data-disabled])),.fa-btn--secondary[aria-pressed=true]:not(:is([disabled],[aria-disabled=true],[data-disabled])){background-image:var(--fa-wash2),var(--fa-hv)}
+.fa-btn--secondary:active:not(:is([disabled],[aria-disabled=true],[data-disabled])),.fa-btn--danger-secondary:active:not(:is([disabled],[aria-disabled=true],[data-disabled])){background-image:var(--fa-wash2),var(--fa-hv),var(--fa-hv)}
 .fa-btn--danger{background-color:var(--fa-danger);color:var(--fa-on-danger)}
 /* Quiet destructive actions outside a confirm dialog. danger-secondary: the neutral wash with danger text, for a standalone action such as "delete project" on a settings page.
    danger-ghost: muted until hovered or focused, for the remove action inside a row. Neither replaces the confirm step. */
-.fa-btn--danger-secondary:not([disabled]){color:var(--fa-danger)}
+.fa-btn--danger-secondary:not(:is([disabled],[data-disabled])):not([aria-disabled=true]:not([aria-busy=true])){color:var(--fa-danger)}
 .fa-btn--danger-ghost{color:var(--fa-fg-muted)}
-.fa-btn--danger-ghost:hover:not([disabled]),.fa-btn--danger-ghost:focus-visible:not([disabled]){color:var(--fa-danger)}
+.fa-btn--danger-ghost:hover:not(:is([disabled],[aria-disabled=true],[data-disabled])),.fa-btn--danger-ghost:focus-visible:not(:is([disabled],[aria-disabled=true],[data-disabled])){color:var(--fa-danger)}
 /* Muted: a ghost button for low-emphasis actions in a bar or row. Text and icon turn to the full foreground on hover, focus, or while its popup is open. */
 .fa-btn--muted{color:var(--fa-fg-muted)}
-.fa-btn--muted:hover:not([disabled]),.fa-btn--muted:focus-visible:not([disabled]),.fa-btn--muted[aria-expanded=true]:not([disabled]),.fa-btn--muted[aria-pressed=true]:not([disabled]){color:var(--fa-fg)}
+.fa-btn--muted:hover:not(:is([disabled],[aria-disabled=true],[data-disabled])),.fa-btn--muted:focus-visible:not(:is([disabled],[aria-disabled=true],[data-disabled])),.fa-btn--muted[aria-expanded=true]:not(:is([disabled],[aria-disabled=true],[data-disabled])),.fa-btn--muted[aria-pressed=true]:not(:is([disabled],[aria-disabled=true],[data-disabled])){color:var(--fa-fg)}
 .fa-btn--sm{height:var(--fa-ctrl-sm);padding:0 var(--fa-space-2)}
 /* 24: only inside a row or bar that is itself at least 32 high, next to that row's own content. Never a standalone action. */
 .fa-btn--xs{height:var(--fa-ctrl-xs);padding:0 var(--fa-space-2);gap:var(--fa-space-1);border-radius:var(--fa-radius-sm)}

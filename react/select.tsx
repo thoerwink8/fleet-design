@@ -16,6 +16,8 @@ export interface SelectProps<V extends string> extends LayoutProps {
   placeholder?: React.ReactNode;
   /** `default`: framed, 32 high. `ghost`: no frame, 28 high, muted text, for pickers inside a composer or toolbar. */
   variant?: 'default' | 'ghost';
+  /** `sm`: framed, 28 high, for a toolbar. `md` (default) is 32. */
+  size?: 'md' | 'sm';
   /** Content before the value inside the trigger (an agent slot, an icon). */
   lead?: React.ReactNode;
   disabled?: boolean;
@@ -40,6 +42,7 @@ export function Select<V extends string>({
   onValueChange,
   placeholder,
   variant = 'default',
+  size = 'md',
   lead,
   disabled,
   name,
@@ -77,7 +80,11 @@ export function Select<V extends string>({
         if (!next && !openRef.current) setPortalOpen(false);
       }}
     >
-      <BaseSelect.Trigger {...aria} className={cx('fa-select', variant === 'ghost' && 'fa-select--ghost', className)} style={style}>
+      <BaseSelect.Trigger
+        {...aria}
+        className={cx('fa-select', size === 'sm' && 'fa-select--sm', variant === 'ghost' && 'fa-select--ghost', className)}
+        style={style}
+      >
         {lead}
         <BaseSelect.Value className="lbl" placeholder={placeholder} />
         <BaseSelect.Icon render={<span />}>

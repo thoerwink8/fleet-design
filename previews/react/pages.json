@@ -18,7 +18,10 @@
       ["[data-cmp=icon-lg]", ".fa-btn--icon.fa-btn--lg"],
       ["[data-cmp=busy]", "#go"],
       ["[data-cmp=disabled-primary]", ".fa-btn--primary[disabled]"],
-      ["[data-cmp=disabled-secondary]", ".fa-btn--secondary[disabled]"]
+      ["[data-cmp=disabled-secondary]", ".fa-btn--secondary[disabled]"],
+      ["#rawic svg", "#rawic svg"],
+      ["[aria-disabled=true].fa-btn--primary", "[aria-disabled=true].fa-btn--primary"],
+      ["[data-disabled].fa-btn--secondary", "[data-disabled].fa-btn--secondary"]
     ]
   },
   {
@@ -99,6 +102,9 @@
       ["[aria-label=视图] [role=menuitem]", "#menu .fa-item[data-active=false]"],
       ["[aria-label=视图] .fa-sep", "#menu .fa-sep"],
       ["[aria-label=视图] [role=menuitemcheckbox]", "#menu [role=menuitemcheckbox]"],
+      ["#item-h .is-plain", "#item-h .is-plain"],
+      ["#item-h .is-icon", "#item-h .is-icon"],
+      ["#item-h .fa-item--selected", "#item-h .fa-item--selected"],
       [
         "[aria-label=视图] .fa-glabel",
         "#p2 .fa-glabel",
@@ -121,6 +127,7 @@
           "card": "Composer"
         }
       ],
+      [".fa-select--sm", ".fa-select--sm"],
       [".fa-select[aria-invalid=true]", ".fa-select[aria-invalid=true]"]
     ]
   },
@@ -313,6 +320,8 @@
             "transform",
             "max-width",
             "max-inline-size",
+            "max-height",
+            "max-block-size",
             "block-size",
             "height",
             "min-block-size",

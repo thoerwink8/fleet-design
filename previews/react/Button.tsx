@@ -72,6 +72,22 @@ function Page() {
           </Button>
         </div>
       </Demo>
+      <Demo caption="没写 fa-ic 的图标也不缩小，固定 16。aria-disabled 和 data-disabled 跟 disabled 同一个样子">
+        <div className="fa-row">
+          <button className="fa-btn fa-btn--secondary" id="rawic" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+              <path d="M4 4l8 8M12 4l-8 8" />
+            </svg>
+            带图标
+          </button>
+          <button className="fa-btn fa-btn--primary" type="button" aria-disabled="true">
+            不能点
+          </button>
+          <button className="fa-btn fa-btn--secondary" type="button" data-disabled="">
+            不能点
+          </button>
+        </div>
+      </Demo>
       <Demo caption="进行中：文字换成进行时，按钮仍可聚焦但不响应；禁用要写原因">
         <div className="fa-row">
           <Button

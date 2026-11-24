@@ -31,10 +31,43 @@ test('loading keeps focus, ignores clicks and announces busy', async ({ page }) 
   await expect(page.getByTestId('say')).toHaveText('压缩完成');
 });
 
+test('aria-disabled and data-disabled use the disabled look and do not take a hover fill', async ({ page }) => {
+  const aria = page.locator('.fa-btn--primary[aria-disabled="true"]');
+  const data = page.locator('.fa-btn--secondary[data-disabled]:not([disabled])');
+  await expect(aria).toHaveCSS('cursor', 'not-allowed');
+  await expect(data).toHaveCSS('cursor', 'not-allowed');
+  await aria.hover();
+  await expect(aria).toHaveCSS('background-image', 'none');
+  await data.hover();
+  await expect(data).toHaveCSS('background-image', 'none');
+  const svg = page.locator('#rawic svg');
+  const box = await svg.boundingBox();
+  expect(Math.round(box?.width ?? 0)).toBe(16);
+  expect(Math.round(box?.height ?? 0)).toBe(16);
+});
+
 test('disabled buttons are not focusable and say why', async ({ page }) => {
   const b = page.getByRole('button', { name: '继续发送', description: '没有排队消息，所以不能继续发送或撤回' });
   await expect(b).toBeDisabled();
   await page.getByRole('button', { name: '压缩会话' }).focus();
   await page.keyboard.press('Tab');
   await expect(b).not.toBeFocused();
+});
+
+test('a loading danger-secondary button keeps its danger text colour', async ({ page }) => {
+  const color = await page.evaluate(() => {
+    const b = document.createElement('button');
+    b.className = 'fa-btn fa-btn--danger-secondary';
+    b.setAttribute('aria-disabled', 'true');
+    b.setAttribute('aria-busy', 'true');
+    b.textContent = '删除中…';
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--fa-danger)';
+    document.body.append(b, probe);
+    const out = [getComputedStyle(b).color, getComputedStyle(probe).color];
+    b.remove();
+    probe.remove();
+    return out;
+  });
+  expect(color[0]).toBe(color[1]);
 });

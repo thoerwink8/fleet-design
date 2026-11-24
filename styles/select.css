@@ -1,4 +1,6 @@
 .fa-select{display:inline-flex;align-items:center;gap:var(--fa-space-2);height:var(--fa-ctrl);padding:0 var(--fa-space-3);border:var(--fa-bw-1) solid var(--fa-border);border-radius:var(--fa-radius-md);background:var(--fa-bg);font:400 14px/20px var(--fa-font-sans);cursor:pointer}
+/* Bordered 28 for a toolbar. The borderless 28 is .fa-select--ghost. */
+.fa-select--sm{height:var(--fa-ctrl-sm);padding:0 var(--fa-space-2);gap:var(--fa-space-2)}
 .fa-select:hover{border-color:var(--fa-fg-muted)}
 /* In-composer pickers: no outline, 28 high, 14/20 fg-muted text (clickable, so never 12), fg on hover; hover wash shows they are clickable. */
 .fa-select--ghost{height:var(--fa-ctrl-sm);padding:0 var(--fa-space-2);gap:var(--fa-space-2);border-color:transparent;background:transparent;font:400 14px/20px var(--fa-font-sans);color:var(--fa-fg-muted)}

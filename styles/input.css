@@ -19,3 +19,5 @@
 .fa-input__control{flex:1;min-width:0;height:100%;border:0;outline:0;background:transparent;color:inherit;font:inherit}
 .fa-input__control::placeholder{color:var(--fa-fg-muted)}
 .fa-input__affix{flex:none;display:inline-flex;align-items:center;color:var(--fa-fg-muted);white-space:nowrap}
+/* Below the viewport width the command palette already treats as narrow (480): 16px so iOS Safari does not zoom a focused field. 14px above it. Not a type step. */
+@media (max-width:480px){.fa-input,.fa-input__control{font-size:16px}}
