@@ -78,3 +78,17 @@ test('a summary-only row gets fa-cmd__row--2 at 52px; a disabled row is marked a
   await expect(page.getByRole('dialog', { name: '命令面板' })).toBeVisible();
   await expect(page.getByTestId('say')).not.toHaveText('不应执行');
 });
+
+test('Ctrl+End skips the disabled last row, Ctrl+Home returns to the first, and hovering a disabled row does not highlight it', async ({
+  page,
+}) => {
+  await page.keyboard.press('Control+End');
+  await expect(options(page).nth(5)).toHaveAttribute('aria-selected', 'true');
+  await expect(options(page).nth(6)).toHaveAttribute('aria-selected', 'false');
+  await page.keyboard.press('Control+Home');
+  await expect(options(page).nth(0)).toHaveAttribute('aria-selected', 'true');
+  await options(page).nth(6).hover({ force: true });
+  await expect(options(page).nth(6)).toHaveAttribute('aria-selected', 'false');
+  await expect(options(page).nth(6)).toHaveAttribute('data-active', 'false');
+  await expect(options(page).nth(0)).toHaveAttribute('aria-selected', 'true');
+});
