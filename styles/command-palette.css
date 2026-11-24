@@ -9,6 +9,12 @@
 .fa-cmd__row{display:flex;flex-direction:column;justify-content:center;min-height:var(--fa-ctrl);padding:var(--fa-space-2) var(--fa-space-3);border-radius:var(--fa-radius-md);cursor:pointer;background-color:transparent}
 /* one-line rows: 2 seam + 4 + 20 + 4 + 2 = 32; the doubled class keeps this ahead of the .fa-cmd__row padding below whatever the order */
 .fa-cmd__row.fa-cmd__row--1{padding-block:var(--fa-space-1)}
+/* two-line rows (title + summary): 2 seam + 6 + 20 + 16 + 6 + 2 = 52 (--fa-row-2), so the padding loses the seam like the other 52 rows */
+.fa-cmd__row.fa-cmd__row--2{padding-block:calc(var(--fa-space-row-y) - var(--fa-space-row-seam))}
+/* Disabled (aria-disabled): muted text, no hover or active fill, cursor stays default. No opacity fade, same as buttons. */
+.fa-cmd__row[aria-disabled=true],.fa-cmd__row[aria-disabled=true]:hover{color:var(--fa-fg-muted);cursor:default;background-image:none}
+.fa-cmd__row[aria-disabled=true][data-active=true]{background-color:transparent}
+.fa-cmd__row[aria-disabled=true] .l1,.fa-cmd__row[aria-disabled=true] .fa-mark{color:var(--fa-fg-muted)}
 .fa-cmd__row:hover{background-image:linear-gradient(var(--fa-hover),var(--fa-hover))}
 .fa-cmd__row[data-active=true]{background-color:var(--fa-selected);background-image:none}
 .fa-cmd__row .l{display:flex;align-items:baseline;gap:var(--fa-space-2);min-width:0}

@@ -61,6 +61,7 @@
 .fa-btn--icon{width:var(--fa-ctrl);padding:0}
 .fa-btn--icon.fa-btn--sm{width:var(--fa-ctrl-sm)}
 .fa-btn--icon.fa-btn--xs{width:var(--fa-ctrl-xs);padding:0}
+.fa-btn--icon.fa-btn--lg{width:var(--fa-ctrl-lg)}
 .fa-btn--stop{background-color:var(--fa-accent);color:var(--fa-on-accent);width:var(--fa-ctrl);padding:0;border-radius:var(--fa-radius-md)}
 .fa-icon-btn{display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--fa-ctrl-sm);height:var(--fa-ctrl-sm);padding:0;border:0;border-radius:var(--fa-radius-sm);background:transparent;color:var(--fa-fg-muted);cursor:pointer}
 .fa-icon-btn:hover{background-image:var(--fa-hv);color:var(--fa-fg)}
@@ -145,6 +146,12 @@
 .fa-cmd__row{display:flex;flex-direction:column;justify-content:center;min-height:var(--fa-ctrl);padding:var(--fa-space-2) var(--fa-space-3);border-radius:var(--fa-radius-md);cursor:pointer;background-color:transparent}
 /* one-line rows: 2 seam + 4 + 20 + 4 + 2 = 32; the doubled class keeps this ahead of the .fa-cmd__row padding below whatever the order */
 .fa-cmd__row.fa-cmd__row--1{padding-block:var(--fa-space-1)}
+/* two-line rows (title + summary): 2 seam + 6 + 20 + 16 + 6 + 2 = 52 (--fa-row-2), so the padding loses the seam like the other 52 rows */
+.fa-cmd__row.fa-cmd__row--2{padding-block:calc(var(--fa-space-row-y) - var(--fa-space-row-seam))}
+/* Disabled (aria-disabled): muted text, no hover or active fill, cursor stays default. No opacity fade, same as buttons. */
+.fa-cmd__row[aria-disabled=true],.fa-cmd__row[aria-disabled=true]:hover{color:var(--fa-fg-muted);cursor:default;background-image:none}
+.fa-cmd__row[aria-disabled=true][data-active=true]{background-color:transparent}
+.fa-cmd__row[aria-disabled=true] .l1,.fa-cmd__row[aria-disabled=true] .fa-mark{color:var(--fa-fg-muted)}
 .fa-cmd__row:hover{background-image:linear-gradient(var(--fa-hover),var(--fa-hover))}
 .fa-cmd__row[data-active=true]{background-color:var(--fa-selected);background-image:none}
 .fa-cmd__row .l{display:flex;align-items:baseline;gap:var(--fa-space-2);min-width:0}
@@ -225,6 +232,8 @@
    Breakpoints are the size tokens bp-composer-foot (520), bp-composer-account (400), bp-composer-icon (300), bp-batch (320);
    container queries cannot read var(), so the numbers are repeated here. */
 .fa-select--ghost{overflow:visible;flex:none}
+/* Invalid state: same border as .fa-input[aria-invalid]; the focus ring is unchanged (base.css). */
+.fa-select[aria-invalid=true]{border-color:var(--fa-danger)}
 .fa-tip{display:inline-flex;gap:var(--fa-space-2);align-items:center;padding:var(--fa-space-1) var(--fa-space-2);border-radius:var(--fa-radius-sm);background:var(--fa-overlay);border:var(--fa-bw-1) solid var(--fa-border);box-shadow:var(--fa-shadow-overlay);font:400 12px/16px var(--fa-font-sans);color:var(--fa-fg)}
 /* Session status: dot + 12px word, no fill, no outline. The dot carries the colour; the word is always fg-muted. */
 .fa-status{display:inline-flex;align-items:center;gap:var(--fa-space-1);font:400 12px/16px var(--fa-font-sans);color:var(--fa-fg-muted);white-space:nowrap;flex:none}

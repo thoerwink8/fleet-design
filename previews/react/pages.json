@@ -15,6 +15,7 @@
       ["[data-cmp=sm]", ".fa-btn--secondary.fa-btn--sm:not(.fa-btn--icon)"],
       ["[data-cmp=lg]", ".fa-btn--secondary.fa-btn--lg"],
       ["[data-cmp=icon-sm]", ".fa-btn--icon.fa-btn--secondary.fa-btn--sm"],
+      ["[data-cmp=icon-lg]", ".fa-btn--icon.fa-btn--lg"],
       ["[data-cmp=busy]", "#go"],
       ["[data-cmp=disabled-primary]", ".fa-btn--primary[disabled]"],
       ["[data-cmp=disabled-secondary]", ".fa-btn--secondary[disabled]"]
@@ -119,7 +120,8 @@
         {
           "card": "Composer"
         }
-      ]
+      ],
+      [".fa-select[aria-invalid=true]", ".fa-select[aria-invalid=true]"]
     ]
   },
   {
@@ -341,6 +343,8 @@
       [".fa-cmd__list .fa-glabel", "#list .fa-glabel"],
       [".fa-cmd__row[data-active=true]", ".fa-cmd__row[data-active=true]"],
       [".fa-cmd__row[data-active=false]:not(.fa-cmd__row--1)", ".fa-cmd__row[data-active=false]"],
+      [".fa-cmd__row--2[data-active=false]", ".fa-cmd__row--2[data-active=false]"],
+      [".fa-cmd__row[aria-disabled=true]", ".fa-cmd__row[aria-disabled=true]"],
       [".fa-cmd__foot", ".fa-cmd__foot"]
     ]
   },
