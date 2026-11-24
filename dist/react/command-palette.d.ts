@@ -5,7 +5,7 @@ export interface CommandItem {
     title: string;
     /** Group heading the item is listed under. Items keep their order inside a group. */
     group?: string;
-    /** Second line, 12px muted (a summary). Its presence makes the row a two- or three-line result. */
+    /** Second line, 12px muted (a summary). Alone it makes a 52px two-line row (`.fa-cmd__row--2`); with `meta`/`metaEnd` the row is three lines (72). */
     summary?: React.ReactNode;
     /** Third line, left side (model, turns) and right side (workspace, branch). One line each; a long value is cut with an ellipsis and the full text goes to its tooltip when it is a string. */
     meta?: React.ReactNode;

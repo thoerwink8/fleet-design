@@ -65,6 +65,10 @@ function audit(S) {
     const h = Math.round(R(e).height);
     add('one-line command row height', `${S.clickableRow}`, h, h === S.clickableRow, e);
   }
+  for (const e of all('.fa-cmd__row--2')) {
+    const h = Math.round(R(e).height);
+    add('two-line command row height', `${S.twoLineRow}`, h, h === S.twoLineRow, e);
+  }
   for (const e of all('.fa-table tbody tr')) {
     const h = Math.round(R(e).height);
     add('table row height', `${S.tableRow}`, h, h === S.tableRow, e);

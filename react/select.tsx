@@ -24,6 +24,8 @@ export interface SelectProps<V extends string> extends LayoutProps {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   'aria-label'?: string;
+  /** Marks the trigger invalid: `aria-invalid` on it, same danger border as an invalid `Input`. */
+  'aria-invalid'?: boolean;
   'aria-labelledby'?: string;
 }
 

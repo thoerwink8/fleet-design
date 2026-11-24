@@ -67,6 +67,9 @@ function Page() {
           <IconButton label="复制路径" data-cmp="icon-btn" onClick={() => say('已复制路径')}>
             <Copy />
           </IconButton>
+          <Button size="lg" icon aria-label="撤销" data-cmp="icon-lg" onClick={() => say('大号图标按钮')}>
+            <Copy />
+          </Button>
         </div>
       </Demo>
       <Demo caption="进行中：文字换成进行时，按钮仍可聚焦但不响应；禁用要写原因">

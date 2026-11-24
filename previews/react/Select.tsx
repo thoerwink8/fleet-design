@@ -44,6 +44,17 @@ function Page() {
           />
         </div>
       </Demo>
+      <Demo caption="出错态：aria-invalid，和输入框一样的红边">
+        <div>
+          <Select<Size>
+            aria-label="无效选择"
+            aria-invalid
+            options={SIZES}
+            defaultValue="18"
+            style={{ width: 200, justifyContent: 'space-between' }}
+          />
+        </div>
+      </Demo>
       <Demo caption="占位文字">
         <Select aria-label="分组" placeholder="选择分组" options={[{ value: 'a', label: '工作区 A' }]} style={{ width: 200 }} />
       </Demo>

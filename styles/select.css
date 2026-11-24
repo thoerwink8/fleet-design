@@ -15,3 +15,5 @@
    Breakpoints are the size tokens bp-composer-foot (520), bp-composer-account (400), bp-composer-icon (300), bp-batch (320);
    container queries cannot read var(), so the numbers are repeated here. */
 .fa-select--ghost{overflow:visible;flex:none}
+/* Invalid state: same border as .fa-input[aria-invalid]; the focus ring is unchanged (base.css). */
+.fa-select[aria-invalid=true]{border-color:var(--fa-danger)}

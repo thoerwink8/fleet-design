@@ -43,10 +43,29 @@ function Page() {
     { id: 'c1', group: '命令', title: '新建会话', end: 'Ctrl+N', keywords: 'new', onRun: () => say('新建会话') },
     { id: 'c2', group: '命令', title: '切换主题', keywords: 'theme dark', onRun: () => say('切换主题') },
     { id: 'c3', group: '命令', title: '打开设置', keywords: 'settings', onRun: () => say('打开设置') },
+    {
+      id: 'c4',
+      group: '命令',
+      title: '同步设置到所有工作区',
+      summary: '把本机外观和快捷键写进共享配置',
+      keywords: 'sync settings',
+      lead: <span className="fa-agent">C</span>,
+      onRun: () => say('同步设置'),
+    },
+    {
+      id: 'd1',
+      group: '命令',
+      title: '重新生成会话摘要',
+      summary: '上一轮还没结束，等它完成后才能重新生成',
+      keywords: 'summary regenerate',
+      disabled: true,
+      lead: <span className="fa-agent">C</span>,
+      onRun: () => say('不应执行'),
+    },
   ];
   return (
     <>
-      <Demo caption="受控（演示态先打开）。输入过滤，↑↓ 选，Enter 执行，Esc 关闭；Ctrl+K 再打开">
+      <Demo caption="受控（演示态先打开）。输入过滤，↑↓ 选，Enter 执行，Esc 关闭；Ctrl+K 再打开。含一行两行的命令和一条禁用命令">
         <div className="fa-row">
           <Button variant="secondary" onClick={() => setOpen(true)}>
             打开命令面板

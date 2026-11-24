@@ -28,6 +28,7 @@
 .fa-btn--icon{width:var(--fa-ctrl);padding:0}
 .fa-btn--icon.fa-btn--sm{width:var(--fa-ctrl-sm)}
 .fa-btn--icon.fa-btn--xs{width:var(--fa-ctrl-xs);padding:0}
+.fa-btn--icon.fa-btn--lg{width:var(--fa-ctrl-lg)}
 .fa-btn--stop{background-color:var(--fa-accent);color:var(--fa-on-accent);width:var(--fa-ctrl);padding:0;border-radius:var(--fa-radius-md)}
 .fa-icon-btn{display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--fa-ctrl-sm);height:var(--fa-ctrl-sm);padding:0;border:0;border-radius:var(--fa-radius-sm);background:transparent;color:var(--fa-fg-muted);cursor:pointer}
 .fa-icon-btn:hover{background-image:var(--fa-hv);color:var(--fa-fg)}
