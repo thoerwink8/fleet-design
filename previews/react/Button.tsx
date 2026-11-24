@@ -9,6 +9,12 @@ const Copy = () => (
   </svg>
 );
 
+const X = () => (
+  <svg className="fa-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+    <path d="M4 4l8 8M12 4l-8 8" />
+  </svg>
+);
+
 function Page() {
   const [said, say] = useState('点一个按钮看反馈。');
   const [busy, setBusy] = useState(false);
@@ -30,8 +36,24 @@ function Page() {
           </Button>
         </div>
       </Demo>
-      <Demo caption="尺寸 28 / 32 / 40，图标按钮同高正方形">
+      <Demo caption="低调的三种：次要文字的幽灵按钮；确认弹窗以外的删除">
         <div className="fa-row">
+          <Button variant="muted" data-cmp="muted" onClick={() => say('次要文字的幽灵按钮：查看日志')}>
+            查看日志
+          </Button>
+          <Button variant="danger-secondary" data-cmp="danger-secondary" onClick={() => say('带底的删除：删除项目')}>
+            删除项目
+          </Button>
+          <Button variant="danger-ghost" size="xs" icon aria-label="移除这一项" data-cmp="danger-ghost" onClick={() => say('行内移除')}>
+            <X />
+          </Button>
+        </div>
+      </Demo>
+      <Demo caption="尺寸 24 / 28 / 32 / 40，图标按钮同高正方形">
+        <div className="fa-row">
+          <Button variant="secondary" size="xs" data-cmp="xs">
+            行内 24
+          </Button>
           <Button variant="secondary" size="sm" data-cmp="sm">
             小 28
           </Button>

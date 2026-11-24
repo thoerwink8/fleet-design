@@ -1,20 +1,33 @@
 .fa-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--fa-space-2);height:var(--fa-ctrl);padding:0 var(--fa-space-3);border:var(--fa-bw-1) solid transparent;border-radius:var(--fa-radius-md);background-color:transparent;color:var(--fa-fg);font:500 14px/20px var(--fa-font-sans);cursor:pointer;white-space:nowrap;transition:background-color var(--fa-dur-fast) var(--fa-ease-out),border-color var(--fa-dur-fast) var(--fa-ease-out)}
 .fa-btn:hover:not([disabled]){background-image:var(--fa-hv)}
+/* A trigger whose popup is open, or a toggle that is on, keeps the hover fill for as long as that state lasts. */
+.fa-btn[aria-expanded=true]:not([disabled]),.fa-btn[aria-pressed=true]:not([disabled]){background-image:var(--fa-hv)}
 .fa-btn:active:not([disabled]){background-image:var(--fa-hv),var(--fa-hv)}
 /* Disabled: no opacity fade (that drops text under 2:1). No fill, 1px border outline, muted text (holds 4.5:1 on every surface), and a reason next to it.
    Filled variants turn into an outline, so disabled never looks like a live secondary button. */
 .fa-btn[disabled]{cursor:not-allowed;background-color:transparent;background-image:none;border-color:var(--fa-border);color:var(--fa-fg-muted)}
-.fa-btn:not(.fa-btn--primary):not(.fa-btn--danger):not(.fa-btn--secondary)[disabled]{border-color:transparent}
+.fa-btn:not(.fa-btn--primary):not(.fa-btn--danger):not(.fa-btn--secondary):not(.fa-btn--danger-secondary)[disabled]{border-color:transparent}
 .fa-btn--primary{background-color:var(--fa-accent);color:var(--fa-on-accent)}
 /* Secondary: neutral filled pill, no outline. The wash follows whatever surface it sits on. */
-.fa-btn--secondary{border-color:transparent;background-color:transparent;background-image:var(--fa-wash2)}
-.fa-btn--secondary:hover:not([disabled]){background-image:var(--fa-wash2),var(--fa-hv)}
-.fa-btn--secondary:active:not([disabled]){background-image:var(--fa-wash2),var(--fa-hv),var(--fa-hv)}
+.fa-btn--secondary,.fa-btn--danger-secondary{border-color:transparent;background-color:transparent;background-image:var(--fa-wash2)}
+.fa-btn--secondary:hover:not([disabled]),.fa-btn--danger-secondary:hover:not([disabled]),.fa-btn--secondary[aria-expanded=true]:not([disabled]),.fa-btn--secondary[aria-pressed=true]:not([disabled]){background-image:var(--fa-wash2),var(--fa-hv)}
+.fa-btn--secondary:active:not([disabled]),.fa-btn--danger-secondary:active:not([disabled]){background-image:var(--fa-wash2),var(--fa-hv),var(--fa-hv)}
 .fa-btn--danger{background-color:var(--fa-danger);color:var(--fa-on-danger)}
+/* Quiet destructive actions outside a confirm dialog. danger-secondary: the neutral wash with danger text, for a standalone action such as "delete project" on a settings page.
+   danger-ghost: muted until hovered or focused, for the remove action inside a row. Neither replaces the confirm step. */
+.fa-btn--danger-secondary:not([disabled]){color:var(--fa-danger)}
+.fa-btn--danger-ghost{color:var(--fa-fg-muted)}
+.fa-btn--danger-ghost:hover:not([disabled]),.fa-btn--danger-ghost:focus-visible:not([disabled]){color:var(--fa-danger)}
+/* Muted: a ghost button for low-emphasis actions in a bar or row. Text and icon turn to the full foreground on hover, focus, or while its popup is open. */
+.fa-btn--muted{color:var(--fa-fg-muted)}
+.fa-btn--muted:hover:not([disabled]),.fa-btn--muted:focus-visible:not([disabled]),.fa-btn--muted[aria-expanded=true]:not([disabled]),.fa-btn--muted[aria-pressed=true]:not([disabled]){color:var(--fa-fg)}
 .fa-btn--sm{height:var(--fa-ctrl-sm);padding:0 var(--fa-space-2)}
+/* 24: only inside a row or bar that is itself at least 32 high, next to that row's own content. Never a standalone action. */
+.fa-btn--xs{height:var(--fa-ctrl-xs);padding:0 var(--fa-space-2);gap:var(--fa-space-1);border-radius:var(--fa-radius-sm)}
 .fa-btn--lg{height:var(--fa-ctrl-lg);padding:0 var(--fa-space-4)}
 .fa-btn--icon{width:var(--fa-ctrl);padding:0}
 .fa-btn--icon.fa-btn--sm{width:var(--fa-ctrl-sm)}
+.fa-btn--icon.fa-btn--xs{width:var(--fa-ctrl-xs);padding:0}
 .fa-btn--stop{background-color:var(--fa-accent);color:var(--fa-on-accent);width:var(--fa-ctrl);padding:0;border-radius:var(--fa-radius-md)}
 .fa-icon-btn{display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--fa-ctrl-sm);height:var(--fa-ctrl-sm);padding:0;border:0;border-radius:var(--fa-radius-sm);background:transparent;color:var(--fa-fg-muted);cursor:pointer}
 .fa-icon-btn:hover{background-image:var(--fa-hv);color:var(--fa-fg)}
