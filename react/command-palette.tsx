@@ -124,14 +124,23 @@ export function CommandPalette({
     else groups.push({ name: item.group, items: [item] });
   }
   const ordered = groups.flatMap((g) => g.items);
-  const current = ordered[Math.min(active, ordered.length - 1)];
+  let index = Math.min(active, Math.max(ordered.length - 1, 0));
+  if (ordered[index]?.disabled) {
+    const next = ordered.findIndex((item) => !item.disabled);
+    if (next >= 0 && next !== active) {
+      setActive(next);
+      index = next;
+    }
+  }
+  const current = ordered[index];
+  const highlighted = current && !current.disabled ? current : undefined;
   const optionId = (item: CommandItem) => `${listId}-${item.id}`;
 
   React.useEffect(() => {
     if (!isOpen) setQuery('');
   }, [isOpen]);
   React.useEffect(() => {
-    if (current) document.getElementById(optionId(current))?.scrollIntoView({ block: 'nearest' });
+    if (highlighted) document.getElementById(optionId(highlighted))?.scrollIntoView({ block: 'nearest' });
   });
 
   const run = (item: CommandItem | undefined) => {
@@ -140,16 +149,29 @@ export function CommandPalette({
     item.onRun();
   };
   const move = (by: number) => {
-    if (!ordered.length) return;
-    setActive((a) => (Math.min(a, ordered.length - 1) + by + ordered.length) % ordered.length);
+    const idxs = ordered.flatMap((item, i) => (item.disabled ? [] : [i]));
+    if (!idxs.length) return;
+    setActive((a) => {
+      const cur = Math.min(a, ordered.length - 1);
+      let pos = idxs.indexOf(cur);
+      if (pos < 0) pos = by > 0 ? -1 : 0;
+      return idxs[(pos + by + idxs.length) % idxs.length] ?? a;
+    });
   };
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.nativeEvent.isComposing) return;
     if (event.key === 'ArrowDown') move(1);
     else if (event.key === 'ArrowUp') move(-1);
-    else if (event.key === 'Home' && event.ctrlKey) setActive(0);
-    else if (event.key === 'End' && event.ctrlKey) setActive(ordered.length - 1);
-    else if (event.key === 'Enter') run(current);
+    else if (event.key === 'Home' && event.ctrlKey) {
+      const first = ordered.findIndex((item) => !item.disabled);
+      if (first >= 0) setActive(first);
+    } else if (event.key === 'End' && event.ctrlKey) {
+      let last = -1;
+      ordered.forEach((item, i) => {
+        if (!item.disabled) last = i;
+      });
+      if (last >= 0) setActive(last);
+    } else if (event.key === 'Enter') run(highlighted);
     else return;
     event.preventDefault();
   };
@@ -169,7 +191,7 @@ export function CommandPalette({
               aria-expanded="true"
               aria-controls={listId}
               aria-autocomplete="list"
-              aria-activedescendant={current ? optionId(current) : undefined}
+              aria-activedescendant={highlighted ? optionId(highlighted) : undefined}
               autoComplete="off"
               spellCheck={false}
               placeholder={placeholder}
@@ -194,7 +216,7 @@ export function CommandPalette({
                     </div>
                   )}
                   {g.items.map((item) => {
-                    const on = item === current;
+                    const on = item === highlighted;
                     const rich = item.summary !== undefined || item.meta !== undefined || item.metaEnd !== undefined;
                     return (
                       // biome-ignore lint/a11y/useKeyWithClickEvents: keyboard selection runs through the combobox input (aria-activedescendant)
@@ -212,7 +234,10 @@ export function CommandPalette({
                           item.summary !== undefined && item.meta === undefined && item.metaEnd === undefined && 'fa-cmd__row--2',
                           item.lead !== undefined && 'has-lead',
                         )}
-                        onMouseMove={() => !on && setActive(ordered.indexOf(item))}
+                        onMouseMove={() => {
+                          if (item.disabled || on) return;
+                          setActive(ordered.indexOf(item));
+                        }}
                         onClick={() => run(item)}
                       >
                         {item.lead !== undefined && <span className="lead">{item.lead}</span>}

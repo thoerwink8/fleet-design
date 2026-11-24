@@ -31,17 +31,20 @@ test('typing filters by title and keywords; no match says so', async ({ page }) 
   await expect(page.getByText('没有匹配的结果')).toBeVisible();
 });
 
-test('arrow keys move across groups and wrap; Enter runs and closes', async ({ page }) => {
+test('arrow keys move across groups, skip disabled rows, and wrap; Enter runs and closes', async ({ page }) => {
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('ArrowDown');
   await expect(options(page).nth(2)).toHaveAttribute('aria-selected', 'true');
-  // Up wraps to the last option, which is disabled: aria-activedescendant lands on it and Enter does nothing.
+  // Up wraps past the disabled last row onto the last enabled row.
   await page.keyboard.press('ArrowUp');
   await page.keyboard.press('ArrowUp');
   await page.keyboard.press('ArrowUp');
-  await expect(options(page).nth(6)).toHaveAttribute('aria-selected', 'true');
+  await expect(options(page).nth(5)).toHaveAttribute('aria-selected', 'true');
+  await expect(options(page).nth(6)).toHaveAttribute('aria-selected', 'false');
+  await expect(options(page).nth(6)).toHaveAttribute('data-active', 'false');
   await page.keyboard.press('ArrowDown');
   await expect(options(page).nth(0)).toHaveAttribute('aria-selected', 'true');
+  await expect(options(page).nth(6)).toHaveAttribute('aria-selected', 'false');
   await page.keyboard.press('Enter');
   await expect(page.getByRole('dialog', { name: '命令面板' })).toHaveCount(0);
   await expect(page.getByTestId('say')).toHaveText('打开会话：排查登录超时');

@@ -25,6 +25,8 @@ export function densitySpec(T = tokensJson()) {
     barGap: px('space-3'),
     listLayerPad: px('space-2'),
     contentLayerPad: px('space-4'),
+    status: px('ctrl-2xs'),
+    ctrlSm: px('ctrl-sm'),
   };
 }
 
@@ -152,6 +154,64 @@ function audit(S) {
       add('composer bar spacing', `>= ${S.barGap}`, g, g >= S.barGap, b);
     }
   }
+  for (const e of all('.fa-btn--icon,.fa-btn--stop')) {
+    const r = R(e);
+    const w = Math.round(r.width);
+    const h = Math.round(r.height);
+    add('icon button square', '0', Math.abs(w - h), w === h, e);
+    add('icon button step', '24|28|32|40', h, [24, 28, 32, 40].includes(h), e);
+  }
+  for (const e of all('.fa-btn')) {
+    const cs = getComputedStyle(e);
+    add('button position', 'relative', cs.position === 'relative' ? 1 : 0, cs.position === 'relative', e);
+    const dur = cs.transitionDuration.split(',')[0].trim();
+    add('button rest transition', '0s', dur === '0s' ? 0 : 1, dur === '0s', e);
+  }
+  for (const e of all('.fa-btn:is([disabled],[aria-disabled=true],[data-disabled])')) {
+    if (e.getAttribute('aria-busy') === 'true') continue;
+    const cursor = getComputedStyle(e).cursor;
+    add('disabled button cursor', 'not-allowed', cursor === 'not-allowed' ? 1 : 0, cursor === 'not-allowed', e);
+  }
+  for (const e of all('.fa-status')) {
+    const h = Math.round(R(e).height);
+    add('status tag height', `${S.status}`, h, h === S.status, e);
+  }
+  for (const e of all('.fa-select--sm')) {
+    const cs = getComputedStyle(e);
+    const h = Math.round(R(e).height);
+    add('toolbar select height', `${S.ctrlSm}`, h, h === S.ctrlSm, e);
+    add('toolbar select border', '1', px(cs.borderTopWidth), px(cs.borderTopWidth) === 1 && cs.borderTopStyle === 'solid', e);
+  }
+  for (const e of all('.fa-pop .fa-input')) {
+    if (e.tagName === 'TEXTAREA') continue;
+    const h = Math.round(R(e).height);
+    add('popup search height', `${S.ctrlSm}`, h, h === S.ctrlSm, e);
+  }
+  for (const e of all('.fa-item')) {
+    const m = px(getComputedStyle(e).minHeight);
+    add('item min height', `>= ${S.clickableRow}`, m, m >= S.clickableRow, e);
+  }
+  const plain = document.querySelector('#item-h .is-plain');
+  const icon = document.querySelector('#item-h .is-icon');
+  if (plain && icon && vis(plain) && vis(icon)) {
+    const d = Math.abs(Math.round(R(plain).height) - Math.round(R(icon).height));
+    add('item height with and without icon', '0', d, d === 0, plain);
+  }
+  for (const e of all('.fa-input,.fa-cmd__in input')) {
+    const fs = px(getComputedStyle(e).fontSize);
+    add('input font at desktop', '14', fs, fs === 14, e);
+  }
+  for (const e of all('.fa-cmd--modal')) {
+    const cs = getComputedStyle(e);
+    const maxH = px(cs.maxHeight);
+    const top = px(cs.top);
+    add('command modal max height', '< viewport', Math.round(maxH), maxH > 0 && maxH < innerHeight, e);
+    add('command modal top offset', '15%', Math.round(top), Math.abs(top - innerHeight * 0.15) < 2, e);
+  }
+  for (const e of all('.fa-cmd__in,.fa-cmd__foot')) {
+    const s = Number(getComputedStyle(e).flexShrink);
+    add('command chrome flex-shrink', '0', s, s === 0, e);
+  }
   for (const p of all('.fa-pop:not(.fa-pop--pad):not(.fa-pop--two),.fa-cmd,.fa-toast')) {
     const v = px(getComputedStyle(p).paddingTop);
     add('list layer padding', `${S.listLayerPad}`, v, v === S.listLayerPad, p);
@@ -189,6 +249,12 @@ function narrow({ width, rows }) {
     const where = `${typeof row.className === 'string' ? row.className.split(' ')[0] : row.tagName} "${row.textContent.trim().slice(0, 16)}"`;
     out.push({ check: `${width}px: row content spills`, spec: '0', actual: Math.max(0, spill), ok: spill <= 0, where });
   }
+  for (const e of document.querySelectorAll('.fa-input, .fa-cmd__in input')) {
+    if (!e.getBoundingClientRect().width) continue;
+    const fs = parseFloat(getComputedStyle(e).fontSize);
+    const where = `${typeof e.className === 'string' && e.className ? e.className : e.tagName}`;
+    out.push({ check: 'narrow input font', spec: '16', actual: fs, ok: fs === 16, where });
+  }
   return out;
 }
 
@@ -224,6 +290,58 @@ export default async function density() {
       if (width === NARROW) record(`${p.label} @${NARROW}`, await page.evaluate(narrow, { width: NARROW, rows: ROWS }));
       else record(p.label, await page.evaluate(audit, spec));
     }
+    await context.close();
+  }
+  const touch = await browser.newContext({ viewport: { width: 390, height: 800 }, hasTouch: true, deviceScaleFactor: 1 });
+  const touchPage = await touch.newPage();
+  await touchPage.goto(`${base}/cards/Button.html?theme=light`);
+  await touchPage.waitForTimeout(400);
+  record(
+    'Button coarse',
+    await touchPage.evaluate(() => {
+      const out = [];
+      const coarse = matchMedia('(pointer: coarse)').matches;
+      for (const e of document.querySelectorAll('.fa-btn')) {
+        const r = e.getBoundingClientRect();
+        if (!r.width || !r.height) continue;
+        const a = getComputedStyle(e, '::after');
+        const min = Math.min(parseFloat(a.minWidth) || 0, parseFloat(a.minHeight) || 0);
+        const where = typeof e.className === 'string' ? e.className : 'button';
+        out.push({
+          check: 'coarse hit area',
+          spec: '>= 44',
+          actual: min,
+          ok: coarse && a.position === 'absolute' && min >= 44 && Math.round(r.height) <= 40,
+          where,
+        });
+      }
+      return out;
+    }),
+  );
+  await touch.close();
+  for (const theme of ['light', 'dark']) {
+    const context = await browser.newContext({ viewport: { width: 1000, height: 900 }, deviceScaleFactor: 1 });
+    const page = await context.newPage();
+    await page.goto(`${base}/cards/StatusTag.html?theme=${theme}`);
+    await page.waitForTimeout(300);
+    record(
+      `StatusTag ${theme}`,
+      await page.evaluate(() => {
+        const bg = (sel) => getComputedStyle(document.querySelector(sel)).backgroundColor;
+        const warning = bg('.fa-dot--warning');
+        const needs = bg('.fa-dot--needs');
+        const info = needs;
+        return [
+          {
+            check: 'warning dot differs from needs',
+            spec: 'different',
+            actual: warning === needs ? 0 : 1,
+            ok: warning !== needs && warning !== info,
+            where: `${warning} vs ${needs}`,
+          },
+        ];
+      }),
+    );
     await context.close();
   }
   lines.push(`${pages.length} pages at 1000px (density table) and ${NARROW}px (overflow), ${total} measurements, ${bad} below spec`);

@@ -1,14 +1,14 @@
 .fa-pop{background:var(--fa-overlay);border:var(--fa-bw-1) solid var(--fa-border);border-radius:var(--fa-radius-lg);box-shadow:var(--fa-shadow-overlay);padding:var(--fa-space-1);color:var(--fa-fg)}
 .fa-pop--pad{padding:var(--fa-space-3)}
-.fa-item{display:flex;align-items:center;gap:var(--fa-space-2);width:100%;height:var(--fa-ctrl);padding:0 var(--fa-space-2);border:0;border-radius:var(--fa-radius-sm);background:transparent;color:var(--fa-fg);font:400 14px/20px var(--fa-font-sans);text-align:left;cursor:pointer}
-/* data-highlighted / data-disabled are what Base UI menus and selects set on their items */
-.fa-item:hover:not([disabled]):not([data-disabled]),.fa-item[data-active=true],.fa-item[data-highlighted]{background-image:var(--fa-hv)}
-.fa-item[aria-selected=true]{background-color:var(--fa-selected)}
+.fa-item{display:flex;align-items:center;gap:var(--fa-space-2);width:100%;min-height:var(--fa-ctrl);padding:0 var(--fa-space-2);border:0;border-radius:var(--fa-radius-sm);background:transparent;color:var(--fa-fg);font:400 14px/20px var(--fa-font-sans);text-align:left;cursor:pointer}
+/* Pointer hover uses the hover wash. Keyboard highlight and the selected row use the neutral selected fill, so a theme that remaps --fa-hover to an accent tint cannot colour them. .fa-item--selected is that fill for markup that does not set aria-selected. */
+.fa-item:hover:not(:is([disabled],[data-disabled],[aria-disabled=true],[data-active=true],[data-highlighted],[aria-selected=true],.fa-item--selected)){background-image:var(--fa-hv)}
+.fa-item:is([data-active=true],[data-highlighted],[aria-selected=true]),.fa-item--selected{background-color:var(--fa-selected);background-image:none}
 /* a checked toggle item shows its check mark, not a selected background */
 .fa-item[aria-checked=false] .fa-ic:first-child{visibility:hidden}
 .fa-item .tick{display:inline-flex;flex:none;color:var(--fa-fg)}
 .fa-item[aria-checked=false] .tick{visibility:hidden}
-.fa-item[disabled],.fa-item[data-disabled]{color:var(--fa-fg-muted);cursor:not-allowed;background-image:none}
+.fa-item:is([disabled],[data-disabled],[aria-disabled=true]){color:var(--fa-fg-muted);cursor:not-allowed;background-color:transparent;background-image:none}
 .fa-item .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fa-item .end{color:var(--fa-fg-muted);font:400 12px/16px var(--fa-font-sans);font-variant-numeric:tabular-nums;white-space:nowrap}
 /* single-letter shortcut, right edge: the key works while the menu is open */
@@ -23,6 +23,8 @@
 /* every list floating layer, plain or with icons, pads its items 8 (space-row-x-menu), as the density table says */
 /* floating list layers 8; content floating cards 16 */
 .fa-pop{padding:var(--fa-space-2)}
+/* Search field inside a list popup: the 28px step (ctrl-sm). The default field is 32 and an off-step height is not used. */
+.fa-pop .fa-input:not(textarea){height:var(--fa-ctrl-sm)}
 .fa-pop--pad{padding:var(--fa-space-4)}
 .fa-sep{margin:var(--fa-space-2) calc(-1 * var(--fa-space-2))}
 /* the popup itself takes focus when it opens; the ring belongs on the item inside, never around the whole layer */

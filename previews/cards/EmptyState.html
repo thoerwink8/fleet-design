@@ -1,7 +1,7 @@
 <div class="fa-stage">
   <div class="fa-cap">空会话页</div>
   <div class="fa-panel"><div class="fa-empty">
-    <span class="fa-ic--lg" id="i1" style="color:var(--fa-fg-muted)"></span>
+    <span class="fa-empty__media fa-ic--lg" id="i1"></span>
     <h3>输入提示词开始新会话</h3>
     <p>也可以粘贴或拖入图片和文件。输入 @ 引用文件和会话，输入 / 用智能体自己的命令。</p>
     <span class="fa-mono fa-muted" style="font-size:12px;line-height:16px">C:\src\acme-app</span>
@@ -17,6 +17,13 @@
       <button class="fa-card"><b>一句话说清楚</b><span>用自然语言描述，自动生成 cron</span></button>
     </div>
   </div></div>
+  <div class="fa-cap">出错了：警告色图标，没有填色块。字仍是正文色</div>
+  <div class="fa-panel"><div class="fa-empty">
+    <span class="fa-empty__media fa-empty__media--warning fa-ic--lg" id="i2"></span>
+    <h3>没能载入这一页</h3>
+    <p>网络中断了。过一会儿再试，已经打开的会话还在。</p>
+    <div class="fa-row"><button class="fa-btn fa-btn--secondary">重试</button></div>
+  </div></div>
   <div class="fa-cap">目录不存在：不是普通空态</div>
   <div class="fa-panel"><div class="fa-empty" style="padding-block:24px">
     <h3>文件夹已不存在</h3>
@@ -27,4 +34,5 @@
 <script>
 /*PRELUDE*/
 $('#i1').innerHTML = ic('file', 'fa-ic--lg');
+$('#i2').innerHTML = ic('warn', 'fa-ic--lg');
 </script>

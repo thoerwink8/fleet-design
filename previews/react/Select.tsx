@@ -28,8 +28,17 @@ function Page() {
           />
         </div>
       </Demo>
-      <Demo caption="幽灵变体：输入框里的选择器，无边框 28 高">
-        <div className="fa-row">
+      <Demo caption="工具条里的带边 28。幽灵变体仍是无边框 28">
+        <div className="fa-row" style={{ minHeight: 32 }}>
+          <Select
+            size="sm"
+            aria-label="账号"
+            defaultValue="local"
+            options={[
+              { value: 'local', label: '本机账号' },
+              { value: 'personal', label: '个人账号' },
+            ]}
+          />
           <Select
             variant="ghost"
             aria-label="强度"

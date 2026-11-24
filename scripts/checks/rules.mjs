@@ -6,6 +6,12 @@ import { RESET, styleFiles, stylesDir } from '../lib/styles.mjs';
 import { cssVar, PREFIX, tokensJson } from '../lib/tokens.mjs';
 
 export const FONT_SIZES = [12, 14, 15, 18, 20];
+
+// 16px is not a type step. It is the iOS Safari focus-zoom floor, and only these two input rules may use it, below 480px.
+export const FONT_SIZE_EXCEPTIONS = [
+  ['.fa-input,.fa-input__control', 'font-size', '16px'],
+  ['.fa-cmd__in input', 'font-size', '16px'],
+];
 export const MAX_WEIGHT = 500;
 
 // Monospace is for code only: commands, paths, branch names, IDs and raw output.
@@ -75,6 +81,7 @@ export default async function rules() {
   const problems = [];
   const seen = { sizes: new Set(), weights: new Set(), spacing: 0, mono: [], rowSpecs: 0, vars: new Set(), selectors: 0 };
   const exceptionsHit = new Set();
+  const fontExceptionsHit = new Set();
 
   for (const t of T.spacing.tokens) {
     const v = parseFloat(t.value);
@@ -118,7 +125,11 @@ export default async function rules() {
         const m = prop === 'font' ? value.match(/(\d+)px\/\d+px/) : value.match(/^(\d+)px$/);
         if (m) {
           seen.sizes.add(Number(m[1]));
-          if (!FONT_SIZES.includes(Number(m[1]))) problems.push(`font size ${m[1]}px is not one of ${FONT_SIZES.join('/')}: ${where}`);
+          if (!FONT_SIZES.includes(Number(m[1]))) {
+            const ex = FONT_SIZE_EXCEPTIONS.find((row) => row[0] === d.parent.selector && row[1] === prop && row[2] === `${m[1]}px`);
+            if (ex) fontExceptionsHit.add(ex.join(' '));
+            else problems.push(`font size ${m[1]}px is not one of ${FONT_SIZES.join('/')}: ${where}`);
+          }
         } else if (!/^(inherit|initial|unset)$/.test(value)) problems.push(`font size not readable: ${where}`);
       }
       if (prop === 'font' || prop === 'font-weight') {
@@ -168,6 +179,7 @@ export default async function rules() {
   const lines = [
     `font sizes used: ${[...seen.sizes].sort((a, b) => a - b).join(', ')}px; weights used: ${[...seen.weights].sort().join(', ')}`,
     `${seen.spacing} spacing values checked; known exceptions still present: ${exceptionsHit.size}/${SPACING_EXCEPTIONS.length}`,
+    `input font-size 16px exceptions still present: ${fontExceptionsHit.size}/${FONT_SIZE_EXCEPTIONS.length}`,
     `monospace on: ${seen.mono.join(', ')}`,
     'colours: every colour in styles/ is a var() reference',
     `names: ${seen.vars.size} custom properties declared or referenced in styles/, all --${PREFIX}*`,

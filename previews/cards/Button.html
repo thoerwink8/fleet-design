@@ -24,6 +24,12 @@
       <button class="fa-btn fa-btn--icon fa-btn--primary" aria-label="发送" data-ic="send"></button>
       <button class="fa-btn fa-btn--icon fa-btn--lg" aria-label="撤销" data-ic="undo" data-say="大号图标按钮：40×40 正方形"></button>
     </div></div>
+  <div class="fa-col"><div class="fa-cap">没写 fa-ic 的图标也不缩小，固定 16。aria-disabled 和 data-disabled 跟 disabled 同一个样子，悬停和按下都不变</div>
+    <div class="fa-row">
+      <button class="fa-btn fa-btn--secondary" id="rawic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>带图标</button>
+      <button class="fa-btn fa-btn--primary" aria-disabled="true">不能点</button>
+      <button class="fa-btn fa-btn--secondary" data-disabled="">不能点</button>
+    </div></div>
   <div class="fa-col"><div class="fa-cap">带图标、进行中、禁用（要写原因）。禁用不靠变淡：中性底 + 次要文字，仍然看得清</div>
     <div class="fa-row">
       <button class="fa-btn fa-btn--secondary"><span data-ic="branch"></span>从这里开新会话</button>

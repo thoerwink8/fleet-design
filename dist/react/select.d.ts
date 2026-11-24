@@ -13,6 +13,8 @@ export interface SelectProps<V extends string> extends LayoutProps {
     placeholder?: React.ReactNode;
     /** `default`: framed, 32 high. `ghost`: no frame, 28 high, muted text, for pickers inside a composer or toolbar. */
     variant?: 'default' | 'ghost';
+    /** `sm`: framed, 28 high, for a toolbar. `md` (default) is 32. */
+    size?: 'md' | 'sm';
     /** Content before the value inside the trigger (an agent slot, an icon). */
     lead?: React.ReactNode;
     disabled?: boolean;
@@ -29,4 +31,4 @@ export interface SelectProps<V extends string> extends LayoutProps {
  * A single-choice dropdown: `<Select options={[{ value: '15', label: '较大' }]} value={v} onValueChange={setV} aria-label="字号" />`.
  * The list opens under the trigger; arrow keys move, Enter picks, Esc closes and focus returns to the trigger.
  */
-export declare function Select<V extends string>({ options, value, defaultValue, onValueChange, placeholder, variant, lead, disabled, name, open, defaultOpen, onOpenChange, className, style, ...aria }: SelectProps<V>): React.JSX.Element;
+export declare function Select<V extends string>({ options, value, defaultValue, onValueChange, placeholder, variant, size, lead, disabled, name, open, defaultOpen, onOpenChange, className, style, ...aria }: SelectProps<V>): React.JSX.Element;

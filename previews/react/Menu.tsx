@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '../../react/button';
+import { Icon } from '../../react/internal';
 import { Menu, type MenuEntry } from '../../react/menu';
 import { Demo, mount, Say } from './lib';
 
@@ -64,6 +65,22 @@ function Page() {
               { type: 'group', label: '显示', items: [{ type: 'checkbox', label: '显示已归档', defaultChecked: false }] },
             ]}
           />
+        </div>
+      </Demo>
+      <Demo caption="一行有图标、一行没有，都是 32。已选是中性底，不跟着悬停的强调色走">
+        <div className="fa-pop" id="item-h" style={{ position: 'relative', width: 240 }}>
+          <button className="fa-item is-plain" type="button">
+            <span className="grow">没有图标</span>
+          </button>
+          <button className="fa-item is-icon" type="button">
+            <span className="lead">
+              <Icon name="search" />
+            </span>
+            <span className="grow">带图标</span>
+          </button>
+          <button className="fa-item fa-item--selected" type="button">
+            <span className="grow">已选，中性底</span>
+          </button>
         </div>
       </Demo>
       <Say>{said}</Say>

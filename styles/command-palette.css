@@ -1,22 +1,21 @@
 /* Command palette. A list floating layer, so 8 padding like menus and selects (stated here so the result does not depend on file order). Three-line result rows: title + time / summary / meta (left: model, turns; right: workspace, branch).
    Every variable-length field truncates on its own innermost element. Right edge of text sits 20px from the overlay edge (list 8 + row 12). */
-.fa-cmd{width:640px;max-width:100%;padding:var(--fa-space-2);overflow:hidden}
-.fa-cmd__in{display:flex;align-items:center;gap:var(--fa-space-2);height:48px;padding:0 var(--fa-space-4);border-bottom:var(--fa-bw-1) solid var(--fa-border);color:var(--fa-fg-muted)}
+.fa-cmd{display:flex;flex-direction:column;width:640px;max-width:100%;padding:var(--fa-space-2);overflow:hidden}
+.fa-cmd__in{display:flex;align-items:center;gap:var(--fa-space-2);flex-shrink:0;height:48px;padding:0 var(--fa-space-4);border-bottom:var(--fa-bw-1) solid var(--fa-border);color:var(--fa-fg-muted)}
 .fa-cmd__in input{flex:1;min-width:0;height:100%;border:0;outline:0;background:transparent;font:400 14px/20px var(--fa-font-sans);color:var(--fa-fg)}
 .fa-cmd__in input::placeholder{color:var(--fa-fg-muted)}
-.fa-cmd__list{padding:var(--fa-space-1) var(--fa-space-2) var(--fa-space-2);max-height:368px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--fa-border) transparent}
+.fa-cmd__list{flex:1 1 auto;min-height:0;padding:var(--fa-space-1) var(--fa-space-2) var(--fa-space-2);max-height:368px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--fa-border) transparent}
 .fa-cmd__list .fa-glabel{padding:var(--fa-space-2) var(--fa-space-3) var(--fa-space-1)}
 .fa-cmd__row{display:flex;flex-direction:column;justify-content:center;min-height:var(--fa-ctrl);padding:var(--fa-space-2) var(--fa-space-3);border-radius:var(--fa-radius-md);cursor:pointer;background-color:transparent}
 /* one-line rows: 2 seam + 4 + 20 + 4 + 2 = 32; the doubled class keeps this ahead of the .fa-cmd__row padding below whatever the order */
 .fa-cmd__row.fa-cmd__row--1{padding-block:var(--fa-space-1)}
 /* two-line rows (title + summary): 2 seam + 6 + 20 + 16 + 6 + 2 = 52 (--fa-row-2), so the padding loses the seam like the other 52 rows */
 .fa-cmd__row.fa-cmd__row--2{padding-block:calc(var(--fa-space-row-y) - var(--fa-space-row-seam))}
-/* Disabled (aria-disabled): muted text, no hover or active fill, cursor stays default. No opacity fade, same as buttons. */
-.fa-cmd__row[aria-disabled=true],.fa-cmd__row[aria-disabled=true]:hover{color:var(--fa-fg-muted);cursor:default;background-image:none}
-.fa-cmd__row[aria-disabled=true][data-active=true]{background-color:transparent}
 .fa-cmd__row[aria-disabled=true] .l1,.fa-cmd__row[aria-disabled=true] .fa-mark{color:var(--fa-fg-muted)}
-.fa-cmd__row:hover{background-image:linear-gradient(var(--fa-hover),var(--fa-hover))}
-.fa-cmd__row[data-active=true]{background-color:var(--fa-selected);background-image:none}
+.fa-cmd__row:hover:not([aria-disabled=true]){background-image:linear-gradient(var(--fa-hover),var(--fa-hover))}
+.fa-cmd__row[data-active=true]:not([aria-disabled=true]){background-color:var(--fa-selected);background-image:none}
+/* Disabled: muted text, no hover wash and no keyboard highlight. No opacity fade, same as buttons. */
+.fa-cmd__row[aria-disabled=true],.fa-cmd__row[aria-disabled=true]:hover,.fa-cmd__row[aria-disabled=true][data-active=true]{color:var(--fa-fg-muted);cursor:default;background-color:transparent;background-image:none}
 .fa-cmd__row .l{display:flex;align-items:baseline;gap:var(--fa-space-2);min-width:0}
 .fa-cmd__row .l1{height:20px;font:400 14px/20px var(--fa-font-sans);color:var(--fa-fg)}
 .fa-cmd__row .l1>.fa-ic{align-self:center;color:var(--fa-fg-muted)}
@@ -33,10 +32,10 @@
 .fa-cmd__row .tail>bdi{direction:ltr;unicode-bidi:isolate}
 .fa-cmd__row .l3 .lt{display:flex;gap:var(--fa-space-2);min-width:0;flex:0 1 auto;max-width:55%}
 .fa-cmd__row .l3 .rt{display:flex;gap:var(--fa-space-1);min-width:0;flex:1 1 0;justify-content:flex-end}
-.fa-cmd__foot{display:flex;gap:var(--fa-space-4);align-items:center;height:var(--fa-ctrl);padding:0 var(--fa-space-4);border-top:var(--fa-bw-1) solid var(--fa-border);font:400 12px/16px var(--fa-font-sans);color:var(--fa-fg-muted);white-space:nowrap;overflow:hidden}
+.fa-cmd__foot{display:flex;gap:var(--fa-space-4);align-items:center;flex-shrink:0;height:var(--fa-ctrl);padding:0 var(--fa-space-4);border-top:var(--fa-bw-1) solid var(--fa-border);font:400 12px/16px var(--fa-font-sans);color:var(--fa-fg-muted);white-space:nowrap;overflow:hidden}
 .fa-cmd__foot>span{display:inline-flex;align-items:center;gap:var(--fa-space-1);flex:none}
 .fa-cmd__foot .hint{margin-left:auto;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
-@media (max-width:480px){.fa-cmd__foot .hint{display:none}.fa-cmd__row .l3 .lt .fix+.fix{display:none}}
+@media (max-width:480px){.fa-cmd__foot .hint{display:none}.fa-cmd__row .l3 .lt .fix+.fix{display:none}.fa-cmd__in input{font-size:16px}}
 .fa-mark{background-color:transparent;background-image:var(--fa-wash2);color:var(--fa-fg);border-radius:var(--fa-radius-sm)}
 .fa-cmd{--fa-ring:var(--fa-overlay)}
 .fa-cmd__row.has-lead{display:grid;grid-template-columns:16px minmax(0,1fr);column-gap:var(--fa-space-2);align-items:start}
@@ -46,6 +45,6 @@
 /* palette three-line rows: 2 seam + 8 + 20 + 16 + 16 + 8 + 2 = 72 */
 .fa-cmd__row{padding:var(--fa-space-2) var(--fa-space-row-x)}
 .fa-cmd__row.has-lead{column-gap:var(--fa-space-icon-gap)}
-/* as a modal layer (React CommandPalette): fixed in the upper part of the viewport over the scrim; an empty result says so in one muted line */
-.fa-cmd--modal{position:fixed;top:15%;left:50%;z-index:41;transform:translateX(-50%);max-width:calc(100% - 2 * var(--fa-space-4))}
+/* Modal layer: centred, 15% from the top of the viewport, and no taller than what remains under that offset plus a 32px bottom gap. A product does not position it. An empty result says so in one muted line. */
+.fa-cmd--modal{position:fixed;top:15%;left:50%;z-index:41;transform:translateX(-50%);max-width:calc(100% - 2 * var(--fa-space-4));max-height:calc(100vh - 15vh - var(--fa-space-8))}
 .fa-cmd__empty{display:flex;align-items:center;min-height:var(--fa-ctrl);padding:0 var(--fa-space-row-x);font:400 14px/20px var(--fa-font-sans);color:var(--fa-fg-muted)}

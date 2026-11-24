@@ -5,6 +5,11 @@
       <div class="fa-pop" id="p1" role="listbox" hidden style="position:absolute;left:0;top:calc(100% + 4px);width:100%;z-index:3"></div>
     </div>
   </div>
+  <div class="fa-col"><div class="fa-cap">工具条里的带边 28。旁边的幽灵 28 没有边。搜索框在弹层里是 28，不是 32</div>
+    <div class="fa-row" style="min-height:32px">
+      <button class="fa-select fa-select--sm" aria-label="账号"><span>本机账号</span><span data-ic="chevD"></span></button>
+      <button class="fa-select fa-select--ghost" aria-label="强度对照"><span>中强度</span><span data-ic="chevD"></span></button>
+    </div></div>
   <div class="fa-col"><div class="fa-cap">出错态：和输入框一样的红边（aria-invalid）；聚焦环不变</div>
     <div style="width:200px">
       <button class="fa-select" aria-invalid="true" style="width:100%;justify-content:space-between"><span>超大</span><span data-ic="chevD"></span></button>
@@ -14,7 +19,7 @@
   <div class="fa-col"><div class="fa-cap">双栏模型选择器（演示态，默认展开）：左智能体，右账号、搜索、模型；换智能体，入口随之增减</div>
     <div style="position:relative">
       <button class="fa-select" id="s2" aria-haspopup="dialog" aria-expanded="false"><span class="fa-agent">C</span><span id="s2v">Claude Opus 5.5 · 本机账号</span><span data-ic="chevD"></span></button>
-      <div class="fa-pop fa-pop--two" id="p2" hidden style="position:absolute;left:0;top:calc(100% + 4px);z-index:3"><div id="ag" role="listbox" aria-label="智能体"></div><div><div class="fa-glabel">账号</div><button class="fa-item" id="acct"><span class="grow" id="acv">本机账号</span><span data-ic="chevD"></span></button><div style="padding:4px 4px 0"><input class="fa-input" id="q" placeholder="搜索模型" aria-label="搜索模型" style="height:28px"></div><div id="ml" role="listbox" aria-label="模型" style="margin-top:4px"></div></div></div>
+      <div class="fa-pop fa-pop--two" id="p2" hidden style="position:absolute;left:0;top:calc(100% + 4px);z-index:3"><div id="ag" role="listbox" aria-label="智能体"></div><div><div class="fa-glabel">账号</div><button class="fa-item" id="acct"><span class="grow" id="acv">本机账号</span><span data-ic="chevD"></span></button><div style="padding:4px 4px 0"><input class="fa-input" id="q" placeholder="搜索模型" aria-label="搜索模型"></div><div id="ml" role="listbox" aria-label="模型" style="margin-top:4px"></div></div></div>
     </div>
     <div class="fa-hint" id="note">智能体有 TUI 时，会话页才有「打开 TUI」入口。</div>
   </div>

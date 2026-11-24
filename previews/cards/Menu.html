@@ -9,6 +9,12 @@
     <div class="fa-pop" id="menu" role="menu" hidden style="position:absolute;width:248px;z-index:3"></div>
   </div>
   <div style="height:392px" aria-hidden="true"></div>
+  <div class="fa-col" id="item-h"><div class="fa-cap">一行有图标、一行没有，都是 32。已选是中性底，不跟着悬停的强调色走</div>
+    <div class="fa-pop" style="position:relative;width:240px">
+      <button class="fa-item is-plain" type="button"><span class="grow">没有图标</span></button>
+      <button class="fa-item is-icon" type="button"><span class="lead" data-ic="folder"></span><span class="grow">带图标</span></button>
+      <button class="fa-item fa-item--selected" type="button"><span class="grow">已选，中性底</span></button>
+    </div></div>
   <div class="fa-hint" id="say" role="status">选一项看反馈。</div>
 </div>
 <script>
@@ -23,6 +29,7 @@ const ITEMS = [
 ];
 const menu = $('#menu'), row = $('#row'); let act = 0, buttons = [];
 $('#more').innerHTML = ic('more');
+$$('#item-h [data-ic]').forEach(e => { e.innerHTML = ic(e.dataset.ic); });
 function build() {
   menu.classList.add('fa-pop--plain'); menu.innerHTML = ITEMS.map((it, n) => it.sep ? '<div class="fa-sep"></div>' : '<button class="fa-item' + (it.danger ? ' fa-item--danger' : '') + '" role="' + (it.toggle ? 'menuitemcheckbox' : 'menuitem') + '"' + (it.toggle ? ' aria-checked="' + it.on + '"' : '') + (it.k ? ' aria-keyshortcuts="' + it.k + '"' : '') + ' data-n="' + n + '"><span class="grow">' + it.l + '</span>' + (it.usage ? '<span class="end" id="u">正在统计…</span>' : '') + (it.toggle ? '<span class="tick">' + ic('check') + '</span>' : '') + (it.k ? '<span class="key" aria-hidden="true">' + it.k + '</span>' : '') + '</button>').join('');
   buttons = $$('.fa-item', menu); buttons.forEach((b, k) => { b.onmouseenter = () => hi(k); b.onclick = () => run(+b.dataset.n); });

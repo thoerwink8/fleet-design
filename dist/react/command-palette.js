@@ -60,15 +60,24 @@ export function CommandPalette({ items, open, defaultOpen, onOpenChange, trigger
             groups.push({ name: item.group, items: [item] });
     }
     const ordered = groups.flatMap((g) => g.items);
-    const current = ordered[Math.min(active, ordered.length - 1)];
+    let index = Math.min(active, Math.max(ordered.length - 1, 0));
+    if (ordered[index]?.disabled) {
+        const next = ordered.findIndex((item) => !item.disabled);
+        if (next >= 0 && next !== active) {
+            setActive(next);
+            index = next;
+        }
+    }
+    const current = ordered[index];
+    const highlighted = current && !current.disabled ? current : undefined;
     const optionId = (item) => `${listId}-${item.id}`;
     React.useEffect(() => {
         if (!isOpen)
             setQuery('');
     }, [isOpen]);
     React.useEffect(() => {
-        if (current)
-            document.getElementById(optionId(current))?.scrollIntoView({ block: 'nearest' });
+        if (highlighted)
+            document.getElementById(optionId(highlighted))?.scrollIntoView({ block: 'nearest' });
     });
     const run = (item) => {
         if (!item || item.disabled)
@@ -77,9 +86,16 @@ export function CommandPalette({ items, open, defaultOpen, onOpenChange, trigger
         item.onRun();
     };
     const move = (by) => {
-        if (!ordered.length)
+        const idxs = ordered.flatMap((item, i) => (item.disabled ? [] : [i]));
+        if (!idxs.length)
             return;
-        setActive((a) => (Math.min(a, ordered.length - 1) + by + ordered.length) % ordered.length);
+        setActive((a) => {
+            const cur = Math.min(a, ordered.length - 1);
+            let pos = idxs.indexOf(cur);
+            if (pos < 0)
+                pos = by > 0 ? -1 : 0;
+            return idxs[(pos + by + idxs.length) % idxs.length] ?? a;
+        });
     };
     const onKeyDown = (event) => {
         if (event.nativeEvent.isComposing)
@@ -88,25 +104,39 @@ export function CommandPalette({ items, open, defaultOpen, onOpenChange, trigger
             move(1);
         else if (event.key === 'ArrowUp')
             move(-1);
-        else if (event.key === 'Home' && event.ctrlKey)
-            setActive(0);
-        else if (event.key === 'End' && event.ctrlKey)
-            setActive(ordered.length - 1);
+        else if (event.key === 'Home' && event.ctrlKey) {
+            const first = ordered.findIndex((item) => !item.disabled);
+            if (first >= 0)
+                setActive(first);
+        }
+        else if (event.key === 'End' && event.ctrlKey) {
+            let last = -1;
+            ordered.forEach((item, i) => {
+                if (!item.disabled)
+                    last = i;
+            });
+            if (last >= 0)
+                setActive(last);
+        }
         else if (event.key === 'Enter')
-            run(current);
+            run(highlighted);
         else
             return;
         event.preventDefault();
     };
-    return (_jsxs(BaseDialog.Root, { open: isOpen, onOpenChange: (next) => setOpen(next), children: [trigger && _jsx(BaseDialog.Trigger, { render: trigger }), _jsxs(BaseDialog.Portal, { children: [_jsx(BaseDialog.Backdrop, { className: "fa-backdrop" }), _jsxs(BaseDialog.Popup, { className: "fa-pop fa-cmd fa-cmd--modal", "aria-label": label, initialFocus: input, children: [_jsxs("div", { className: "fa-cmd__in", children: [_jsx(Icon, { name: "search" }), _jsx("input", { ref: input, role: "combobox", "aria-label": label, "aria-expanded": "true", "aria-controls": listId, "aria-autocomplete": "list", "aria-activedescendant": current ? optionId(current) : undefined, autoComplete: "off", spellCheck: false, placeholder: placeholder, value: query, onChange: (e) => {
+    return (_jsxs(BaseDialog.Root, { open: isOpen, onOpenChange: (next) => setOpen(next), children: [trigger && _jsx(BaseDialog.Trigger, { render: trigger }), _jsxs(BaseDialog.Portal, { children: [_jsx(BaseDialog.Backdrop, { className: "fa-backdrop" }), _jsxs(BaseDialog.Popup, { className: "fa-pop fa-cmd fa-cmd--modal", "aria-label": label, initialFocus: input, children: [_jsxs("div", { className: "fa-cmd__in", children: [_jsx(Icon, { name: "search" }), _jsx("input", { ref: input, role: "combobox", "aria-label": label, "aria-expanded": "true", "aria-controls": listId, "aria-autocomplete": "list", "aria-activedescendant": highlighted ? optionId(highlighted) : undefined, autoComplete: "off", spellCheck: false, placeholder: placeholder, value: query, onChange: (e) => {
                                             setQuery(e.target.value);
                                             setActive(0);
                                         }, onKeyDown: onKeyDown })] }), _jsxs("div", { className: "fa-cmd__list", id: listId, role: "listbox", "aria-label": label, children: [ordered.length === 0 && _jsx("div", { className: "fa-cmd__empty", children: emptyText }), groups.map((g, gi) => {
                                         const head = `${listId}-g${gi}`;
                                         return (_jsxs("div", { role: "group", "aria-labelledby": g.name ? head : undefined, children: [g.name && (_jsx("div", { className: "fa-glabel", id: head, children: g.name })), g.items.map((item) => {
-                                                    const on = item === current;
+                                                    const on = item === highlighted;
                                                     const rich = item.summary !== undefined || item.meta !== undefined || item.metaEnd !== undefined;
-                                                    return (_jsxs("div", { id: optionId(item), role: "option", "aria-selected": on, "aria-disabled": item.disabled || undefined, "data-active": on, tabIndex: -1, className: cx('fa-cmd__row', !rich && 'fa-cmd__row--1', item.summary !== undefined && item.meta === undefined && item.metaEnd === undefined && 'fa-cmd__row--2', item.lead !== undefined && 'has-lead'), onMouseMove: () => !on && setActive(ordered.indexOf(item)), onClick: () => run(item), children: [item.lead !== undefined && _jsx("span", { className: "lead", children: item.lead }), _jsxs("div", { className: "fa-cmd__body", children: [_jsxs("div", { className: "l l1", children: [_jsx("span", { className: "x grow", children: highlight(item.title, query.trim()) }), item.end !== undefined && _jsx("span", { className: "tm", children: item.end })] }), item.summary !== undefined && (_jsx("div", { className: "l l2", children: _jsx("span", { className: "x", children: item.summary }) })), (item.meta !== undefined || item.metaEnd !== undefined) && (_jsxs("div", { className: "l l3", children: [_jsx("span", { className: "lt", children: _jsx("span", { className: "x", title: typeof item.meta === 'string' ? item.meta : undefined, children: item.meta }) }), _jsx("span", { className: "rt", children: _jsx("span", { className: "x", title: typeof item.metaEnd === 'string' ? item.metaEnd : undefined, children: item.metaEnd }) })] }))] })] }, item.id));
+                                                    return (_jsxs("div", { id: optionId(item), role: "option", "aria-selected": on, "aria-disabled": item.disabled || undefined, "data-active": on, tabIndex: -1, className: cx('fa-cmd__row', !rich && 'fa-cmd__row--1', item.summary !== undefined && item.meta === undefined && item.metaEnd === undefined && 'fa-cmd__row--2', item.lead !== undefined && 'has-lead'), onMouseMove: () => {
+                                                            if (item.disabled || on)
+                                                                return;
+                                                            setActive(ordered.indexOf(item));
+                                                        }, onClick: () => run(item), children: [item.lead !== undefined && _jsx("span", { className: "lead", children: item.lead }), _jsxs("div", { className: "fa-cmd__body", children: [_jsxs("div", { className: "l l1", children: [_jsx("span", { className: "x grow", children: highlight(item.title, query.trim()) }), item.end !== undefined && _jsx("span", { className: "tm", children: item.end })] }), item.summary !== undefined && (_jsx("div", { className: "l l2", children: _jsx("span", { className: "x", children: item.summary }) })), (item.meta !== undefined || item.metaEnd !== undefined) && (_jsxs("div", { className: "l l3", children: [_jsx("span", { className: "lt", children: _jsx("span", { className: "x", title: typeof item.meta === 'string' ? item.meta : undefined, children: item.meta }) }), _jsx("span", { className: "rt", children: _jsx("span", { className: "x", title: typeof item.metaEnd === 'string' ? item.metaEnd : undefined, children: item.metaEnd }) })] }))] })] }, item.id));
                                                 })] }, g.name ?? gi));
                                     })] }), footer && _jsx("div", { className: "fa-cmd__foot", children: footer })] })] })] }));
 }
