@@ -22,7 +22,7 @@
 .fa-btn--danger{background-color:var(--fa-danger);color:var(--fa-on-danger)}
 /* Quiet destructive actions outside a confirm dialog. danger-secondary: the neutral wash with danger text, for a standalone action such as "delete project" on a settings page.
    danger-ghost: muted until hovered or focused, for the remove action inside a row. Neither replaces the confirm step. */
-.fa-btn--danger-secondary:not(:is([disabled],[aria-disabled=true],[data-disabled])){color:var(--fa-danger)}
+.fa-btn--danger-secondary:not(:is([disabled],[data-disabled])):not([aria-disabled=true]:not([aria-busy=true])){color:var(--fa-danger)}
 .fa-btn--danger-ghost{color:var(--fa-fg-muted)}
 .fa-btn--danger-ghost:hover:not(:is([disabled],[aria-disabled=true],[data-disabled])),.fa-btn--danger-ghost:focus-visible:not(:is([disabled],[aria-disabled=true],[data-disabled])){color:var(--fa-danger)}
 /* Muted: a ghost button for low-emphasis actions in a bar or row. Text and icon turn to the full foreground on hover, focus, or while its popup is open. */

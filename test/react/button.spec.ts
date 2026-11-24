@@ -53,3 +53,21 @@ test('disabled buttons are not focusable and say why', async ({ page }) => {
   await page.keyboard.press('Tab');
   await expect(b).not.toBeFocused();
 });
+
+test('a loading danger-secondary button keeps its danger text colour', async ({ page }) => {
+  const color = await page.evaluate(() => {
+    const b = document.createElement('button');
+    b.className = 'fa-btn fa-btn--danger-secondary';
+    b.setAttribute('aria-disabled', 'true');
+    b.setAttribute('aria-busy', 'true');
+    b.textContent = '删除中…';
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--fa-danger)';
+    document.body.append(b, probe);
+    const out = [getComputedStyle(b).color, getComputedStyle(probe).color];
+    b.remove();
+    probe.remove();
+    return out;
+  });
+  expect(color[0]).toBe(color[1]);
+});
